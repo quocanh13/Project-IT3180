@@ -4,7 +4,7 @@ export class ServerResponse{
      * 
      * Kiểu của phản hồi 
      * 
-     * OK - Request đã được xử lý thành công \n
+     * OK - Request đã được xử lý thành công 
      * 
      * ERROR - Có lỗi nào đó ở server
      * 
