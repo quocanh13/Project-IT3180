@@ -33,5 +33,5 @@ export class ServerResponse{
      * 
      * URL để điều hướng khi type = REDIRECT
      */
-    redirectURl;
+    redirectURL;
 }

@@ -7,6 +7,7 @@ import {sign} from "../utils/jwt.mjs"
  * @param {import("express").Response} res
  */
 export async function postLogin(req, res) {
+    console.log(req.body);
     const result = await login(req.body.username, req.body.password);
     /**@type {ServerResponse} */
     let resData;
