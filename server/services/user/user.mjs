@@ -6,11 +6,22 @@ import User from "../../config/models/user-model.mjs";
  * @returns {Promise<"OK" | "TÊN ĐĂNG NHẬP KHÔNG TỒN TẠI" | "MẬT KHẨU KHÔNG ĐÚNG" | "KHÔNG ĐÚNG ĐỊNH DẠNG" | "SERVER CÓ LỖI">}
  */
 export async function login(username, password) {
-    const res = await User.findOne({
-        username : "quocanh1234",
-        password : "quocanh"
-    });
-    console.log(res);
+    try {
+        if(typeof username !== "string" || typeof password !== "string") {
+            return "KHÔNG ĐÚNG ĐỊNH DẠNG";
+        }
+        const user = await User.findOne({ username: username });
+        if(!user) {
+            return "TÊN ĐĂNG NHẬP KHÔNG TỒN TẠI";
+        }
+        if(user.password !== password) {
+            return "MẬT KHẨU KHÔNG ĐÚNG";
+        }
+        return "OK";
+    } catch (error) {
+        console.error("Login error:", error);
+        return "SERVER CÓ LỖI";
+    }
 }
 
 login();
