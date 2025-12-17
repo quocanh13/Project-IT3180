@@ -7,7 +7,7 @@ import User from "../../config/models/user-model.mjs";
  */
 export async function login(username, password) {
     try {
-        const user = await User.findOne({ username: username });
+        const user = await User.findOne({username : username})
         if(!user) {
             return "TÊN ĐĂNG NHẬP KHÔNG TỒN TẠI";
         }
@@ -21,3 +21,4 @@ export async function login(username, password) {
     }
 }
 
+console.log(login("quocanh", "123"))
