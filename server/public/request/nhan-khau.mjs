@@ -6,7 +6,7 @@ import { ServerResponse } from "../utils/data-types.mjs";
  * @param {number} limit - Số lượng hộ khẩu được lấy, nếu là -1 thì lấy toàn bộ - Mặc định là 20
  * @returns {ServerResponse}
  */
-export async function getNhanKhau(offset = 0, limit = 20) {
+export async function getHoKhau(offset = 0, limit = 20) {
 
     const res = await fetch(
         `/nhan_khau?offset=${offset}&limit=${limit}`,
