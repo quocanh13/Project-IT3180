@@ -35,3 +35,39 @@ export class ServerResponse{
      */
     redirectURL;
 }
+
+export class NhanKhau {
+    /**@type {number} */
+    cccd;
+
+    /**@type {string} */
+    hoTen;
+
+    /**
+     * @type {boolean} 
+     * 
+     * True là nam, false là nữ
+     */
+    gioiTinh;
+
+    /**@type {Date} */
+    ngaySinh;
+
+    /**@type {string} */
+    danToc;
+
+    /**@type {string} */
+    quocTich;
+
+    /**@type {string} */
+    queQuan;
+
+    /**@type {string} */
+    noiSinh;
+
+    /**@type {number} */
+    hoKhau;
+
+    /**@type {string} */
+    quanHeVoiChuHo;
+}
