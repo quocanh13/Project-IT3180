@@ -71,3 +71,17 @@ export class NhanKhau {
     /**@type {string} */
     quanHeVoiChuHo;
 }
+
+export class HoKhau {
+    /**@type {number} */
+    chuHo;
+
+    /**@type {number[]} */
+    thanhVien;
+
+    /**@type {number} */
+    soNha;
+
+    /**@type {Date} */
+    ngayDK;
+}
