@@ -1,25 +1,4 @@
-import { ServerResponse } from "../utils/data-types.mjs";
-
-/**
- * @param {string} username 
- * @param {string} password 
- * @returns {Promise<ServerResponse>}
- */
-async function login(username, password) {
-    const res = await fetch(
-        "/auth/login",
-        {
-            method : "POST",
-            headers : {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify({username, password})
-        }
-    );
-
-    const resData = await res.json();
-    return resData;
-}
+import { login } from "../request/login.mjs";
 
 const form = document.querySelector("form");
 const button = document.querySelector("button");
