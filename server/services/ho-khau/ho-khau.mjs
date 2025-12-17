@@ -7,7 +7,17 @@ import { HoKhau } from "../../public/utils/data-types.mjs";
  * @returns {Promise<HoKhau[] | "ERROR">} - Trả về danh sách hộ khẩu | Trả về "ERROR" nếu có lỗi
  */
 export async function getHoKhau(offset, limit) {
-    
+    try {
+        let query = HoKhau.find();
+        if(limit !== -1) {
+            query = query.skip(offset).limit(limit);
+        }
+        const hoKhauList = await query.exec();
+        return hoKhauList;
+    } catch(error) {
+        console.error("Get HoKhau error:", error);
+        return "ERROR";
+    }
 }
 
 /**
@@ -21,7 +31,23 @@ export async function getHoKhau(offset, limit) {
  * Trả về "HỘ ĐÃ TỒN TẠI" nếu chủ hộ của hộ khẩu được thêm vào đã là chủ hộ của một hộ khác (1 người chỉ được là chủ hộ của 1 hộ)
  */
 export async function insertHoKhau(hoKhau) {
-    
+    try {
+        if(!hoKhau || !hoKhau.chuHo) {
+            return "ERROR";
+        }
+ 
+        const existingHoKhau = await HoKhau.findOne({ chuHo: hoKhau.chuHo });
+        if(existingHoKhau) {
+            return "HỘ ĐÃ TỒN TẠI";
+        }
+
+        await hoKhau.save();
+
+        return "OK";
+    } catch(error) {
+        console.error("Insert error:", error);
+        return "ERROR";
+    }
 }
 
 /**
@@ -33,7 +59,17 @@ export async function insertHoKhau(hoKhau) {
  * Trả về "ERROR" nếu có lỗi
  */
 export async function deleteHoKhau(chuHo) {
-    
+    try {
+        const result = await HoKhau.deleteOne({ chuHo: chuHo });    
+        if(result.deletedCount === 1) {
+            return "OK";
+        } else {
+            return "HỘ KHÔNG TỒN TẠI";
+        }
+    } catch(error) {
+        console.error("Delete error:", error);
+        return "ERROR";
+    }
 }
 
 /**
@@ -45,5 +81,27 @@ export async function deleteHoKhau(chuHo) {
  * Trả về "ERROR" nếu có lỗi
  */
 export async function updateHoKhau(hoKhau) {
-    
+    try {
+        if(!hoKhau || !hoKhau.chuHo) {
+            return "ERROR";
+        }   
+        const updateData = {};
+
+        if(hoKhau.thanhVien !== null && hoKhau.thanhVien !== undefined) {
+            updateData.thanhVien = hoKhau.thanhVien;
+        }
+
+        if(hoKhau.soNha !== null && hoKhau.soNha !== undefined) {
+            updateData.soNha = hoKhau.soNha;
+        }
+        if(hoKhau.ngayDK !== null && hoKhau.ngayDK !== undefined) {
+            updateData.ngayDK = hoKhau.ngayDK;
+        }
+
+        await HoKhau.updateOne({ chuHo: hoKhau.chuHo }, updateData);
+        return "OK";
+    } catch(error) {
+        console.error("Update error:", error);
+        return "ERROR";
+    }
 }
