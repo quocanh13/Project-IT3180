@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "**/*.d.mts" : true,
+        "**/*.d.ts" : true
+    }
+}
