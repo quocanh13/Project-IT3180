@@ -3,7 +3,7 @@ import User from "../../config/models/user-model.mjs";
 /**
  * @param {string} username 
  * @param {string} password 
- * @returns {Promise<"OK" | "TÊN ĐĂNG NHẬP KHÔNG TỒN TẠI" | "MẬT KHẨU KHÔNG ĐÚNG" | "SERVER CÓ LỖI">}
+ * @returns {Promise<"OK" | "TÊN ĐĂNG NHẬP KHÔNG TỒN TẠI" | "MẬT KHẨU KHÔNG ĐÚNG" | "SERVER CÓ LỖI" | "KHÔNG ĐÚNG ĐỊNH DẠNG">}
  */
 export async function login(username, password) {
     try {

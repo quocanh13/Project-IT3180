@@ -3,7 +3,7 @@ import { HoKhau, ServerResponse } from "../utils/data-types.mjs";
  * Request để lấy danh sách hộ khẩu
  * @param offset - Vị trí bắt đầu để lấy danh sách hộ khẩu - Mặc định là 0
  * @param limit - Số lượng hộ khẩu được lấy, nếu là -1 thì lấy toàn bộ - Mặc định là 20
- * @returns {Promise<ServerResponse>}
+ * @returns - Nếu thành công thì data là mảng lưu số cccd của chủ hộ
  */
 export declare function getHoKhau(offset?: number, limit?: number): Promise<ServerResponse>;
 /**

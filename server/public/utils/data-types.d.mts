@@ -10,48 +10,48 @@ export declare class ServerResponse {
      *
      * BAD REQUEST - Thông tin mà client gửi lên server không hợp lệ
      */
-    type: "OK" | "ERROR" | "REDIRECT" | "BAD REQUEST";
+    type?: "OK" | "ERROR" | "REDIRECT" | "BAD REQUEST";
     /**
      *
      * Thông điệp server gửi về cho client để thông báo về kết quả của request
      */
-    message: string;
+    message?: string;
     /**
      *
      * Dữ liệu đi kèm nếu type là OK khi người dùng cần lấy dữ liệu
      */
-    data: any;
+    data?: any;
     /**
      *
      * URL để điều hướng khi type = REDIRECT
      */
-    redirectURL: string;
+    redirectURL?: string;
 }
 export declare class NhanKhau {
-    cccd: number;
-    hoTen: string;
+    cccd?: number;
+    hoTen?: string;
     /**
      * True là nam, false là nữ
      */
-    gioiTinh: boolean;
+    gioiTinh?: boolean;
     /**@type {Date} */
-    ngaySinh: string;
-    danToc: string;
-    quocTich: string;
-    queQuan: string;
-    noiSinh: string;
+    ngaySinh?: string;
+    danToc?: string;
+    quocTich?: string;
+    queQuan?: string;
+    noiSinh?: string;
     /**
      * Số CCCD của chủ hộ
      */
-    hoKhau: number;
-    quanHeVoiChuHo: string;
+    hoKhau?: number;
+    quanHeVoiChuHo?: string;
 }
 export declare class HoKhau {
-    chuHo: string;
+    chuHo?: string;
     /**
      * Danh sách số CCCD của các thành viên
      */
-    thanhVien: number[];
-    soNha: string;
-    ngayDK: Date;
+    thanhVien?: number[];
+    soNha?: string;
+    ngayDK?: Date;
 }
