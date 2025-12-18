@@ -9,7 +9,7 @@ import { HoKhau, ServerResponse } from "../utils/data-types.mjs";
 export async function getHoKhau(offset = 0, limit = 20) {
 
     const res = await fetch(
-        `/nhan_khau?offset=${offset}&limit=${limit}`,
+        `/ho_khau?offset=${offset}&limit=${limit}`,
         {
             method : "GET"
         }
@@ -20,12 +20,12 @@ export async function getHoKhau(offset = 0, limit = 20) {
 
 /**
  * Request để thêm hộ khẩu
- * @type {HoKhau} - Thông tin về hộ khẩu cần thêm
+ * @param {HoKhau} hoKhau - Thông tin về hộ khẩu cần thêm
  * @returns {Promise<ServerResponse>}
  */
 export async function insertHoKhau(hoKhau) {
     const res = await fetch(
-        `/nhan_khau`,
+        `/ho_khau`,
         {
             method : "POST",
             body : JSON.stringify(hoKhau),
@@ -40,16 +40,36 @@ export async function insertHoKhau(hoKhau) {
 
 /**
  * Request để cập nhật hộ khẩu
- * @param {HoKhau} hoKhau 
+ * @param {HoKhau} hoKhau - Chỉ cập nhật các thuộc tính khác null và undefined
+ * @returns {Promise<ServerResponse>}
  */
 export async function updateHoKhau(hoKhau) {
-    
+    const res = await fetch(
+        `/ho_khau/${hoKhau.chuHo}`,
+        {
+            method : "PUT",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(hoKhau)
+        }
+    );
+
+    return await res.json();
 }
 
 /**
  * Request để xóa hộ khẩu
  * @param {number} chuHo
+ * @returns {Promise<ServerResponse>}
  */
 export async function deleteHoKhau(chuHo) {
-    
+    const res = fetch(
+        `/ho_khau/${chuHo}`,
+        {
+            method : "DELETE"
+        }
+    )
+
+    return await res.json();
 }

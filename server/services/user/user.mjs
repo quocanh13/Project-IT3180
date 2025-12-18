@@ -20,5 +20,3 @@ export async function login(username, password) {
         return "SERVER CÓ LỖI";
     }
 }
-
-console.log(login("quocanh", "123"))
