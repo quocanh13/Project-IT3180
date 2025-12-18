@@ -1,4 +1,4 @@
-export class ServerResponse {
+export declare class ServerResponse {
     /**
      * Kiểu của phản hồi
      *
@@ -10,48 +10,48 @@ export class ServerResponse {
      *
      * BAD REQUEST - Thông tin mà client gửi lên server không hợp lệ
      */
-    type;
+    type: "OK" | "ERROR" | "REDIRECT" | "BAD REQUEST";
     /**
      *
      * Thông điệp server gửi về cho client để thông báo về kết quả của request
      */
-    message;
+    message: string;
     /**
      *
      * Dữ liệu đi kèm nếu type là OK khi người dùng cần lấy dữ liệu
      */
-    data;
+    data: any;
     /**
      *
      * URL để điều hướng khi type = REDIRECT
      */
-    redirectURL;
+    redirectURL: string;
 }
-export class NhanKhau {
-    cccd;
-    hoTen;
+export declare class NhanKhau {
+    cccd: number;
+    hoTen: string;
     /**
      * True là nam, false là nữ
      */
-    gioiTinh;
+    gioiTinh: boolean;
     /**@type {Date} */
-    ngaySinh;
-    danToc;
-    quocTich;
-    queQuan;
-    noiSinh;
+    ngaySinh: string;
+    danToc: string;
+    quocTich: string;
+    queQuan: string;
+    noiSinh: string;
     /**
      * Số CCCD của chủ hộ
      */
-    hoKhau;
-    quanHeVoiChuHo;
+    hoKhau: number;
+    quanHeVoiChuHo: string;
 }
-export class HoKhau {
-    chuHo;
+export declare class HoKhau {
+    chuHo: string;
     /**
      * Danh sách số CCCD của các thành viên
      */
-    thanhVien;
-    soNha;
-    ngayDK;
+    thanhVien: number[];
+    soNha: string;
+    ngayDK: Date;
 }
