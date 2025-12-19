@@ -1,12 +1,12 @@
 import { HoKhau } from "../../public/utils/data-types.mjs";
 
 /**
- * Hàm lấy thông tin nhân khẩu
+ * Hàm lấy danh sách hộ khẩu
  * @param {number} offset - Vị trí bắt đầu 
  * @param {number} limit - Số lượng, nếu là -1 thì lấy toàn bộ nhân khẩu
- * @returns {Promise<HoKhau[] | "ERROR">} - Trả về danh sách hộ khẩu | Trả về "ERROR" nếu có lỗi
+ * @returns {Promise<number[] | "ERROR">} - Trả về mảng lưu số CCCD của chủ hộ | Trả về "ERROR" nếu có lỗi
  */
-export async function getHoKhau(offset, limit) {
+export async function getHoKhauList(offset, limit) {
     try {
         let query = HoKhau.find();
         if(limit !== -1) {
@@ -18,6 +18,20 @@ export async function getHoKhau(offset, limit) {
         console.error("Get HoKhau error:", error);
         return "ERROR";
     }
+}
+
+/**
+ * Hàm lấy thông tin hộ khẩu tương ứng số CCCD của chủ hộ
+ * @param {number} chuHo - Số CCCD của chủ hộ
+ * @returns {Promise<HoKhau | "ERROR" | "HỘ KHẨU KHÔNG TỒN TẠI">} 
+ * Trả về HoKhau nếu thành công
+ * 
+ * Trả về "ERROR" nếu có lỗi
+ * 
+ * Trả về "HỘ KHẨU KHÔNG TỒN TẠI" nếu hộ khẩu không tồn tại
+ */
+export async function getHoKhau(chuHo) {
+
 }
 
 /**

@@ -1,4 +1,5 @@
 import { login } from "../request/login.mjs";
+import { getHoKhauList } from "../request/ho-khau.mjs";
 
 const form = document.querySelector("form");
 const button = document.querySelector("button");
@@ -16,3 +17,4 @@ button.addEventListener("click", async ()=>{
         console.log(resData.message);
     }
 });
+

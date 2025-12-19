@@ -1,4 +1,4 @@
-export declare class ServerResponse {
+export declare class ServerResponse<Data = any> {
     /**
      * Kiểu của phản hồi
      *
@@ -10,7 +10,7 @@ export declare class ServerResponse {
      *
      * BAD REQUEST - Thông tin mà client gửi lên server không hợp lệ
      */
-    type?: "OK" | "ERROR" | "REDIRECT" | "BAD REQUEST";
+    type?: "OK" | "ERROR" | "REDIRECT" | "BAD REQUEST" | "NOT FOUND";
     /**
      *
      * Thông điệp server gửi về cho client để thông báo về kết quả của request
@@ -20,7 +20,7 @@ export declare class ServerResponse {
      *
      * Dữ liệu đi kèm nếu type là OK khi người dùng cần lấy dữ liệu
      */
-    data?: any;
+    data?: Data;
     /**
      *
      * URL để điều hướng khi type = REDIRECT

@@ -1,5 +1,5 @@
-import { login } from "../services/user/user";
-import { sign } from "../utils/jwt";
+import { login } from "../services/user/user.mjs";
+import { sign } from "../utils/jwt.mjs";
 export async function postLogin(req, res) {
     const result = await login(req.body.username, req.body.password);
     let resData;

@@ -1,4 +1,4 @@
-import { verify } from "../utils/jwt";
+import { verify } from "../utils/jwt.mjs";
 export function verifyUser(req, res, next) {
     const token = verify(req.cookies.token);
     let resData;
