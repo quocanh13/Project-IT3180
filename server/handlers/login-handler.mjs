@@ -7,7 +7,8 @@ export async function postLogin(req, res) {
         const token = sign({ username: req.body.username }, "1h");
         res.cookie("token", token);
         resData = {
-            type: "OK"
+            type: "REDIRECT",
+            redirectURL: "/ho-khau/ho-khau.html"
         };
         res.status(200);
     }
