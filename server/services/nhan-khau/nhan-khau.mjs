@@ -1,4 +1,4 @@
-import { NhanKhau } from "../../public/utils/data-types.mjs";
+import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
 
 /**
  * Hàm lấy danh sách nhân khẩu 
@@ -11,7 +11,7 @@ import { NhanKhau } from "../../public/utils/data-types.mjs";
  */
 export async function getNhanKhauList(offset = 0, limit = 10) {
     try {
-        const nhanKhauList = await NhanKhau.find().skip(offset).limit(limit);
+        const nhanKhauList = await NhanKhauModel.find().skip(offset).limit(limit);
         return nhanKhauList;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách nhân khẩu:", error);
@@ -31,7 +31,7 @@ export async function getNhanKhauList(offset = 0, limit = 10) {
  */
 export async function getNhanKhau(cccd) {
     try {
-        const infoNhanKhau = await NhanKhau.findOne({ cccd : cccd }).exec();
+        const infoNhanKhau = await NhanKhauModel.findOne({ cccd : cccd }).exec();
         if (!infoNhanKhau) {
             return "NHÂN KHẨU KHÔNG TỒN TẠI";
         }
@@ -52,11 +52,11 @@ export async function getNhanKhau(cccd) {
  */
 export async function insertNhanKhau(nhanKhau) {
     try {
-        const existingNhanKhau = await NhanKhau.findOne({ cccd: nhanKhau.cccd }).exec();
+        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: nhanKhau.cccd }).exec();
         if (existingNhanKhau) {
             return "NHÂN KHẨU ĐÃ TỒN TẠI";
         }else{
-            const newNhanKhau = new NhanKhau(nhanKhau);
+            const newNhanKhau = new NhanKhauModel(nhanKhau);
             await newNhanKhau.save();
             return "OK";
         }
@@ -75,7 +75,7 @@ export async function insertNhanKhau(nhanKhau) {
  */
 export async function updateNhanKhau(nhanKhau) {
     try {
-        const existingNhanKhau = await NhanKhau.findOne({ cccd: nhanKhau.cccd }).exec();
+        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: nhanKhau.cccd }).exec();
         if (!existingNhanKhau) {
             return "NHÂN KHẨU KHÔNG TỒN TẠI";
         }
@@ -85,7 +85,7 @@ export async function updateNhanKhau(nhanKhau) {
                 updateFields[key] = nhanKhau[key];
             }
         }
-        await NhanKhau.updateOne({ cccd: nhanKhau.cccd }, { $set: updateFields });
+        await NhanKhauModel.updateOne({ cccd: nhanKhau.cccd }, { $set: updateFields });
         return "OK";
     } catch (error) {
         console.error("Lỗi khi cập nhật nhân khẩu:", error);
@@ -105,11 +105,11 @@ export async function updateNhanKhau(nhanKhau) {
  */
 export async function deleteNhanKhau(cccd) {
     try {
-        const existingNhanKhau = await NhanKhau.findOne({ cccd: cccd }).exec();
+        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: cccd }).exec();
         if (!existingNhanKhau) {
             return "NHÂN KHẨU KHÔNG TỒN TẠI";
         }
-        await NhanKhau.deleteOne({ cccd: cccd });
+        await NhanKhauModel.deleteOne({ cccd: cccd });
         return "OK";
     } catch (error) {
         console.error("Lỗi khi xóa nhân khẩu:", error);
