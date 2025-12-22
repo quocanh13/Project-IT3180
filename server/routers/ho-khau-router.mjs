@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau } from "../handlers/ho-khau-handler.mjs";
+import { getHoKhauList, getHoKhau, addThanhVien, deleteThanhVien, insertHoKhau, deleteHoKhau, updateHoKhau } from "../handlers/ho-khau-handler.mjs";
 const router = Router();
 router.get("/ho-khau", getHoKhauList);
 router.post("/ho-khau", insertHoKhau);
-router.get("/ho-khau/:chuHo", getHoKhau);
-router.put("/ho-khau/:chuHo", updateHoKhau);
 router.delete("/ho-khau/:chuHo", deleteHoKhau);
+router.put("/ho-khau/:chuHo", updateHoKhau);
+router.get("/ho-khau/:chuHo", getHoKhau);
+router.post("/ho-khau/:chuHo/thanh-vien/:thanhVien", addThanhVien);
+router.delete("/ho-khau/:chuHo/thanh-vien/:thanhVien", deleteThanhVien);
 export default router;

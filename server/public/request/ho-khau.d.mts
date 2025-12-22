@@ -29,3 +29,15 @@ export declare function updateHoKhau(hoKhau: HoKhau): Promise<ServerResponse>;
  * @returns
  */
 export declare function deleteHoKhau(chuHo: number): Promise<ServerResponse>;
+/**
+ * Hàm thêm thành viên vào hộ
+ * @param chuHo - Số CCCD của chủ hộ
+ * @param thanhVien - Số CCCD của thành viên
+ */
+export declare function addThanhVien(chuHo: number, thanhVien: number): Promise<ServerResponse>;
+/**
+ * Hàm xóa thành viên khỏi hộ
+ * @param chuHo - Số CCCD của chủ hộ
+ * @param thanhVien - Số CCCD của thành viên
+ */
+export declare function deleteThanhVien(chuHo: number, thanhVien: number): Promise<ServerResponse>;

@@ -4,7 +4,7 @@ import { HoKhau } from "../../public/utils/data-types.mjs";
  * Hàm lấy danh sách hộ khẩu
  * @param offset - Vị trí bắt đầu 
  * @param limit - Số lượng, nếu là -1 thì lấy toàn bộ nhân khẩu
- * @returns Trả về mảng lưu số CCCD của chủ hộ | Trả về "ERROR" nếu có lỗi
+ * @returns  Trả về danh sách hộ khẩu | Trả về "ERROR" nếu có lỗi
  */
 export function getHoKhauList(offset : number, limit : number) : Promise<number[] | "ERROR">;
 
@@ -36,8 +36,6 @@ export function insertHoKhau(hoKhau : HoKhau) : Promise<"OK" | "ERROR" | "HỘ �
  * Trả về "OK" nếu thành công
  * 
  * Trả về "ERROR" nếu có lỗi
- * 
- * Trả về "HỘ KHÔNG TỒN TẠI" nếu hộ không tồn tại
  */
 export function deleteHoKhau(chuHo : number) : Promise<"OK" | "ERROR" | "HỘ KHÔNG TỒN TẠI">;
 
@@ -48,7 +46,21 @@ export function deleteHoKhau(chuHo : number) : Promise<"OK" | "ERROR" | "HỘ KH
  * Trả về "OK" nếu thành công
  * 
  * Trả về "ERROR" nếu có lỗi
- * 
- * Trả về "HỘ KHÔNG TỒN TẠI" nếu hộ không tồn tại
  */
 export function updateHoKhau(hoKhau : HoKhau) : Promise<"OK" | "ERROR" | "HỘ KHÔNG TỒN TẠI">;
+
+/**
+ * Hàm thêm thành viên vào hộ
+ * @param chuHo - Số CCCD của chủ hộ
+ * @param cccd - Số CCCD của thành viên
+ */
+export function addThanhVien(chuHo : number, cccd : number) : 
+        Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN ĐÃ TRONG HỘ RỒI">
+
+/**
+ * Hàm xóa thành viên trong hộ
+ * @param chuHo - Số CCCD của chủ hộ
+ * @param cccd - Số CCCD của thành viên
+ */
+export function deleteThanhVien(chuHo : number, cccd : number) : 
+        Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TRONG HỘ">
