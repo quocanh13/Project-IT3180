@@ -9,13 +9,15 @@
 body {
     font-family: 'Inter', sans-serif;
     background: #0a0e27;
-    min-height: 100vh;
+    /* SỬA: Đặt chiều cao cố định bằng màn hình để căn giữa */
+    height: 100vh;
+    width: 100vw;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Căn giữa ngang */
+    align-items: center;     /* Căn giữa dọc */
     padding: 20px;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* SỬA: Ẩn thanh cuộn toàn trang */
 }
 
 .stars {
@@ -23,6 +25,7 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    z-index: 0;
 }
 
 .star {
@@ -58,22 +61,43 @@ body {
 }
 
 .login-container {
+    /* SỬA QUAN TRỌNG: Chuyển từ Fixed sang Relative để Flexbox hoạt động */
     position: relative;
+    /* Bỏ top/left/transform vì Flexbox đã căn giữa rồi */
     z-index: 10;
     width: 100%;
     max-width: 450px;
+    
+    /* Đảm bảo form không bao giờ cao hơn màn hình */
+    max-height: 95vh; 
+    /* Cho phép cuộn nhẹ bên trong form nếu màn hình quá lùn, nhưng ẩn thanh cuộn */
+    overflow-y: auto;
+    
     background: rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(20px);
     border-radius: 30px;
-    padding: 50px 40px;
+    padding: 40px; /* Giảm nhẹ padding để nội dung gọn hơn */
+    
+    /* Bỏ margin cứng để nó tự động căn giữa */
+    margin: 0; 
+    
     border: 1px solid rgba(77, 166, 255, 0.2);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    
+    /* Ẩn thanh cuộn bên trong (cho Chrome/Safari/Opera) */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Ẩn thanh cuộn bên trong (cho Chrome/Safari/Opera) */
+.login-container::-webkit-scrollbar {
+    display: none;
 }
 
 .logo-section {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px; /* Giảm nhẹ khoảng cách */
     position: relative;
 }
 
@@ -164,7 +188,7 @@ body {
 
 .logo-text h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 36px;
+    font-size: 32px; /* Giảm nhẹ size chữ tiêu đề */
     font-weight: 900;
     background: linear-gradient(135deg, #4da6ff, #80c5ff);
     -webkit-background-clip: text;
@@ -192,7 +216,7 @@ body {
     color: #80c5ff;
     font-size: 12px;
     font-weight: 500;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     letter-spacing: 1px;
 }
 
@@ -206,7 +230,7 @@ body {
 .form-subtitle {
     color: #94a3b8;
     font-size: 14px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .form-group {
@@ -353,7 +377,7 @@ button:active {
 .divider {
     display: flex;
     align-items: center;
-    margin: 30px 0;
+    margin: 20px 0; /* Giảm margin một chút */
     gap: 15px;
 }
 
@@ -392,8 +416,8 @@ button:active {
 
 .footer-badge {
     text-align: center;
-    margin-top: 30px;
-    padding-top: 20px;
+    margin-top: 20px; /* Giảm khoảng cách để gọn */
+    padding-top: 15px;
     border-top: 1px solid rgba(77, 166, 255, 0.1);
 }
 
