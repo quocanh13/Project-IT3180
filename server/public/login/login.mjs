@@ -17,7 +17,7 @@ async function loginEvent() {
     }
 
     const resData = await login(user, pass);
-    
+    console.log(resData);
     if(resData.type == "REDIRECT") {
         window.location.href = resData.redirectURL;
     }
