@@ -47,6 +47,7 @@ export async function getHoKhau(req, res) {
     res.json(resData);
 }
 export async function insertHoKhau(req, res) {
+    console.log("insertHoKhau - req.body:", req.body);
     const result = await DBInsertHoKhau(req.body);
     let resData;
     if (result == "ERROR") {
@@ -88,6 +89,13 @@ export async function updateHoKhau(req, res) {
             message: "Cập nhật hộ thành công"
         };
         res.status(200);
+    }
+    else if (result == "PHÒNG ĐÃ CÓ HỘ KHẨU") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Phòng đã có chủ"
+        };
+        res.status(400);
     }
     else {
         resData = {
