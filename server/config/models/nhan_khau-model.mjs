@@ -16,6 +16,6 @@ const nhan_khauSchema = Schema({
 });
 
 /**@type {mongoose.Model} */
-const NhanKhau = model("nhan_khau", nhan_khauSchema);
+const NhanKhauModel = model("nhan_khau", nhan_khauSchema);
 
-export default NhanKhau;
+export { NhanKhauModel };
