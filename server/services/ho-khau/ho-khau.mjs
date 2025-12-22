@@ -69,6 +69,11 @@ export async function insertHoKhau(hoKhau) {
             return "HỘ ĐÃ TỒN TẠI";
         }
 
+        const existingSoNha = await HoKhau.findOne({ soNha: hoKhau.soNha , chuHo: { $ne: hoKhau.chuHo } });
+        if(existingSoNha) {
+            return "PHÒNG ĐÃ CÓ HỘ KHẨU";
+        }
+
         const newHoKhau = new HoKhau(hoKhau);
         await newHoKhau.save();
 
@@ -122,7 +127,14 @@ export async function updateHoKhau(hoKhau) {
 
         if(hoKhau.soNha !== null && hoKhau.soNha !== undefined) {
             updateData.soNha = hoKhau.soNha;
+            
+            // Chỉ check soNha trùng nếu soNha được thay đổi
+            const existingHoKhau = await HoKhau.findOne({ soNha: hoKhau.soNha , chuHo: { $ne: hoKhau.chuHo } });
+            if(existingHoKhau) {
+                return "PHÒNG ĐÃ CÓ HỘ KHẨU";
+            }
         }
+        
         if(hoKhau.ngayDK !== null && hoKhau.ngayDK !== undefined) {
             updateData.ngayDK = hoKhau.ngayDK;
         }

@@ -90,6 +90,13 @@ export async function updateHoKhau(req, res) {
         };
         res.status(200);
     }
+    else if (result == "PHÒNG ĐÃ CÓ HỘ KHẨU") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Phòng đã có chủ"
+        };
+        res.status(400);
+    }
     else {
         resData = {
             type: "NOT FOUND",
