@@ -47,6 +47,7 @@ export async function getHoKhau(req, res) {
     res.json(resData);
 }
 export async function insertHoKhau(req, res) {
+    console.log("insertHoKhau - req.body:", req.body);
     const result = await DBInsertHoKhau(req.body);
     let resData;
     if (result == "ERROR") {

@@ -69,7 +69,8 @@ export async function insertHoKhau(hoKhau) {
             return "HỘ ĐÃ TỒN TẠI";
         }
 
-        await hoKhau.save();
+        const newHoKhau = new HoKhau(hoKhau);
+        await newHoKhau.save();
 
         return "OK";
     } catch(error) {
