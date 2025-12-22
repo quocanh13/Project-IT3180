@@ -2,15 +2,16 @@ import express from "express"
 
 import staticRouter from "./routers/static-router.mjs"
 import loginRouter from "./routers/login-router.mjs"
+import hoKhauRouter from "./routers/ho-khau-router.mjs"
 
 const server = express();
 
 server.use(express.static("./server/public"));
 server.use(express.json());
-server.use([staticRouter, loginRouter]);
+server.use([staticRouter, loginRouter, hoKhauRouter]);
 
 server.use((req, res)=>{
-    console.log(req.url);
+    console.log(req.url + " " + req.method);
 })
 
 server.listen(80, "::", ()=>{

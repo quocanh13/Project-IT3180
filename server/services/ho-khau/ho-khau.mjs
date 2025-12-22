@@ -1,4 +1,4 @@
-import { HoKhau } from "../../public/utils/data-types.mjs";
+import HoKhau from "../../config/models/ho_khau-model.mjs";
 
 /**
  * Hàm lấy danh sách hộ khẩu
@@ -8,17 +8,20 @@ import { HoKhau } from "../../public/utils/data-types.mjs";
  */
 export async function getHoKhauList(offset, limit) {
     try {
-        let query = HoKhau.find();
-        if(limit !== -1) {
+        let query = HoKhau.find().select("chuHo -_id");
+
+        if (limit !== -1) {
             query = query.skip(offset).limit(limit);
         }
+
         const hoKhauList = await query.exec();
-        return hoKhauList;
-    } catch(error) {
+        return hoKhauList.map(hk => hk.chuHo);
+    } catch (error) {
         console.error("Get HoKhau error:", error);
         return "ERROR";
     }
 }
+
 
 /**
  * Hàm lấy thông tin hộ khẩu tương ứng số CCCD của chủ hộ
@@ -31,7 +34,18 @@ export async function getHoKhauList(offset, limit) {
  * Trả về "HỘ KHẨU KHÔNG TỒN TẠI" nếu hộ khẩu không tồn tại
  */
 export async function getHoKhau(chuHo) {
+    try {
+        const hoKhau = await HoKhau.findOne({ chuHo }).exec();
 
+        if (!hoKhau) {
+            return "HỘ KHẨU KHÔNG TỒN TẠI";
+        }
+
+        return hoKhau;
+    } catch (error) {
+        console.error("Get HoKhau error:", error);
+        return "ERROR";
+    }
 }
 
 /**

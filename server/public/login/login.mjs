@@ -1,20 +1,21 @@
 import { login } from "../request/login.mjs";
-import { getHoKhauList } from "../request/ho-khau.mjs";
 
-const form = document.querySelector("form");
-const button = document.querySelector("button");
+document.addEventListener('DOMContentLoaded', function() {
+    const loginBtn = document.getElementById('loginBtn');
 
-button.addEventListener("click", async ()=>{
-    const formData = new FormData(form);
-    const username = formData.get("username");
-    const password = formData.get("password");
-
-    const resData = await login(username, password);
-
-    if(resData.type == "OK") {
-        console.log("abc");
-    } else {
-        console.log(resData.message);
-    }
+    loginBtn.addEventListener('click', loginEvent);
 });
 
+async function loginEvent() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+
+    // Kiểm tra rỗng
+    if (!user || !pass) {
+        alert("Vui lòng không để trống tên đăng nhập hoặc mật khẩu.");
+        return;
+    }
+
+    const resData = await login(user, pass);
+    console.log(resData);
+}

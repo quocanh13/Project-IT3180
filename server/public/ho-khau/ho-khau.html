@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Hộ Khẩu</title>
+    <link rel="stylesheet" href="./ho-khau.css">
+</head>
+<body>
+    <nav class="topbar">
+        <div class="logo">Hệ Thống Quản Lý</div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">Quản lý Hộ khẩu</a></li>
+            <li><a href="nhankhau.html">Quản lý Nhân khẩu</a></li>
+            <li><a href="thuchi.html">Quản lý Thu chi</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <header class="content-header">
+            <h1>Danh sách Hộ khẩu</h1>
+            <button class="btn btn-primary" onclick="openModal('add')">Thêm Hộ Khẩu Mới</button>
+        </header>
+
+        <section class="table-container">
+            <table id="hoKhauTable">
+                <thead>
+                    <tr>
+                        <th>CCCD Chủ Hộ</th>
+                        <th>Số Nhà</th>
+                        <th>Ngày Đăng Ký</th>
+                        <th>Số Thành Viên</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="hoKhauData">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <div id="hoKhauModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Thêm Hộ Khẩu</h2>
+            <form id="hoKhauForm">
+                <div class="form-group">
+                    <label>Số CCCD Chủ Hộ:</label>
+                    <input type="number" id="chuHo" required>
+                </div>
+                <div class="form-group">
+                    <label>Số Nhà:</label>
+                    <input type="text" id="soNha" required>
+                </div>
+                <div class="form-group">
+                    <label>Ngày Đăng Ký:</label>
+                    <input type="date" id="ngayDK" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="./ho-khau.mjs"></script>
+</body>
+</html>

@@ -11,4 +11,5 @@ const ho_khauSchema = Schema({
 
 /**@type {mongoose.Model} */
 const HoKhau = model("ho_khau", ho_khauSchema);
+
 export default HoKhau;
