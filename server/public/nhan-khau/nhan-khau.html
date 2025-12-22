@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Hộ Khẩu</title>
-    <link rel="stylesheet" href="./ho-khau.css">
+    <title>Quản Lý Nhân Khẩu</title>
+    <link rel="stylesheet" href="./nhan-khau.css">
 </head>
 <body>
     <nav class="topbar">
@@ -15,18 +15,18 @@
     </nav>
 
     <nav class = "sidebar">
-        <a href="#">
-            <div class="sidebar-link chosen-link ho-khau-link">
+        <a href="../ho-khau/ho-khau.html">
+            <div class="sidebar-link">
                 <img src = "../images/ho-khau.png">
-                <div class = "sidebar-text chosen-link">Quản lý</div>
-                <div class = "sidebar-text chosen-link">hộ khẩu</div>
+                <div class = "sidebar-text">Quản lý</div>
+                <div class = "sidebar-text">hộ khẩu</div>
             </div>
         </a>
-        <a href="../nhan-khau/nhan-khau.html">
-            <div class="sidebar-link">
+        <a href="#">
+            <div class="sidebar-link chosen-link">
                 <img src = "../images/nhan-khau.png">
-                <div class = "sidebar-text">Quản lý</div>
-                <div class = "sidebar-text">nhân khẩu</div>
+                <div class = "sidebar-text chosen-link">Quản lý</div>
+                <div class = "sidebar-text chosen-link">nhân khẩu</div>
             </div>
         </a>
         <a href="../thu-chi/thu-chi.html">
@@ -41,8 +41,8 @@
 
     <main class="container">
         <header class="content-header">
-            <h1>Danh sách Hộ khẩu</h1>
-            <button class="btn btn-primary" onclick="openModal('add')">Thêm Hộ Khẩu Mới</button>
+            <h1>Danh sách Nhân khẩu</h1>
+            <button class="btn btn-primary" onclick="/*openModal('add')*/">Thêm Hộ Khẩu Mới</button>
         </header>
 
         <section class="table-container">
@@ -79,13 +79,13 @@
                     <input type="date" id="ngayDK" required>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+                    <button type="button" class="btn btn-secondary" onclick="/*closeModal()*/">Hủy</button>
                     <button type="submit" class="btn btn-primary">Lưu</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script type="module" src="./ho-khau.mjs"></script>
+    <script type="module" src="./nhan-khau.mjs"></script>
 </body>
 </html>
