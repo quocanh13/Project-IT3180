@@ -14,7 +14,7 @@ export async function postLogin(req, res) {
     }
     else if (result == "TÊN ĐĂNG NHẬP KHÔNG TỒN TẠI") {
         resData = {
-            type: "BAD REQUEST",
+            type: "NOT FOUND",
             message: "Tên đăng nhập không tồn tại"
         };
         res.status(400);
