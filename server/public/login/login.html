@@ -3,24 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Đăng Nhập</title>
+    <title>Đăng Nhập - Bluemoon</title>
     <link rel="stylesheet" href="./login.css">
     <script src="./login.mjs" defer type="module"></script>
     <script src="../request/login.mjs" defer type="module"></script>
 </head>
 <body>
-
+    <div class="stars" id="stars"></div>
+    <div class="moon-bg"></div>
+    
     <div class="login-container">
-        <h2>Đăng Nhập</h2>
-        <div class="form-group">
-            <input type="text" id="username" placeholder="Tên đăng nhập">
+        <div class="logo-section">
+            <div class="logo-container">
+                <div class="orbit-ring"></div>
+                <div class="orbit-ring"></div>
+                <div class="moon-logo">
+                    <div class="moon-crater crater-1"></div>
+                    <div class="moon-crater crater-2"></div>
+                    <div class="moon-crater crater-3"></div>
+                </div>
+            </div>
+            <div class="logo-text">
+                <h1>BLUEMOON</h1>
+                <p>SMART LIVING SYSTEM</p>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="password" id="password" placeholder="Mật khẩu">
+
+        <div class="welcome-badge">🏢 Hệ thống quản lý chung cư</div>
+        
+        <h2 class="form-title">Chào mừng trở lại</h2>
+        <p class="form-subtitle">Đăng nhập để truy cập vào hệ thống</p>
+        
+        <form action="">
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <div class="input-container">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="username" placeholder="Nhập tên đăng nhập">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <div class="input-container">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu">
+                </div>
+            </div>
+            
+            <div class="options">
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Ghi nhớ đăng nhập</label>
+                </div>
+                <div class="forgot-password">
+                    <a href="#">Quên mật khẩu?</a>
+                </div>
+            </div>
+            
+            <button type="button" id="loginBtn">Đăng Nhập</button>
+            
+            <div class="divider">
+                <span>hoặc</span>
+            </div>
+            
+            <div class="register-link">
+                Chưa có tài khoản? <a href="#">Đăng ký cư dân mới</a>
+            </div>
+        </form>
+
+        <div class="footer-badge">
+            <p>POWERED BY TEAM 36</p>
         </div>
-        <button id="loginBtn">Đăng nhập</button>
     </div>
 
-
+    <script>
+        // Tạo hiệu ứng sao
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+    </script>
 </body>
 </html>
