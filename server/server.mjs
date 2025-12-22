@@ -8,11 +8,13 @@ const server = express();
 
 server.use(express.static("./server/public"));
 server.use(express.json());
-server.use([staticRouter, loginRouter, hoKhauRouter]);
 
-server.use((req, res)=>{
+server.use((req, res, next)=>{
     console.log(req.url + " " + req.method);
+    next();
 })
+
+server.use([staticRouter, loginRouter, hoKhauRouter]);
 
 server.listen(80, "::", ()=>{
     console.log("Server is listening");

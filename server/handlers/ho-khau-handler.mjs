@@ -22,8 +22,6 @@ export async function getHoKhauList(req, res) {
 }
 export async function getHoKhau(req, res) {
     let resData;
-    const offset = Number(req.query.offset) || 0;
-    const limit = Number(req.query.limit) || 10;
     const data = await DBGetHoKhau(Number(req.params.chuHo));
     if (data == "ERROR") {
         resData = {

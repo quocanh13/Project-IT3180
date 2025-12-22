@@ -5,7 +5,7 @@
  * @returns - Nếu thành công thì data là mảng lưu số cccd của chủ hộ
  */
 export async function getHoKhauList(offset = 0, limit = 20) {
-    const res = await fetch(`/ho_khau?offset=${offset}&limit=${limit}`, {
+    const res = await fetch(`/ho-khau?offset=${offset}&limit=${limit}`, {
         method: "GET"
     });
     return await res.json();
@@ -26,7 +26,7 @@ export async function getHoKhau(chuHo) {
  * @param hoKhau - Thông tin về hộ khẩu cần thêm
  */
 export async function insertHoKhau(hoKhau) {
-    const res = await fetch(`/ho_khau`, {
+    const res = await fetch(`/ho-khau`, {
         method: "POST",
         body: JSON.stringify(hoKhau),
         headers: {
@@ -41,7 +41,7 @@ export async function insertHoKhau(hoKhau) {
  * @returns
  */
 export async function updateHoKhau(hoKhau) {
-    const res = await fetch(`/ho_khau/${hoKhau.chuHo}`, {
+    const res = await fetch(`/ho-khau/${hoKhau.chuHo}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -56,7 +56,7 @@ export async function updateHoKhau(hoKhau) {
  * @returns
  */
 export async function deleteHoKhau(chuHo) {
-    const res = await fetch(`/ho_khau/${chuHo}`, {
+    const res = await fetch(`/ho-khau/${chuHo}`, {
         method: "DELETE"
     });
     return await res.json();
