@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 export declare class ServerResponse<Data = any> {
     /**
      * Kiểu của phản hồi
@@ -54,4 +55,17 @@ export declare class HoKhau {
     thanhVien?: number[];
     soNha?: string;
     ngayDK?: Date;
+}
+export declare class KhoanThu {
+    id: mongoose.Types.ObjectId;
+    ten: string;
+    soTien: number;
+    moTa?: string;
+    hanNop?: Date;
+    ngayNop?: Date;
+}
+export declare class DsKhoanThu {
+    /**Số CCCD của chủ hộ */
+    chuHo: number;
+    khoanThu: mongoose.Types.ObjectId[];
 }
