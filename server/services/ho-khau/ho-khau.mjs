@@ -143,4 +143,14 @@ export async function updateHoKhau(hoKhau) {
 export function addThanhVien(chuHo, cccd) {
 
 }
+
+/**
+ * Hàm xóa thành viên khỏi hộ
+ * @param {number} chuHo - Số CCCD của chủ hộ
+ * @param {number} cccd - Số CCCD của thành viên
+ * @returns {Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TRONG HỘ">}
+ */
+export function deleteThanhVien(chuHo, cccd) {
+
+}
         
