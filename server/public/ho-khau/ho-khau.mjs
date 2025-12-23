@@ -130,7 +130,6 @@ window.addThanhVien = async function(chuHo) {
     const cccd = prompt('Nhập số CCCD thành viên:');
     if (cccd) {
         const res = await addThanhVien(chuHo, cccd);
-        console.log(res);
         if (res.type === "OK") {
             createToast('Thêm thành viên thành công', false);
             loadHoKhauList();

@@ -132,7 +132,6 @@ export async function deleteHoKhau(req, res) {
             res.status(404);
         }
     }
-    console.log(resData)
     res.json(resData);
 }
 export async function addThanhVien(req, res) {
@@ -174,6 +173,7 @@ export async function addThanhVien(req, res) {
         };
         res.status(500);
     }
+    res.json(resData);
 }
 export async function deleteThanhVien(req, res) {
     let resData;
@@ -214,4 +214,5 @@ export async function deleteThanhVien(req, res) {
         };
         res.status(500);
     }
+    res.json(resData);
 }
