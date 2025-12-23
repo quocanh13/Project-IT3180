@@ -1,5 +1,8 @@
+import {getNhanKhau} from "../request/nhan-khau.mjs"
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
+import { HoKhau } from "../utils/data-types.mjs";
 import createToast from "../utils/toast/toast.mjs";
+import createHoKhauDetail from "./ho-khau-detail.mjs"
 
 let currentMode = 'add';
 
@@ -36,15 +39,22 @@ async function loadHoKhauList() {
 function renderRow(hoKhau) {
     const tbody = document.getElementById('hoKhauData');
     const row = document.createElement('tr');
+    row.className = "member-row"
+    row.addEventListener("click", async ()=>{
+        const _hoKhau = await getHoKhauInformation(hoKhau)
+        if(_hoKhau != null) {
+            createHoKhauDetail(_hoKhau)
+        }
+    });
     row.innerHTML = `
         <td>${hoKhau.chuHo}</td>
         <td>${hoKhau.soNha}</td>
         <td>${new Date(hoKhau.ngayDK).toLocaleDateString('vi-VN')}</td>
         <td>${hoKhau.thanhVien ? hoKhau.thanhVien.length : 0}</td>
         <td>
-            <button class="btn btn-primary" onclick="editHoKhau('${hoKhau.chuHo}')">Sửa</button>
-            <button class="btn btn-danger" onclick="removeHoKhau('${hoKhau.chuHo}')">Xóa</button>
-            <button class="btn btn-success" onclick="window.addThanhVien('${hoKhau.chuHo}')">Thêm thành viên</button>
+            <button class="btn btn-primary" onclick="editHoKhau('${hoKhau.chuHo}'); event.stopPropagation();">Sửa</button>
+            <button class="btn btn-danger" onclick="removeHoKhau('${hoKhau.chuHo}'); event.stopPropagation();">Xóa</button>
+            <button class="btn btn-success" onclick="window.addThanhVien('${hoKhau.chuHo}'); event.stopPropagation();">Thêm thành viên</button>
         </td>
     `;
     tbody.appendChild(row);
@@ -60,7 +70,6 @@ async function handleFormSubmit(e) {
         ngayDK: new Date(document.getElementById('ngayDK').value),
         thanhVien: [] // Mặc định khi thêm mới chưa có thành viên
     };
-
     let res;
     if (currentMode === 'add') {
         res = await insertHoKhau(hoKhauObj);
@@ -137,4 +146,29 @@ window.addThanhVien = async function(chuHo) {
             createToast(res.message);
         }
     }
+}
+
+/**
+ * @param {HoKhau} hoKhau 
+ */
+async function getHoKhauInformation(_hoKhau) {
+    const hoKhau = Object.create(_hoKhau)
+    const chuHo = await getNhanKhau(hoKhau.chuHo)
+    if(chuHo.type == "OK") {
+        hoKhau.chuHo = chuHo.data
+    } else {
+        createToast(chuHo.message)
+        return null
+    }
+
+    for(let i = 0; i < hoKhau.thanhVien.length; i++) {
+        const thanhVien = await getNhanKhau(hoKhau.thanhVien[i])
+        if(thanhVien.type == "OK") {
+            hoKhau.thanhVien[i] = thanhVien.data
+        } else {
+            createToast(thanhVien.message)
+            return null
+        }
+    }
+    return hoKhau;   
 }
