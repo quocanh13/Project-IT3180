@@ -24,7 +24,7 @@ export async function getNhanKhauList(req, res) {
 
 export async function getNhanKhau(req, res) {
     let resData;
-    const data = await DBGetNhanKhau(Number(req.params.cccd));
+    const data = await DBGetNhanKhau(req.params.cccd);
     if (data == "ERROR") {
         resData = {
             type: "ERROR",
@@ -51,9 +51,6 @@ export async function getNhanKhau(req, res) {
 
 export async function insertNhanKhau(req, res) {
     const nhanKhauData = req.body;
-    if (nhanKhauData.cccd) {
-        nhanKhauData.cccd = Number(nhanKhauData.cccd);
-    }
     const result = await DBInsertNhanKhau(nhanKhauData);
     let resData;
     if (result == "ERROR") {
@@ -82,9 +79,6 @@ export async function insertNhanKhau(req, res) {
 
 export async function updateNhanKhau(req, res) {
     const nhanKhauData = req.body;
-    if (nhanKhauData.cccd) {
-        nhanKhauData.cccd = Number(nhanKhauData.cccd);
-    }
     const result = await DBUpdateNhanKhau(nhanKhauData);
     let resData;
     if (result == "ERROR") {
@@ -112,7 +106,7 @@ export async function updateNhanKhau(req, res) {
 }
 
 export async function deleteNhanKhau(req, res) {
-    const result = await DBDeleteNhanKhau(Number(req.params.cccd));
+    const result = await DBDeleteNhanKhau(req.params.cccd);
     let resData;
     if (result == "ERROR") {
         resData = {

@@ -22,7 +22,7 @@ export async function getHoKhauList(req, res) {
 }
 export async function getHoKhau(req, res) {
     let resData;
-    const data = await DBGetHoKhau(Number(req.params.chuHo));
+    const data = await DBGetHoKhau(req.params.chuHo);
     if (data == "ERROR") {
         resData = {
             type: "ERROR",
@@ -47,6 +47,15 @@ export async function getHoKhau(req, res) {
     res.json(resData);
 }
 export async function insertHoKhau(req, res) {
+    // Đảm bảo chuHo là String
+    if (req.body.chuHo) {
+        req.body.chuHo = String(req.body.chuHo);
+    }
+    // Đảm bảo soNha là Number
+    if (req.body.soNha) {
+        req.body.soNha = Number(req.body.soNha);
+    }
+    
     const result = await DBInsertHoKhau(req.body);
     let resData;
     if (result == "ERROR") {
@@ -73,6 +82,15 @@ export async function insertHoKhau(req, res) {
     res.json(resData);
 }
 export async function updateHoKhau(req, res) {
+    // Đảm bảo chuHo là String
+    if (req.body.chuHo) {
+        req.body.chuHo = String(req.body.chuHo);
+    }
+    // Đảm bảo soNha là Number
+    if (req.body.soNha) {
+        req.body.soNha = Number(req.body.soNha);
+    }
+    
     const result = await DBUpdateHoKhau(req.body);
     let resData;
     if (result == "ERROR") {
@@ -100,8 +118,8 @@ export async function updateHoKhau(req, res) {
 }
 export async function deleteHoKhau(req, res) {
     let resData;
-    const chuHo = Number(req.params.chuHo);
-    if (chuHo <= 0 || Number.isNaN(chuHo)) {
+    const chuHo = req.params.chuHo;
+    if (!chuHo || chuHo.trim() === '') {
         resData = {
             type: "BAD REQUEST",
             message: "Số CCCD của chủ hộ không hợp lệ"
@@ -136,7 +154,7 @@ export async function deleteHoKhau(req, res) {
 }
 export async function addThanhVien(req, res) {
     let resData;
-    const chuHo = Number(req.params.chuHo), thanhVien = Number(req.params.thanhVien);
+    const chuHo = req.params.chuHo, thanhVien = req.params.thanhVien;
     const result = await DBAddThanhVien(chuHo, thanhVien);
     if (result == "OK") {
         resData = {
@@ -177,7 +195,7 @@ export async function addThanhVien(req, res) {
 }
 export async function deleteThanhVien(req, res) {
     let resData;
-    const chuHo = Number(req.params.chuHo), thanhVien = Number(req.params.thanhVien);
+    const chuHo = req.params.chuHo, thanhVien = req.params.thanhVien;
     const result = await DBDeleteThanhVien(chuHo, thanhVien);
     if (result == "OK") {
         resData = {

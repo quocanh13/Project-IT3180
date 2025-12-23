@@ -1,6 +1,6 @@
 import {getNhanKhau} from "../request/nhan-khau.mjs"
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
-import { HoKhau } from "../utils/data-types.mjs";
+import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
 import createHoKhauDetail from "./ho-khau-detail.mjs"
 
@@ -28,7 +28,10 @@ async function loadHoKhauList() {
         for (const cccd of listCCCD) {
             const detailRes = await getHoKhau(cccd);
             if (detailRes.type === "OK") {
-                renderRow(detailRes.data);
+                // Lấy tên chủ hộ
+                const chuHoRes = await getNhanKhau(cccd);
+                const tenChuHo = chuHoRes.type === "OK" ? chuHoRes.data.hoTen : "Không xác định";
+                renderRow(detailRes.data, tenChuHo);
             }
         }
     } else {
@@ -36,7 +39,7 @@ async function loadHoKhauList() {
     }
 }
 
-function renderRow(hoKhau) {
+function renderRow(hoKhau, tenChuHo) {
     const tbody = document.getElementById('hoKhauData');
     const row = document.createElement('tr');
     row.className = "member-row"
@@ -47,6 +50,7 @@ function renderRow(hoKhau) {
         }
     });
     row.innerHTML = `
+        <td>${tenChuHo}</td>
         <td>${hoKhau.chuHo}</td>
         <td>${hoKhau.soNha}</td>
         <td>${new Date(hoKhau.ngayDK).toLocaleDateString('vi-VN')}</td>
@@ -88,18 +92,26 @@ async function handleFormSubmit(e) {
 
 // 3. Xóa
 window.removeHoKhau = async function(cccd) {
-    if (confirm(`Bạn có chắc muốn xóa hộ khẩu chủ hộ: ${cccd}?`)) {
-        const res = await deleteHoKhau(Number(cccd));
+    if (confirm(`Bạn có chắc muốn xóa hộ khẩu chủ hộ: ${cccd}?`)) { 
+        const hoKhauRes = await getHoKhau(cccd);
+        if (hoKhauRes.type !== "OK") {
+            createToast("Hộ khẩu không tồn tại");
+        } else if (hoKhauRes.data.thanhVien) {
+            hoKhauRes.data.thanhVien.forEach(async (memberCCCD) => {
+                await deleteNhanKhau(memberCCCD);
+            });
+        }
+        const res = await deleteHoKhau(cccd);
         if (res.type === "OK") {
             loadHoKhauList();
         } else {
-            
+            loadHoKhauList();
         }
     }
 }
 
 // 4. Quản lý Modal
-window.openModal = function(mode, cccd = null) {
+window.openModal = async function(mode, cccd = null) {
     currentMode = mode;
     const modal = document.getElementById('hoKhauModal');
     const title = document.getElementById('modalTitle');
@@ -107,6 +119,9 @@ window.openModal = function(mode, cccd = null) {
     
     modal.style.display = 'flex';
     document.getElementById('hoKhauForm').reset();
+    
+    // Load danh sách nhân khẩu vào dropdown
+    await loadNhanKhauToDropdown();
 
     if (mode === 'edit') {
         title.innerText = "Chỉnh sửa Hộ Khẩu";
@@ -119,7 +134,7 @@ window.openModal = function(mode, cccd = null) {
 }
 
 async function fetchDetailToForm(cccd) {
-    const res = await getHoKhau(Number(cccd));
+    const res = await getHoKhau(cccd);
     if (res.type === "OK") {
         document.getElementById('chuHo').value = res.data.chuHo;
         document.getElementById('soNha').value = res.data.soNha;
@@ -133,6 +148,45 @@ window.closeModal = function() {
 
 window.editHoKhau = function(cccd) {
     openModal('edit', cccd);
+}
+
+// Load danh sách nhân khẩu vào dropdown
+async function loadNhanKhauToDropdown() {
+    const chuHoSelect = document.getElementById('chuHo');
+    chuHoSelect.innerHTML = '<option value="" disabled selected>Chọn Chủ Hộ</option>';
+    
+    try {
+        const response = await getNhanKhauList(0, -1);
+        console.log('Response from getNhanKhauList:', response);
+        
+        if (response.type === "OK") {
+            const listNhanKhau = response.data; // Đây là array of full objects, không phải array of CCCD
+            console.log('Danh sách nhân khẩu:', listNhanKhau);
+            
+            if (!listNhanKhau || listNhanKhau.length === 0) {
+                chuHoSelect.innerHTML += '<option value="" disabled>Chưa có nhân khẩu nào</option>';
+                createToast('Vui lòng thêm nhân khẩu trước khi tạo hộ khẩu', true);
+                return;
+            }
+            
+            // Duyệt qua từng nhân khẩu và thêm vào dropdown
+            for (const nhanKhau of listNhanKhau) {
+                const option = document.createElement('option');
+                option.value = nhanKhau.cccd;
+                option.textContent = `${nhanKhau.hoTen} - ${nhanKhau.cccd}`;
+                chuHoSelect.appendChild(option);
+            }
+            console.log('Đã load xong dropdown');
+        } else {
+            console.error('Lỗi khi lấy danh sách:', response);
+            createToast(response.message || 'Không thể tải danh sách nhân khẩu');
+            chuHoSelect.innerHTML += '<option value="" disabled>Lỗi tải dữ liệu</option>';
+        }
+    } catch (error) {
+        console.error('Exception khi load nhân khẩu:', error);
+        createToast('Lỗi khi tải danh sách nhân khẩu');
+        chuHoSelect.innerHTML += '<option value="" disabled>Lỗi tải dữ liệu</option>';
+    }
 }
 
 window.addThanhVien = async function(chuHo) {
