@@ -11,7 +11,7 @@ const nhan_khauSchema = Schema({
     quocTich : {type : String, required : true},
     queQuan : {type : String, required : true},
     noiSinh : {type : String, required : true},
-    hoKhau : {type : String},
+    hoKhau : {type : mongoose.Schema.Types.ObjectId, ref : "ho_khau", default : null},
     quanHeVoiChuHo : {type : String}
 });
 

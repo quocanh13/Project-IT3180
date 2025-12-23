@@ -4,7 +4,6 @@ const { Schema, model } = mongoose;
 
 const ho_khauSchema = Schema({
     chuHo : {type : String, required : true, unique : true},
-    thanhVien : {type : [String]},
     soNha : {type : Number,unique : true},
     ngayDK : {type : Date}
 });

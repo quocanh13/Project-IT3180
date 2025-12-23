@@ -18,10 +18,15 @@ async function renderRow(nhanKhau) {
 
     let tenChuHo = '-';
     if (nhanKhau.hoKhau) {
-        const resChuHo = await getNhanKhau(nhanKhau.hoKhau);
-        if (resChuHo && resChuHo.type === "OK" && resChuHo.data) {
-            tenChuHo = resChuHo.data.hoTen;
+        // nhanKhau.hoKhau là ObjectId, hoặc là object đã populate
+        if (typeof nhanKhau.hoKhau === 'object' && nhanKhau.hoKhau.chuHo) {
+            // Đã populate, lấy chuHo rồi lấy tên
+            const resChuHo = await getNhanKhau(nhanKhau.hoKhau.chuHo);
+            if (resChuHo && resChuHo.type === "OK" && resChuHo.data) {
+                tenChuHo = resChuHo.data.hoTen;
+            }
         }
+        // Nếu chưa populate thì hiển thị ID
     }
 
     row.innerHTML = `

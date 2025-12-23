@@ -15,8 +15,8 @@ export async function getHoKhauList(offset = 0, limit = 20) {
  * @param chuHo - Số CCCD của chủ hộ
  * @returns - Thông tin về hộ
  */
-export async function getHoKhau(chuHo) {
-    const res = await fetch(`/ho-khau/${chuHo}`, {
+export async function getHoKhau(_id) {
+    const res = await fetch(`/ho-khau/${_id}`, {
         method: "GET",
     });
     return await res.json();
@@ -41,7 +41,7 @@ export async function insertHoKhau(hoKhau) {
  * @returns
  */
 export async function updateHoKhau(hoKhau) {
-    const res = await fetch(`/ho-khau/${hoKhau.chuHo}`, {
+    const res = await fetch(`/ho-khau/${hoKhau._id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -52,33 +52,33 @@ export async function updateHoKhau(hoKhau) {
 }
 /**
  * Request để xóa hộ khẩu
- * @param chuHo - Số CCCD của chủ hộ
+ * @param _id - ID của hộ khẩu
  * @returns
  */
-export async function deleteHoKhau(chuHo) {
-    const res = await fetch(`/ho-khau/${chuHo}`, {
+export async function deleteHoKhau(_id) {
+    const res = await fetch(`/ho-khau/${_id}`, {
         method: "DELETE"
     });
     return await res.json();
 }
 /**
  * Hàm thêm thành viên vào hộ
- * @param chuHo - Số CCCD của chủ hộ
+ * @param _id - ID của hộ khẩu
  * @param thanhVien - Số CCCD của thành viên
  */
-export async function addThanhVien(chuHo, thanhVien) {
-    const res = await fetch(`/ho-khau/${chuHo}/thanh-vien/${thanhVien}`, {
+export async function addThanhVien(_id, thanhVien) {
+    const res = await fetch(`/ho-khau/${_id}/thanh-vien/${thanhVien}`, {
         method: "POST"
     });
     return await res.json();
 }
 /**
  * Hàm xóa thành viên khỏi hộ
- * @param chuHo - Số CCCD của chủ hộ
+ * @param _id - ID của hộ khẩu
  * @param thanhVien - Số CCCD của thành viên
  */
-export async function deleteThanhVien(chuHo, thanhVien) {
-    const res = await fetch(`/ho-khau/${chuHo}/thanh-vien/${thanhVien}`, {
+export async function deleteThanhVien(_id, thanhVien) {
+    const res = await fetch(`/ho-khau/${_id}/thanh-vien/${thanhVien}`, {
         method: "DELETE"
     });
     return await res.json();

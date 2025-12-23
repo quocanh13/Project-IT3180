@@ -9,14 +9,14 @@ import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
  */
 export async function getHoKhauList(offset, limit) {
     try {
-        let query = HoKhau.find().select("chuHo -_id");
+        let query = HoKhau.find().select('_id');
 
         if (limit !== -1) {
             query = query.skip(offset).limit(limit);
         }
 
         const hoKhauList = await query.exec();
-        return hoKhauList.map(hk => hk.chuHo);
+        return hoKhauList.map(hk => hk._id);
     } catch (error) {
         console.error("Get HoKhau error:", error);
         return "ERROR";
@@ -34,15 +34,22 @@ export async function getHoKhauList(offset, limit) {
  * 
  * Trả về "HỘ KHẨU KHÔNG TỒN TẠI" nếu hộ khẩu không tồn tại
  */
-export async function getHoKhau(chuHo) {
+export async function getHoKhau(_id) {
     try {
-        const hoKhau = await HoKhau.findOne({ chuHo }).exec();
+        const hoKhau = await HoKhau.findOne({ _id }).exec();
 
         if (!hoKhau) {
             return "HỘ KHẨU KHÔNG TỒN TẠI";
         }
+        
+        // Đếm số thành viên từ collection nhan_khau
+        const thanhVienCount = await NhanKhauModel.countDocuments({ hoKhau: _id });
+        
+        // Chuyển sang plain object để thêm field
+        const hoKhauObj = hoKhau.toObject();
+        hoKhauObj.numMembers = thanhVienCount;
 
-        return hoKhau;
+        return hoKhauObj;
     } catch (error) {
         console.error("Get HoKhau error:", error);
         return "ERROR";
@@ -76,10 +83,10 @@ export async function insertHoKhau(hoKhau) {
         }
 
         const newHoKhau = new HoKhau(hoKhau);
-        newHoKhau.thanhVien = [hoKhau.chuHo]; 
         await newHoKhau.save();
 
-        await NhanKhauModel.updateOne({ cccd: hoKhau.chuHo }, { hoKhau: hoKhau.chuHo, quanHeVoiChuHo: "Chủ Hộ" });
+        // Cập nhật nhân khẩu với _id của hộ khẩu (không phải chuHo CCCD)
+        await NhanKhauModel.updateOne({ cccd: hoKhau.chuHo }, { hoKhau: newHoKhau._id, quanHeVoiChuHo: "Chủ Hộ" });
 
         return "OK";
     } catch(error) {
@@ -96,9 +103,9 @@ export async function insertHoKhau(hoKhau) {
  * 
  * Trả về "ERROR" nếu có lỗi
  */
-export async function deleteHoKhau(chuHo) {
+export async function deleteHoKhau(_id) {
     try {
-        const result = await HoKhau.deleteOne({ chuHo: chuHo });    
+        const result = await HoKhau.deleteOne({ _id: _id });    
         if(result.deletedCount === 1) {
             return "OK";
         } else {
@@ -125,15 +132,15 @@ export async function updateHoKhau(hoKhau) {
         }   
         const updateData = {};
 
-        if(hoKhau.thanhVien !== null && hoKhau.thanhVien !== undefined) {
-            updateData.thanhVien = hoKhau.thanhVien;
+        if(hoKhau.chuHo !== null && hoKhau.chuHo !== undefined) {
+            updateData.chuHo = hoKhau.chuHo;
         }
 
         if(hoKhau.soNha !== null && hoKhau.soNha !== undefined) {
             updateData.soNha = hoKhau.soNha;
             
             // Chỉ check soNha trùng nếu soNha được thay đổi
-            const existingHoKhau = await HoKhau.findOne({ soNha: hoKhau.soNha , chuHo: { $ne: hoKhau.chuHo } });
+            const existingHoKhau = await HoKhau.findOne({ soNha: hoKhau.soNha , _id: { $ne: hoKhau._id } });
             if(existingHoKhau) {
                 return "PHÒNG ĐÃ CÓ HỘ KHẨU";
             }
@@ -143,7 +150,7 @@ export async function updateHoKhau(hoKhau) {
             updateData.ngayDK = hoKhau.ngayDK;
         }
 
-        await HoKhau.updateOne({ chuHo: hoKhau.chuHo }, updateData);
+        await HoKhau.updateOne({ _id: hoKhau._id }, updateData);
         return "OK";
     } catch(error) {
         console.error("Update error:", error);
@@ -153,23 +160,23 @@ export async function updateHoKhau(hoKhau) {
 
 /**
  * Hàm thêm thành viên vào hộ
- * @param {number} chuHo - Số CCCD của chủ hộ
+ * @param {string} _id - ID của hộ khẩu
  * @param {number} cccd - Số CCCD của thành viên
  * @returns {Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN ĐÃ TRONG HỘ RỒI">}
  */
-export async function addThanhVien(chuHo, cccd) {
+export async function addThanhVien(_id, cccd) {
     try {
-        const existingHoKhau = await HoKhau.findOne({ chuHo: chuHo });
+        const existingHoKhau = await HoKhau.findOne({ _id: _id });
         if(!existingHoKhau) {
             return "CHỦ HỘ KHÔNG TỒN TẠI";
         }
 
-        const existingThanhVien = await HoKhau.findOne({ thanhVien: cccd });
+        const existingThanhVien = await NhanKhauModel.findOne({ cccd: cccd, hoKhau: _id });
         if(existingThanhVien) {
             return "THÀNH VIÊN ĐÃ TRONG HỘ RỒI";
         }
 
-        await HoKhau.updateOne({ chuHo: chuHo }, { $push: { thanhVien: cccd } });
+        await NhanKhauModel.updateOne({ cccd: cccd }, { hoKhau: _id });
         return "OK";
     } catch (error) {
         console.error("Add ThanhVien error:", error);
@@ -179,21 +186,21 @@ export async function addThanhVien(chuHo, cccd) {
 
 /**
  * Hàm xóa thành viên khỏi hộ
- * @param {number} chuHo - Số CCCD của chủ hộ
+ * @param {string} _id - ID của hộ khẩu
  * @param {number} cccd - Số CCCD của thành viên
  * @returns {Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TRONG HỘ">}
  */
-export async function deleteThanhVien(chuHo, cccd) {
+export async function deleteThanhVien(_id, cccd) {
     try {
-        const existingHoKhau = await HoKhau.findOne({ chuHo: chuHo });
+        const existingHoKhau = await HoKhau.findOne({ _id: _id });
         if(!existingHoKhau) {
             return "CHỦ HỘ KHÔNG TỒN TẠI";
         }   
-        const existingThanhVien = await HoKhau.findOne({ chuHo: chuHo, thanhVien: cccd });
+        const existingThanhVien = await NhanKhauModel.findOne({ cccd: cccd, hoKhau: _id });
         if(!existingThanhVien) {
             return "THÀNH VIÊN KHÔNG TRONG HỘ";
         }
-        await HoKhau.updateOne({ chuHo: chuHo }, { $pull: { thanhVien: cccd } });
+        await NhanKhauModel.updateOne({ cccd: cccd }, { $unset: { hoKhau: "" } });
         return "OK";
     } catch (error) {
         console.error("Delete ThanhVien error:", error);

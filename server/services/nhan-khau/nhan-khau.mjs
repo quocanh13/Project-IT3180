@@ -13,10 +13,10 @@ import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
 export async function getNhanKhauList(offset = 0, limit = 10) {
     try {
         if(limit === -1) {
-            const nhanKhauList = await NhanKhauModel.find();
+            const nhanKhauList = await NhanKhauModel.find().populate('hoKhau');
             return nhanKhauList;
         }
-        const nhanKhauList = await NhanKhauModel.find().skip(offset).limit(limit);
+        const nhanKhauList = await NhanKhauModel.find().skip(offset).limit(limit).populate('hoKhau');
         return nhanKhauList;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách nhân khẩu:", error);

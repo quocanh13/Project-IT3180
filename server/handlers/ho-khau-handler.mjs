@@ -22,7 +22,7 @@ export async function getHoKhauList(req, res) {
 }
 export async function getHoKhau(req, res) {
     let resData;
-    const data = await DBGetHoKhau(req.params.chuHo);
+    const data = await DBGetHoKhau(req.params._id);
     if (data == "ERROR") {
         resData = {
             type: "ERROR",
@@ -118,16 +118,16 @@ export async function updateHoKhau(req, res) {
 }
 export async function deleteHoKhau(req, res) {
     let resData;
-    const chuHo = req.params.chuHo;
-    if (!chuHo || chuHo.trim() === '') {
+    const _id = req.params._id;
+    if (!_id) {
         resData = {
             type: "BAD REQUEST",
-            message: "Số CCCD của chủ hộ không hợp lệ"
+            message: "Hộ không tồn tại"
         };
         res.status(400);
     }
     else {
-        const result = await DBDeleteHoKhau(chuHo);
+        const result = await DBDeleteHoKhau(_id);
         if (result == "ERROR") {
             resData = {
                 type: "ERROR",
@@ -154,8 +154,8 @@ export async function deleteHoKhau(req, res) {
 }
 export async function addThanhVien(req, res) {
     let resData;
-    const chuHo = req.params.chuHo, thanhVien = req.params.thanhVien;
-    const result = await DBAddThanhVien(chuHo, thanhVien);
+    const _id = req.params._id, thanhVien = req.params.thanhVien;
+    const result = await DBAddThanhVien(_id, thanhVien);
     if (result == "OK") {
         resData = {
             type: "OK",
@@ -195,8 +195,8 @@ export async function addThanhVien(req, res) {
 }
 export async function deleteThanhVien(req, res) {
     let resData;
-    const chuHo = req.params.chuHo, thanhVien = req.params.thanhVien;
-    const result = await DBDeleteThanhVien(chuHo, thanhVien);
+    const _id = req.params._id, thanhVien = req.params.thanhVien;
+    const result = await DBDeleteThanhVien(_id, thanhVien);
     if (result == "OK") {
         resData = {
             type: "OK",

@@ -3,9 +3,9 @@ import { getHoKhauList, getHoKhau, addThanhVien, deleteThanhVien, insertHoKhau, 
 const router = Router();
 router.get("/ho-khau", getHoKhauList);
 router.post("/ho-khau", insertHoKhau);
-router.delete("/ho-khau/:chuHo", deleteHoKhau);
-router.put("/ho-khau/:chuHo", updateHoKhau);
-router.get("/ho-khau/:chuHo", getHoKhau);
-router.post("/ho-khau/:chuHo/thanh-vien/:thanhVien", addThanhVien);
-router.delete("/ho-khau/:chuHo/thanh-vien/:thanhVien", deleteThanhVien);
+router.delete("/ho-khau/:_id", deleteHoKhau);
+router.put("/ho-khau/:_id", updateHoKhau);
+router.get("/ho-khau/:_id", getHoKhau);
+router.post("/ho-khau/:_id/thanh-vien/:thanhVien", addThanhVien);
+router.delete("/ho-khau/:_id/thanh-vien/:thanhVien", deleteThanhVien);
 export default router;
