@@ -80,7 +80,7 @@ async function fetchDetailToForm(cccd) {
         document.getElementById('cccd').value = res.data.cccd;
         document.getElementById('hoTen').value = res.data.hoTen;
         document.getElementById('ngaySinh').value = new Date(res.data.ngaySinh).toISOString().split('T')[0];
-        document.getElementById('gioiTinh').value = res.data.gioiTinh;
+        document.getElementById('gioiTinh').value = res.data.gioiTinh ? "1" : "0";
         document.getElementById('quocTich').value = res.data.quocTich;
         document.getElementById('danToc').value = res.data.danToc;
         document.getElementById('queQuan').value = res.data.queQuan;

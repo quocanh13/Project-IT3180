@@ -29,7 +29,10 @@ export async function getNhanKhauList(offset = 0, limit = 10) {
 export async function insertNhanKhau(nhanKhau) {
     const res = await fetch(`/nhan-khau`, {
         method: "POST",
-        body: JSON.stringify(nhanKhau)
+        body: JSON.stringify(nhanKhau),
+        headers: {
+            "content-type": "application/json"
+        }
     });
     return await res.json();
 }
@@ -39,9 +42,12 @@ export async function insertNhanKhau(nhanKhau) {
  * @returns
  */
 export async function updateNhanKhau(nhanKhau) {
-    const res = await fetch(`/nhan-khau`, {
+    const res = await fetch(`/nhan-khau/${nhanKhau.cccd}`, {
         method: "PUT",
-        body: JSON.stringify(nhanKhau)
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(nhanKhau),
     });
     return await res.json();
 }
