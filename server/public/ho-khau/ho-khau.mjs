@@ -1,4 +1,5 @@
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau } from "../request/ho-khau.mjs";
+import createToast from "../utils/toast/toast.mjs";
 
 let currentMode = 'add';
 
@@ -28,7 +29,7 @@ async function loadHoKhauList() {
             }
         }
     } else {
-        alert("Lỗi: " + response.message);
+        createToast(response.message);
     }
 }
 
@@ -74,11 +75,11 @@ async function handleFormSubmit(e) {
     console.log("Phản hồi từ server:", res);
 
     if (res.type === "OK") {
-        alert("Thành công!");
+        createToast(res.message, false)
         closeModal();
         loadHoKhauList();
     } else {
-        alert("Thất bại: " + res.message);
+        createToast(res.message);
     }
 }
 
@@ -89,7 +90,7 @@ window.removeHoKhau = async function(cccd) {
         if (res.type === "OK") {
             loadHoKhauList();
         } else {
-            alert(res.message);
+            
         }
     }
 }
