@@ -50,7 +50,6 @@ export async function getNhanKhau(req, res) {
 }
 
 export async function insertNhanKhau(req, res) {
-    console.log("123");
     const nhanKhauData = req.body;
     if (nhanKhauData.cccd) {
         nhanKhauData.cccd = Number(nhanKhauData.cccd);
