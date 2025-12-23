@@ -121,6 +121,10 @@ table {
     border-collapse: collapse;
 }
 
+.member-row {
+    cursor: pointer;
+}
+
 th, td {
     padding: 15px;
     text-align: left;

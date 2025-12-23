@@ -61,24 +61,31 @@ async function handleFormSubmit(e) {
     
     const hoKhauObj = {
         chuHo: document.getElementById('chuHo').value,
-        soNha: document.getElementById('soNha').value,
+        soNha: Number(document.getElementById('soNha').value),
         ngayDK: new Date(document.getElementById('ngayDK').value),
     };
+    
+    // Nếu là edit, thêm _id
+    if (currentMode === 'edit') {
+        hoKhauObj._id = document.getElementById('hoKhauId').value;
+    }
 
     let res;
     if (currentMode === 'add') {
         res = await insertHoKhau(hoKhauObj);
-        res = await addThanhVien(res.data._id, hoKhauObj.chuHo);
+        if (res.type === "OK" && res.data && res.data._id) {
+            await addThanhVien(res.data._id, hoKhauObj.chuHo);
+        }
     } else {
         res = await updateHoKhau(hoKhauObj);
     }
 
-    if (res.type === "OK") {
-        createToast(res.message, false)
+    if (res && res.type === "OK") {
+        createToast(res.message || 'Thành công', false);
         closeModal();
         loadHoKhauList();
     } else {
-        createToast(res.message);
+        createToast(res?.message || 'Có lỗi xảy ra');
     }
 }
 
@@ -117,7 +124,7 @@ window.openModal = async function(mode, _id = null) {
 
     if (mode === 'edit') {
         title.innerText = "Chỉnh sửa Hộ Khẩu";
-        chuHoInput.disabled = true; // Không cho sửa CCCD chủ hộ khi update
+        chuHoInput.disabled = false; // Cho phép sửa chủ hộ
         fetchDetailToForm(_id);
     } else {
         title.innerText = "Thêm Hộ Khẩu";
@@ -128,6 +135,7 @@ window.openModal = async function(mode, _id = null) {
 async function fetchDetailToForm(_id) {
     const res = await getHoKhau(_id);
     if (res.type === "OK") {
+        document.getElementById('hoKhauId').value = res.data._id;
         document.getElementById('chuHo').value = res.data.chuHo;
         document.getElementById('soNha').value = res.data.soNha;
         document.getElementById('ngayDK').value = new Date(res.data.ngayDK).toISOString().split('T')[0];
