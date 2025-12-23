@@ -51,6 +51,7 @@ function renderRow(hoKhau) {
 // 2. Thêm và Sửa
 async function handleFormSubmit(e) {
     e.preventDefault();
+    console.log("Form submit được kích hoạt");
     
     const hoKhauObj = {
         chuHo: document.getElementById('chuHo').value,
@@ -59,12 +60,18 @@ async function handleFormSubmit(e) {
         thanhVien: [] // Mặc định khi thêm mới chưa có thành viên
     };
 
+    console.log("Dữ liệu gửi:", hoKhauObj);
+
     let res;
     if (currentMode === 'add') {
+        console.log("Mode: Thêm mới");
         res = await insertHoKhau(hoKhauObj);
     } else {
+        console.log("Mode: Cập nhật");
         res = await updateHoKhau(hoKhauObj);
     }
+
+    console.log("Phản hồi từ server:", res);
 
     if (res.type === "OK") {
         alert("Thành công!");

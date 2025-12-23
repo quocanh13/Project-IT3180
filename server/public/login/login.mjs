@@ -1,4 +1,5 @@
 import { login } from "../request/login.mjs";
+import createToast from "../utils/toast/toast.mjs"
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginBtn = document.getElementById('loginBtn');
@@ -20,5 +21,7 @@ async function loginEvent() {
     console.log(resData);
     if(resData.type == "REDIRECT") {
         window.location.href = resData.redirectURL;
+    } else {
+        createToast(resData.message);
     }
 }

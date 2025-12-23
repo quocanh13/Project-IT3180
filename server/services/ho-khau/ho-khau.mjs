@@ -69,7 +69,13 @@ export async function insertHoKhau(hoKhau) {
             return "HỘ ĐÃ TỒN TẠI";
         }
 
-        await hoKhau.save();
+        const existingSoNha = await HoKhau.findOne({ soNha: hoKhau.soNha , chuHo: { $ne: hoKhau.chuHo } });
+        if(existingSoNha) {
+            return "PHÒNG ĐÃ CÓ HỘ KHẨU";
+        }
+
+        const newHoKhau = new HoKhau(hoKhau);
+        await newHoKhau.save();
 
         return "OK";
     } catch(error) {
@@ -121,7 +127,14 @@ export async function updateHoKhau(hoKhau) {
 
         if(hoKhau.soNha !== null && hoKhau.soNha !== undefined) {
             updateData.soNha = hoKhau.soNha;
+            
+            // Chỉ check soNha trùng nếu soNha được thay đổi
+            const existingHoKhau = await HoKhau.findOne({ soNha: hoKhau.soNha , chuHo: { $ne: hoKhau.chuHo } });
+            if(existingHoKhau) {
+                return "PHÒNG ĐÃ CÓ HỘ KHẨU";
+            }
         }
+        
         if(hoKhau.ngayDK !== null && hoKhau.ngayDK !== undefined) {
             updateData.ngayDK = hoKhau.ngayDK;
         }
@@ -133,3 +146,24 @@ export async function updateHoKhau(hoKhau) {
         return "ERROR";
     }
 }
+
+/**
+ * Hàm thêm thành viên vào hộ
+ * @param {number} chuHo - Số CCCD của chủ hộ
+ * @param {number} cccd - Số CCCD của thành viên
+ * @returns {Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN ĐÃ TRONG HỘ RỒI">}
+ */
+export function addThanhVien(chuHo, cccd) {
+
+}
+
+/**
+ * Hàm xóa thành viên khỏi hộ
+ * @param {number} chuHo - Số CCCD của chủ hộ
+ * @param {number} cccd - Số CCCD của thành viên
+ * @returns {Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TRONG HỘ">}
+ */
+export function deleteThanhVien(chuHo, cccd) {
+
+}
+        

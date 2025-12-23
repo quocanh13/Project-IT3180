@@ -12,7 +12,7 @@ const nhan_khauSchema = Schema({
     queQuan : {type : String, required : true},
     noiSinh : {type : String, required : true},
     hoKhau : {type : Number, required : true},
-    quanHeVoiChuHo : {type : String, required : true}
+    quanHeVoiChuHo : {type : String}
 });
 
 /**@type {mongoose.Model} */

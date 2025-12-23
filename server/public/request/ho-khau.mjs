@@ -61,3 +61,25 @@ export async function deleteHoKhau(chuHo) {
     });
     return await res.json();
 }
+/**
+ * Hàm thêm thành viên vào hộ
+ * @param chuHo - Số CCCD của chủ hộ
+ * @param thanhVien - Số CCCD của thành viên
+ */
+export async function addThanhVien(chuHo, thanhVien) {
+    const res = await fetch(`/ho-khau/${chuHo}/thanh-vien/${thanhVien}`, {
+        method: "POST"
+    });
+    return await res.json();
+}
+/**
+ * Hàm xóa thành viên khỏi hộ
+ * @param chuHo - Số CCCD của chủ hộ
+ * @param thanhVien - Số CCCD của thành viên
+ */
+export async function deleteThanhVien(chuHo, thanhVien) {
+    const res = await fetch(`/ho-khau/${chuHo}/thanh-vien/${thanhVien}`, {
+        method: "DELETE"
+    });
+    return await res.json();
+}

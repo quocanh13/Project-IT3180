@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Nhân Khẩu</title>
+    <link rel="stylesheet" href="./nhan-khau.css">
+</head>
+<body>
+    <nav class="topbar">
+        <div class="logo">Hệ Thống Quản Lý</div>
+        <ul class="nav-links">
+            <button class="btn btn-danger">Đăng xuất</button>
+        </ul>
+    </nav>
+
+    <nav class = "sidebar">
+        <a href="../ho-khau/ho-khau.html">
+            <div class="sidebar-link">
+                <img src = "../images/ho-khau.png">
+                <div class = "sidebar-text">Quản lý</div>
+                <div class = "sidebar-text">hộ khẩu</div>
+            </div>
+        </a>
+        <a href="#">
+            <div class="sidebar-link chosen-link">
+                <img src = "../images/nhan-khau.png">
+                <div class = "sidebar-text chosen-link">Quản lý</div>
+                <div class = "sidebar-text chosen-link">nhân khẩu</div>
+            </div>
+        </a>
+        <a href="../thu-chi/thu-chi.html">
+            <div class="sidebar-link">
+                <img src = "../images/thu-chi.png">
+                <div class = "sidebar-text">Quản lý</div>
+                <div class = "sidebar-text">thu chi</div>
+            </div>
+        </a>
+    </nav>
+
+
+    <main class="container">
+        <header class="content-header">
+            <h1>Danh sách Nhân khẩu</h1>
+            <button class="btn btn-primary" onclick="openModal('add')">Thêm Nhân Khẩu Mới</button>
+        </header>
+
+        <section class="table-container">
+            <table id="nhanKhauTable">
+                <thead>
+                    <tr>
+                        <th>CCCD</th>
+                        <th>Họ tên</th>
+                        <th>Ngày Sinh</th>
+                        <th>Giới Tính</th>
+                        <th>Chủ Hộ</th>
+                        <th>Quan Hệ Với Chủ Hộ</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="nhanKhauData">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <div id="nhanKhauModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Thêm Nhân Khẩu</h2>
+            <form id="nhanKhauForm">
+                <div class="form-group">
+                    <label>Số CCCD:</label>
+                    <input type="number" id="cccd" required>
+                </div>
+                <div class="form-group">
+                    <label>Họ tên:</label>
+                    <input type="text" id="hoTen" required>
+                </div>
+                <div class="form-group">
+                    <label>Ngày Sinh:</label>
+                    <input type="date" id="ngaySinh" required>
+                </div>
+                <div class="form-group">
+                    <label>Giới Tính:</label>
+                    <select id="gioiTinh" required>
+                        <option value="">Chọn giới tính</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quốc Tịch:</label>
+                    <input type="text" id="quocTich" required>
+                </div>
+                <div class="form-group">
+                    <label>Dân Tộc:</label>
+                    <input type="text" id="danToc" required>
+                </div>
+                <div class="form-group">
+                    <label>Quê Quán:</label>
+                    <input type="text" id="queQuan" required>
+                </div>
+                <div class="form-group">
+                    <label>Nơi Sinh:</label>
+                    <input type="text" id="noiSinh" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="./nhan-khau.mjs"></script>
+</body>
+</html>
