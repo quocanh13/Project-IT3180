@@ -15,7 +15,8 @@ body {
     align-items: center;
     padding: 20px;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .stars {
@@ -35,8 +36,15 @@ body {
 }
 
 @keyframes twinkle {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 .moon-bg {
@@ -53,39 +61,47 @@ body {
 }
 
 @keyframes float {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(-30px, 30px); }
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-30px, 30px);
+    }
 }
 
 .login-container {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 450px;
+    max-width: min(450px, 90vw);
     background: rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(20px);
-    border-radius: 30px;
-    padding: 50px 40px;
+    border-radius: clamp(20px, 5vw, 30px);
+    padding: clamp(30px, 5vw, 50px) clamp(25px, 4vw, 40px);
     border: 1px solid rgba(77, 166, 255, 0.2);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    margin: 20px 0;
 }
 
 .logo-section {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: clamp(25px, 5vw, 40px);
     position: relative;
 }
 
 .logo-container {
     display: inline-block;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: clamp(15px, 3vw, 20px);
 }
 
 .orbit-ring {
-    width: 140px;
-    height: 140px;
+    width: clamp(100px, 20vw, 140px);
+    height: clamp(100px, 20vw, 140px);
     border: 2px solid rgba(77, 166, 255, 0.3);
     border-radius: 50%;
     position: absolute;
@@ -96,8 +112,8 @@ body {
 }
 
 .orbit-ring:nth-child(2) {
-    width: 160px;
-    height: 160px;
+    width: clamp(115px, 23vw, 160px);
+    height: clamp(115px, 23vw, 160px);
     border-color: rgba(77, 166, 255, 0.2);
     animation-duration: 25s;
     animation-direction: reverse;
@@ -117,13 +133,18 @@ body {
 }
 
 @keyframes rotate {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 .moon-logo {
-    width: 100px;
-    height: 100px;
+    width: clamp(70px, 15vw, 100px);
+    height: clamp(70px, 15vw, 100px);
     background: linear-gradient(135deg, #4da6ff 0%, #0066cc 100%);
     border-radius: 50%;
     position: relative;
@@ -131,7 +152,7 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 40px rgba(77, 166, 255, 0.6),
-                inset -15px -15px 30px rgba(0, 0, 0, 0.3);
+        inset -15px -15px 30px rgba(0, 0, 0, 0.3);
     z-index: 1;
 }
 
@@ -164,22 +185,22 @@ body {
 
 .logo-text h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 36px;
+    font-size: clamp(24px, 5vw, 36px);
     font-weight: 900;
     background: linear-gradient(135deg, #4da6ff, #80c5ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    letter-spacing: 4px;
+    letter-spacing: clamp(2px, 0.5vw, 4px);
     margin-bottom: 5px;
     text-transform: uppercase;
 }
 
 .logo-text p {
     font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
+    font-size: clamp(9px, 1.5vw, 11px);
     color: #80c5ff;
-    letter-spacing: 3px;
+    letter-spacing: clamp(1.5px, 0.4vw, 3px);
     font-weight: 500;
 }
 
@@ -187,26 +208,26 @@ body {
     display: inline-block;
     background: rgba(77, 166, 255, 0.1);
     border: 1px solid rgba(77, 166, 255, 0.3);
-    padding: 8px 20px;
+    padding: clamp(6px, 1.5vw, 8px) clamp(15px, 3vw, 20px);
     border-radius: 20px;
     color: #80c5ff;
-    font-size: 12px;
+    font-size: clamp(10px, 2vw, 12px);
     font-weight: 500;
-    margin-bottom: 30px;
+    margin-bottom: clamp(20px, 4vw, 30px);
     letter-spacing: 1px;
 }
 
 .form-title {
     color: #ffffff;
-    font-size: 24px;
+    font-size: clamp(20px, 4vw, 24px);
     font-weight: 600;
     margin-bottom: 10px;
 }
 
 .form-subtitle {
     color: #94a3b8;
-    font-size: 14px;
-    margin-bottom: 30px;
+    font-size: clamp(12px, 2.5vw, 14px);
+    margin-bottom: clamp(20px, 4vw, 30px);
 }
 
 .form-group {
@@ -240,12 +261,12 @@ label {
 input[type="text"],
 input[type="password"] {
     width: 100%;
-    padding: 14px 16px 14px 45px;
+    padding: clamp(12px, 2vw, 14px) clamp(14px, 2.5vw, 16px) clamp(12px, 2vw, 14px) clamp(40px, 8vw, 45px);
     background: rgba(30, 41, 59, 0.5);
     border: 1px solid rgba(77, 166, 255, 0.2);
-    border-radius: 12px;
+    border-radius: clamp(10px, 2vw, 12px);
     color: #ffffff;
-    font-size: 14px;
+    font-size: clamp(13px, 2.5vw, 14px);
     font-family: 'Inter', sans-serif;
     transition: all 0.3s ease;
     outline: none;
@@ -261,7 +282,7 @@ input[type="password"]:focus {
     background: rgba(30, 41, 59, 0.8);
     border-color: #4da6ff;
     box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.1),
-                0 0 20px rgba(77, 166, 255, 0.2);
+        0 0 20px rgba(77, 166, 255, 0.2);
 }
 
 .options {
@@ -294,27 +315,27 @@ input[type="password"]:focus {
     letter-spacing: 0;
 }
 
-.forgot-password a {
+/* .forgot-password a {
     color: #4da6ff;
     text-decoration: none;
     font-size: 13px;
     font-weight: 500;
     transition: all 0.3s ease;
-}
+} */
 
-.forgot-password a:hover {
+/* .forgot-password a:hover {
     color: #80c5ff;
     text-shadow: 0 0 10px rgba(77, 166, 255, 0.5);
-}
+} */
 
 button {
     width: 100%;
-    padding: 16px;
+    padding: clamp(14px, 2.5vw, 16px);
     background: linear-gradient(135deg, #4da6ff 0%, #0066cc 100%);
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 15px;
+    border-radius: clamp(10px, 2vw, 12px);
+    font-size: clamp(14px, 2.5vw, 15px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -405,26 +426,56 @@ button:active {
 }
 
 @media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .moon-bg {
+        width: 300px;
+        height: 300px;
+        top: -80px;
+        right: -80px;
+    }
+
     .login-container {
-        padding: 40px 30px;
+        padding: clamp(25px, 5vw, 40px) clamp(20px, 4vw, 30px);
     }
 
-    .logo-text h1 {
-        font-size: 28px;
+    .options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
 
-    .orbit-ring {
-        width: 120px;
-        height: 120px;
+    .forgot-password {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-badge {
+        font-size: 10px;
+        padding: 6px 12px;
     }
 
-    .orbit-ring:nth-child(2) {
-        width: 140px;
-        height: 140px;
+    .divider {
+        margin: 20px 0;
     }
 
-    .moon-logo {
-        width: 80px;
-        height: 80px;
+    .footer-badge {
+        margin-top: 20px;
+        padding-top: 15px;
+    }
+
+    .input-icon {
+        font-size: 16px;
+        left: 14px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .login-container {
+        max-width: 480px;
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,11 @@
     <script src="./login.mjs" defer type="module"></script>
     <script src="../request/login.mjs" defer type="module"></script>
 </head>
+
 <body>
     <div class="stars" id="stars"></div>
     <div class="moon-bg"></div>
-    
+
     <div class="login-container">
         <div class="logo-section">
             <div class="logo-container">
@@ -30,10 +32,10 @@
         </div>
 
         <div class="welcome-badge">🏢 Hệ thống quản lý chung cư</div>
-        
+
         <h2 class="form-title">Chào mừng trở lại</h2>
         <p class="form-subtitle">Đăng nhập để truy cập vào hệ thống</p>
-        
+
         <form action="">
             <div class="form-group">
                 <label for="username">Tên đăng nhập</label>
@@ -42,7 +44,7 @@
                     <input type="text" id="username" placeholder="Nhập tên đăng nhập">
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Mật khẩu</label>
                 <div class="input-container">
@@ -50,23 +52,23 @@
                     <input type="password" id="password" placeholder="Nhập mật khẩu">
                 </div>
             </div>
-            
+
             <div class="options">
                 <div class="remember-me">
                     <input type="checkbox" id="remember" name="remember">
                     <label for="remember">Ghi nhớ đăng nhập</label>
                 </div>
-                <div class="forgot-password">
+                <!-- <div class="forgot-password">
                     <a href="#">Quên mật khẩu?</a>
-                </div>
+                </div> -->
             </div>
-            
+
             <button type="button" id="loginBtn">Đăng Nhập</button>
-            
+
             <div class="divider">
                 <span>hoặc</span>
             </div>
-            
+
             <div class="register-link">
                 Chưa có tài khoản? <a href="#">Đăng ký cư dân mới</a>
             </div>
@@ -90,4 +92,5 @@
         }
     </script>
 </body>
+
 </html>
