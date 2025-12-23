@@ -11,7 +11,7 @@ const nhan_khauSchema = Schema({
     quocTich : {type : String, required : true},
     queQuan : {type : String, required : true},
     noiSinh : {type : String, required : true},
-    hoKhau : {type : Number, required : true},
+    hoKhau : {type : Number},
     quanHeVoiChuHo : {type : String}
 });
 

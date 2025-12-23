@@ -143,6 +143,7 @@ th {
 
 .btn-primary { background-color: var(--accent-color); color: white; }
 .btn-danger { background-color: var(--danger-color); color: white; }
+.btn-success { background-color: #27ae60; color: white; }
 .btn-secondary { background-color: #95a5a6; color: white; }
 
 /* Modal */

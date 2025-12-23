@@ -153,8 +153,24 @@ export async function updateHoKhau(hoKhau) {
  * @param {number} cccd - Số CCCD của thành viên
  * @returns {Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN ĐÃ TRONG HỘ RỒI">}
  */
-export function addThanhVien(chuHo, cccd) {
+export async function addThanhVien(chuHo, cccd) {
+    try {
+        const existingHoKhau = await HoKhau.findOne({ chuHo: chuHo });
+        if(!existingHoKhau) {
+            return "CHỦ HỘ KHÔNG TỒN TẠI";
+        }
 
+        const existingThanhVien = await HoKhau.findOne({ thanhVien: cccd });
+        if(existingThanhVien) {
+            return "THÀNH VIÊN ĐÃ TRONG HỘ RỒI";
+        }
+
+        await HoKhau.updateOne({ chuHo: chuHo }, { $push: { thanhVien: cccd } });
+        return "OK";
+    } catch (error) {
+        console.error("Add ThanhVien error:", error);
+        return "ERROR";
+    }
 }
 
 /**
@@ -163,7 +179,21 @@ export function addThanhVien(chuHo, cccd) {
  * @param {number} cccd - Số CCCD của thành viên
  * @returns {Promise<"OK" | "ERROR" | "CHỦ HỘ KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TỒN TẠI" | "THÀNH VIÊN KHÔNG TRONG HỘ">}
  */
-export function deleteThanhVien(chuHo, cccd) {
-
+export async function deleteThanhVien(chuHo, cccd) {
+    try {
+        const existingHoKhau = await HoKhau.findOne({ chuHo: chuHo });
+        if(!existingHoKhau) {
+            return "CHỦ HỘ KHÔNG TỒN TẠI";
+        }   
+        const existingThanhVien = await HoKhau.findOne({ chuHo: chuHo, thanhVien: cccd });
+        if(!existingThanhVien) {
+            return "THÀNH VIÊN KHÔNG TRONG HỘ";
+        }
+        await HoKhau.updateOne({ chuHo: chuHo }, { $pull: { thanhVien: cccd } });
+        return "OK";
+    } catch (error) {
+        console.error("Delete ThanhVien error:", error);
+        return "ERROR";
+    }
 }
         

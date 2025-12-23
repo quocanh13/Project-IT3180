@@ -8,9 +8,14 @@ import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
  * - Trả về danh sách nhân khẩu (NhanKhau[]) nếu thành công
  * 
  * - Trả về "ERROR" nếu có lỗi
+ * - Trả về toàn bộ danh sách nếu limit = -1
  */
 export async function getNhanKhauList(offset = 0, limit = 10) {
     try {
+        if(limit === -1) {
+            const nhanKhauList = await NhanKhauModel.find();
+            return nhanKhauList;
+        }
         const nhanKhauList = await NhanKhauModel.find().skip(offset).limit(limit);
         return nhanKhauList;
     } catch (error) {
@@ -45,7 +50,7 @@ export async function getNhanKhau(cccd) {
 /**
  * Hàm thêm một nhân khẩu vào database
  * @param {NhanKhau} nhanKhau - Thông tin nhân khẩu cần thêm
- * @returns {Promise<"OK" | "ERROR | "NHÂN KHẨU ĐÃ TỒN TẠI">}
+ * @returns {Promise<"OK" | "ERROR" | "NHÂN KHẨU ĐÃ TỒN TẠI">}
  * - Trả về "OK" nếu thêm thành công
  * - Trả về "ERROR" nếu có lỗi
  * - Trả về "NHÂN KHẨU ĐÃ TỒN TẠI" nếu nhân khẩu đã có trong database

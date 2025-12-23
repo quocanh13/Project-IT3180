@@ -1,4 +1,4 @@
-import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau } from "../request/ho-khau.mjs";
+import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
 
 let currentMode = 'add';
@@ -44,6 +44,7 @@ function renderRow(hoKhau) {
         <td>
             <button class="btn btn-primary" onclick="editHoKhau('${hoKhau.chuHo}')">Sửa</button>
             <button class="btn btn-danger" onclick="removeHoKhau('${hoKhau.chuHo}')">Xóa</button>
+            <button class="btn btn-success" onclick="window.addThanhVien('${hoKhau.chuHo}')">Thêm thành viên</button>
         </td>
     `;
     tbody.appendChild(row);
@@ -52,7 +53,6 @@ function renderRow(hoKhau) {
 // 2. Thêm và Sửa
 async function handleFormSubmit(e) {
     e.preventDefault();
-    console.log("Form submit được kích hoạt");
     
     const hoKhauObj = {
         chuHo: document.getElementById('chuHo').value,
@@ -61,18 +61,12 @@ async function handleFormSubmit(e) {
         thanhVien: [] // Mặc định khi thêm mới chưa có thành viên
     };
 
-    console.log("Dữ liệu gửi:", hoKhauObj);
-
     let res;
     if (currentMode === 'add') {
-        console.log("Mode: Thêm mới");
         res = await insertHoKhau(hoKhauObj);
     } else {
-        console.log("Mode: Cập nhật");
         res = await updateHoKhau(hoKhauObj);
     }
-
-    console.log("Phản hồi từ server:", res);
 
     if (res.type === "OK") {
         createToast(res.message, false)
@@ -130,4 +124,18 @@ window.closeModal = function() {
 
 window.editHoKhau = function(cccd) {
     openModal('edit', cccd);
+}
+
+window.addThanhVien = async function(chuHo) {
+    const cccd = prompt('Nhập số CCCD thành viên:');
+    if (cccd) {
+        const res = await addThanhVien(chuHo, cccd);
+        console.log(res);
+        if (res.type === "OK") {
+            createToast('Thêm thành viên thành công', false);
+            loadHoKhauList();
+        } else {
+            createToast(res.message);
+        }
+    }
 }

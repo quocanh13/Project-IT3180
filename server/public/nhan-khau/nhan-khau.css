@@ -153,6 +153,7 @@ th {
     background: rgba(0,0,0,0.5);
     align-items: center;
     justify-content: center;
+    z-index: 1000;
 }
 
 .modal-content {
@@ -160,9 +161,22 @@ th {
     padding: 2rem;
     border-radius: 8px;
     width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .form-group { margin-bottom: 1rem; }
-.form-group label { display: block; margin-bottom: 5px; }
-.form-group input { width: 100%; padding: 8px; box-sizing: border-box; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+.form-group input,
+.form-group select { 
+    width: 100%; 
+    padding: 8px; 
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.form-group select {
+    cursor: pointer;
+}
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1rem; }
