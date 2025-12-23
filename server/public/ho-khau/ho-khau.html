@@ -49,7 +49,8 @@
             <table id="hoKhauTable">
                 <thead>
                     <tr>
-                        <th>CCCD Chủ Hộ</th>
+                        <th>Chủ Hộ</th>
+                        <th>CCCD</th>
                         <th>Số Nhà</th>
                         <th>Ngày Đăng Ký</th>
                         <th>Số Thành Viên</th>
@@ -67,8 +68,11 @@
             <h2 id="modalTitle">Thêm Hộ Khẩu</h2>
             <form id="hoKhauForm">
                 <div class="form-group">
-                    <label>Số CCCD Chủ Hộ:</label>
-                    <input type="number" id="chuHo" required>
+                    <label>Chủ Hộ:</label>
+                    <select id="chuHo" required>
+                        <option value="" disabled selected>-- Đang tải danh sách --</option>
+                        <!-- Options sẽ được load động từ JavaScript -->
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Số Nhà:</label>

@@ -1,4 +1,5 @@
 import HoKhau from "../../config/models/ho_khau-model.mjs";
+import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
 
 /**
  * Hàm lấy danh sách hộ khẩu
@@ -75,7 +76,10 @@ export async function insertHoKhau(hoKhau) {
         }
 
         const newHoKhau = new HoKhau(hoKhau);
+        newHoKhau.thanhVien = [hoKhau.chuHo]; 
         await newHoKhau.save();
+
+        await NhanKhauModel.updateOne({ cccd: hoKhau.chuHo }, { hoKhau: hoKhau.chuHo, quanHeVoiChuHo: "Chủ Hộ" });
 
         return "OK";
     } catch(error) {

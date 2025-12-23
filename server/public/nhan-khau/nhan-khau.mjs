@@ -1,4 +1,4 @@
-import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau, deleteNhanKhau } from "../request/nhan-khau.mjs";
+import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau,  deleteNhanKhau } from "../request/nhan-khau.mjs";
 
 import createToast from "../utils/toast/toast.mjs";
 
@@ -7,66 +7,77 @@ let currentMode = 'add';
 // 1. Khởi tạo khi load trang
 document.addEventListener('DOMContentLoaded', () => {
     loadNhanKhauList();
-    // Gán sự kiện submit form
-    document.getElementById('nhanKhauForm').addEventListener('submit', handleFormSubmit);
+    document.getElementById('nhanKhauForm')
+        .addEventListener('submit', handleFormSubmit);
 });
 
-// 1.5 Hiển thị hàng trong bảng
-function renderRow(nhanKhau) {
+// 1.5 Hiển thị 1 hàng trong bảng
+async function renderRow(nhanKhau) {
     const tbody = document.getElementById('nhanKhauData');
     const row = document.createElement('tr');
+
+    let tenChuHo = '-';
+    if (nhanKhau.hoKhau) {
+        const resChuHo = await getNhanKhau(nhanKhau.hoKhau);
+        if (resChuHo && resChuHo.type === "OK" && resChuHo.data) {
+            tenChuHo = resChuHo.data.hoTen;
+        }
+    }
+
     row.innerHTML = `
         <td>${nhanKhau.cccd}</td>
         <td>${nhanKhau.hoTen}</td>
         <td>${new Date(nhanKhau.ngaySinh).toLocaleDateString('vi-VN')}</td>
-        <td>${nhanKhau.gioiTinh ? 'Nam' : 'Nữ'}</td>
-        <td>${nhanKhau.chuHo || '-'}</td>
+        <td>${nhanKhau.gioiTinh? 'Nam' : 'Nữ'}</td>
+        <td>${tenChuHo}</td>
         <td>${nhanKhau.quanHeVoiChuHo || '-'}</td>
         <td>
-            <button class="btn btn-primary" onclick="editNhanKhau('${nhanKhau.cccd}')">Sửa</button>
-            <button class="btn btn-danger" onclick="removeNhanKhau('${nhanKhau.cccd}')">Xóa</button>
+            <button class="btn btn-primary" onclick="editNhanKhau('${nhanKhau.cccd}')">
+                Sửa
+            </button>
+            <button class="btn btn-danger" onclick="removeNhanKhau('${nhanKhau.cccd}')">
+                Xóa
+            </button>
         </td>
     `;
     tbody.appendChild(row);
 }
+
 // 2. Lấy và hiển thị danh sách
 async function loadNhanKhauList() {
     const tbody = document.getElementById('nhanKhauData');
-    tbody.innerHTML = '<tr><td colspan="5">Đang tải dữ liệu...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7">Đang tải dữ liệu...</td></tr>';
 
     const response = await getNhanKhauList(0, -1);
-    
+
     if (response.type === "OK") {
         const nhanKhauList = response.data;
         console.log(nhanKhauList);
-        tbody.innerHTML = ''; // Xóa dữ liệu cũ
 
+        tbody.innerHTML = '';
         for (const nhanKhau of nhanKhauList) {
-            renderRow(nhanKhau);
+            await renderRow(nhanKhau);
         }
     } else {
         createToast(response.message);
     }
 }
-// 3.Gán vào window để HTML onclick có thể gọi được
-window.openModal = function(mode, cccd = null) {
+
+// 3. Mở modal
+window.openModal = function (mode, cccd = null) {
     currentMode = mode;
+
     const modal = document.getElementById('nhanKhauModal');
     const title = document.getElementById('modalTitle');
     const cccdInput = document.getElementById('cccd');
     const form = document.getElementById('nhanKhauForm');
 
-    if (!modal || !title) {
-        return;
-    }
-
-    // Hiển thị modal trước để các thay đổi bên dưới có thể nhìn thấy
     modal.style.display = 'flex';
     form.reset();
 
     if (mode === 'edit') {
         title.innerText = "Chỉnh sửa Nhân Khẩu";
-        cccdInput.disabled = true; 
+        cccdInput.disabled = true;
         fetchDetailToForm(cccd);
     } else {
         title.innerText = "Thêm Nhân Khẩu";
@@ -74,34 +85,38 @@ window.openModal = function(mode, cccd = null) {
     }
 };
 
+// 4. Load chi tiết lên form
 async function fetchDetailToForm(cccd) {
-    const res = await getNhanKhau(Number(cccd));
+    const res = await getNhanKhau(cccd);
+
     if (res.type === "OK") {
-        document.getElementById('cccd').value = res.data.cccd;
-        document.getElementById('hoTen').value = res.data.hoTen;
-        document.getElementById('ngaySinh').value = new Date(res.data.ngaySinh).toISOString().split('T')[0];
-        document.getElementById('gioiTinh').value = res.data.gioiTinh ? "1" : "0";
-        document.getElementById('quocTich').value = res.data.quocTich;
-        document.getElementById('danToc').value = res.data.danToc;
-        document.getElementById('queQuan').value = res.data.queQuan;
-        document.getElementById('noiSinh').value = res.data.noiSinh;
+        const nk = res.data;
+        document.getElementById('cccd').value = nk.cccd;
+        document.getElementById('hoTen').value = nk.hoTen;
+        document.getElementById('ngaySinh').value =
+            new Date(nk.ngaySinh).toISOString().split('T')[0];
+        document.getElementById('gioiTinh').value = nk.gioiTinh ? "1" : "0";
+        document.getElementById('quocTich').value = nk.quocTich;
+        document.getElementById('danToc').value = nk.danToc;
+        document.getElementById('queQuan').value = nk.queQuan;
+        document.getElementById('noiSinh').value = nk.noiSinh;
     }
 }
 
-// 4. Hàm đóng modal
-window.closeModal = function() {
-    const modal = document.getElementById('nhanKhauModal');
-    modal.style.display = 'none';
+// 5. Đóng modal
+window.closeModal = function () {
+    document.getElementById('nhanKhauModal').style.display = 'none';
 };
-// 5. Thêm và Sửa
+
+// 6. Submit form (Thêm / Sửa)
 async function handleFormSubmit(e) {
     e.preventDefault();
-    
+
     const nhanKhauObj = {
         cccd: document.getElementById('cccd').value,
         hoTen: document.getElementById('hoTen').value,
         ngaySinh: new Date(document.getElementById('ngaySinh').value),
-        gioiTinh: document.getElementById('gioiTinh').value,
+        gioiTinh: Number(document.getElementById('gioiTinh').value),
         quocTich: document.getElementById('quocTich').value,
         danToc: document.getElementById('danToc').value,
         queQuan: document.getElementById('queQuan').value,
@@ -116,7 +131,7 @@ async function handleFormSubmit(e) {
     }
 
     if (res.type === "OK") {
-        createToast(res.message, false)
+        createToast(res.message, false);
         closeModal();
         loadNhanKhauList();
     } else {
@@ -124,19 +139,19 @@ async function handleFormSubmit(e) {
     }
 }
 
-// 6. Xóa
-window.removeNhanKhau = async function(cccd) {
+// 7. Xóa
+window.removeNhanKhau = async function (cccd) {
     if (confirm(`Bạn có chắc muốn xóa nhân khẩu: ${cccd}?`)) {
-        const res = await deleteNhanKhau(Number(cccd));
+        const res = await deleteNhanKhau(cccd);
         if (res.type === "OK") {
             loadNhanKhauList();
         } else {
             createToast(res.message);
         }
     }
-}
+};
 
-// 7. Edit
-window.editNhanKhau = function(cccd) {
+// 8. Edit
+window.editNhanKhau = function (cccd) {
     openModal('edit', cccd);
-}
+};
