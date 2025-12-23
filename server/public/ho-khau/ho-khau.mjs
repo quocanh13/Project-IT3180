@@ -1,4 +1,3 @@
-import {getNhanKhau} from "../request/nhan-khau.mjs"
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
 import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
@@ -203,10 +202,11 @@ window.addThanhVien = async function(chuHo) {
 }
 
 /**
- * @param {HoKhau} hoKhau 
+ * @param {HoKhau} _hoKhau 
  */
 async function getHoKhauInformation(_hoKhau) {
     const hoKhau = Object.create(_hoKhau)
+    hoKhau.thanhVien = []
     const chuHo = await getNhanKhau(hoKhau.chuHo)
     if(chuHo.type == "OK") {
         hoKhau.chuHo = chuHo.data
@@ -215,10 +215,10 @@ async function getHoKhauInformation(_hoKhau) {
         return null
     }
 
-    for(let i = 0; i < hoKhau.thanhVien.length; i++) {
-        const thanhVien = await getNhanKhau(hoKhau.thanhVien[i])
+    for(let i = 0; i < _hoKhau.thanhVien.length; i++) {
+        const thanhVien = await getNhanKhau(_hoKhau.thanhVien[i])
         if(thanhVien.type == "OK") {
-            hoKhau.thanhVien[i] = thanhVien.data
+            hoKhau.thanhVien.push(thanhVien.data)
         } else {
             createToast(thanhVien.message)
             return null
