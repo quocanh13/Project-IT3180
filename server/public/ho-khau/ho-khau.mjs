@@ -1,5 +1,5 @@
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
-import { getNhanKhauList, getNhanKhau } from "../request/nhan-khau.mjs";
+import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
 
 let currentMode = 'add';
@@ -84,12 +84,20 @@ async function handleFormSubmit(e) {
 
 // 3. Xóa
 window.removeHoKhau = async function(cccd) {
-    if (confirm(`Bạn có chắc muốn xóa hộ khẩu chủ hộ: ${cccd}?`)) {
+    if (confirm(`Bạn có chắc muốn xóa hộ khẩu chủ hộ: ${cccd}?`)) { 
+        const hoKhauRes = await getHoKhau(cccd);
+        if (hoKhauRes.type !== "OK") {
+            createToast("Hộ khẩu không tồn tại");
+        } else if (hoKhauRes.data.thanhVien) {
+            hoKhauRes.data.thanhVien.forEach(async (memberCCCD) => {
+                await deleteNhanKhau(memberCCCD);
+            });
+        }
         const res = await deleteHoKhau(cccd);
         if (res.type === "OK") {
             loadHoKhauList();
         } else {
-            
+            loadHoKhauList();
         }
     }
 }

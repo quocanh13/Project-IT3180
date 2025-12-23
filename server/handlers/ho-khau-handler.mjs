@@ -47,6 +47,15 @@ export async function getHoKhau(req, res) {
     res.json(resData);
 }
 export async function insertHoKhau(req, res) {
+    // Đảm bảo chuHo là String
+    if (req.body.chuHo) {
+        req.body.chuHo = String(req.body.chuHo);
+    }
+    // Đảm bảo soNha là Number
+    if (req.body.soNha) {
+        req.body.soNha = Number(req.body.soNha);
+    }
+    
     const result = await DBInsertHoKhau(req.body);
     let resData;
     if (result == "ERROR") {
@@ -73,6 +82,15 @@ export async function insertHoKhau(req, res) {
     res.json(resData);
 }
 export async function updateHoKhau(req, res) {
+    // Đảm bảo chuHo là String
+    if (req.body.chuHo) {
+        req.body.chuHo = String(req.body.chuHo);
+    }
+    // Đảm bảo soNha là Number
+    if (req.body.soNha) {
+        req.body.soNha = Number(req.body.soNha);
+    }
+    
     const result = await DBUpdateHoKhau(req.body);
     let resData;
     if (result == "ERROR") {
