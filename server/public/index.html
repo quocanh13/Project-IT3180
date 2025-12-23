@@ -1,181 +1,20 @@
 <!doctype html>
 <html lang="vi">
-
 <head>
   <meta charset="utf-8" />
-  <title>Bluemoon Residence - Nhóm 36</title>
+  <title>Chào mừng</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f5f7fb}
+    .card{background:white;padding:30px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.08);text-align:center;width:320px}
+    a.button{display:inline-block;margin-top:16px;padding:10px 18px;background:#0b66ff;color:white;border-radius:6px;text-decoration:none}
+  </style>
 </head>
-
 <body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-brand">Bluemoon</div>
-      <div class="nav-links">
-        <a href="#gioi-thieu">Giới thiệu</a>
-        <a href="#tien-ich">Tiện ích</a>
-        <a href="login/login.html" class="btn-login">Đăng nhập</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1 class="hero-title">Chung cư Bluemoon</h1>
-      <p class="hero-subtitle">Tuyệt tác kiến trúc, biểu tượng sống đẳng cấp giữa lòng thành phố</p>
-      <p class="hero-description">
-        Bluemoon- nơi bản sắc thượng lưu được tôn vinh trong từng đường nét kiến trúc tinh xảo, khẳng định
-        vị thế độc tôn của những chủ nhân kiệt xuất
-      </p>
-      <a href="login/login.html" class="btn-primary">Truy cập hệ thống</a>
-    </div>
-    <div class="scroll-indicator">
-      <span>Cuộn xuống</span>
-      <div class="scroll-arrow">↓</div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="features" id="tien-ich">
-    <div class="container">
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">🏢</div>
-          <h3>Tiện Nghi Cao Cấp</h3>
-          <p>Thưởng thức các tiện ích hiện đại như phòng gym, hồ bơi và vườn trên mái.
-            Mọi chi tiết đều được thiết kế để mang đến sự thoải mái và sang trọng tuyệt đối.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📍</div>
-          <h3>Vị Trí Chiến Lược</h3>
-          <p>Tọa lạc ngay ngã tư Văn Phú, Bluemoon cung cấp sự tiếp cận tuyệt vời
-            đến các trung tâm mua sắm, nhà hàng và khu giải trí.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🛡️</div>
-          <h3>An Ninh Tuyệt Đối</h3>
-          <p>Hệ thống an ninh hàng đầu đảm bảo sự yên tâm với giám sát 24/7,
-            các điểm vào bảo mật và nhân viên bảo vệ chuyên nghiệp.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- About Section 1 -->
-  <section class="about-section" id="gioi-thieu">
-    <div class="container">
-      <div class="about-content">
-        <div class="about-image">
-          <img src="images/banner.jpg" alt="Bluemoon Convenient" />
-        </div>
-        <div class="about-text">
-          <h2>Biểu tượng của sự hiện đại</h2>
-          <p>
-            Chung cư Bluemoon được khởi công xây dựng năm 2021 và hoàn thành vào 2023. Chung cư được xây dựng trên diện
-            tích 360m², gồm 30 tầng, tầng 1 làm kiot,
-            4 tầng đế, 24 tầng nhà ở và 1 tầng penthouse.
-          </p>
-          <div class="stats">
-            <div class="stat-item">
-              <div class="stat-number">30</div>
-              <div class="stat-label">Tầng</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number">360m²</div>
-              <div class="stat-label">Diện tích</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number">2025</div>
-              <div class="stat-label">Hoàn thành</div>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="about-image">
-          <img src="" alt="Bluemoon Modern" />
-        </div> -->
-      </div>
-    </div>
-  </section>
-
-  <!-- About Section 2 -->
-  <section class="about-section reverse">
-    <div class="container">
-      <div class="about-content">
-        <div class="about-image">
-          <img src="images/can ho.jpg" alt="Bluemoon Convenient" />
-        </div>
-        <div class="about-text">
-          <h2>Bluemoon là chung cư danh giá bậc nhất</h2>
-          <p>
-            Đến với chung cư Bluemoon, quý khách sẽ được chào đón bởi sự thân thiện của
-            đội ngũ nhân viên tận tình và tận hưởng những dịch vụ cao cấp bậc nhất khu vực,
-            đảm bảo sẽ mang đến cho quý khách một trải nghiệm ấn tượng không thể nào quên.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-
-  <!-- Team Section -->
-  <section class="team-section">
-    <div class="container">
-      <h2 class="section-title">Đội ngũ phát triển</h2>
-      <div class="team-grid">
-        <div class="team-member">
-          <div class="member-avatar">
-            <img src="images/barca.jpg" alt="Thành viên 1" />
-          </div>
-          <h4>Đinh Minh Chiến</h4>
-          <p>20235278</p>
-        </div>
-
-        <div class="team-member">
-          <div class="member-avatar">
-            <img src="images/barca.jpg" alt="Thành viên 2" />
-          </div>
-          <h4>Ngô Hoàng Minh</h4>
-          <p>20235377</p>
-        </div>
-
-        <div class="team-member">
-          <div class="member-avatar">
-            <img src="images/barca.jpg" alt="Thành viên 2" />
-          </div>
-          <h4>Nguyễn Quốc Anh</h4>
-          <p>20235263</p>
-        </div>
-
-        <div class="team-member">
-          <div class="member-avatar">
-            <img src="images/barca.jpg" alt="Thành viên 2" />
-          </div>
-          <h4>Nguyễn Hoàng Long</h4>
-          <p>20235367</p>
-        </div>
-
-        <div class="team-member">
-          <div class="member-avatar">
-            <img src="images/mu.jpeg" alt="Thành viên 3" />
-          </div>
-          <h4>Phùng Đắc Cường</h4>
-          <p>20235388</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <p> 2025 - Nhóm 36 - IT3180</p>
-    </div>
-  </footer>
+  <div class="card">
+    <h1>Chào mừng</h1>
+    <p>Hệ thống quản lý — vui lòng đăng nhập để tiếp tục.</p>
+    <a class="button" href="login/login.html">Đăng nhập</a>
+  </div>
 </body>
-
 </html>
