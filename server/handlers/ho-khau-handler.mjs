@@ -51,9 +51,9 @@ export async function insertHoKhau(req, res) {
     if (req.body.chuHo) {
         req.body.chuHo = String(req.body.chuHo);
     }
-    // Đảm bảo soNha là Number
-    if (req.body.soNha) {
-        req.body.soNha = Number(req.body.soNha);
+    // Đảm bảo canHo là Number
+    if (req.body.canHo) {
+        req.body.canHo = Number(req.body.canHo);
     }
     
     const result = await DBInsertHoKhau(req.body);
@@ -72,6 +72,13 @@ export async function insertHoKhau(req, res) {
         };
         res.status(400);
     }
+    else if (result == "CĂN HỘ ĐÃ CÓ HỘ KHẨU") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Căn hộ đã có hộ khẩu"
+        };
+        res.status(400);
+    }
     else {
         resData = {
             type: "OK",
@@ -86,9 +93,9 @@ export async function updateHoKhau(req, res) {
     if (req.body.chuHo) {
         req.body.chuHo = String(req.body.chuHo);
     }
-    // Đảm bảo soNha là Number
-    if (req.body.soNha) {
-        req.body.soNha = Number(req.body.soNha);
+    // Đảm bảo canHo là Number
+    if (req.body.canHo) {
+        req.body.canHo = Number(req.body.canHo);
     }
     
     const result = await DBUpdateHoKhau(req.body);
@@ -106,6 +113,13 @@ export async function updateHoKhau(req, res) {
             message: "Cập nhật hộ thành công"
         };
         res.status(200);
+    }
+    else if (result == "CĂN HỘ ĐÃ CÓ HỘ KHẨU") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Căn hộ đã có hộ khẩu"
+        };
+        res.status(400);
     }
     else {
         resData = {
@@ -163,7 +177,7 @@ export async function addThanhVien(req, res) {
         };
         res.status(200);
     }
-    else if (result == "CHỦ HỘ KHÔNG TỒN TẠI") {
+    else if (result == "HỘ KHÔNG TỒN TẠI") {
         resData = {
             type: "NOT FOUND",
             message: "Không tìm thấy hộ"
@@ -181,6 +195,13 @@ export async function addThanhVien(req, res) {
         resData = {
             type: "BAD REQUEST",
             message: "Thành viên đã trong hộ rồi"
+        };
+        res.status(400);
+    }
+    else if (result == "THÀNH VIÊN ĐÃ THUỘC HỘ KHẨU KHÁC") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Thành viên đã thuộc hộ khẩu khác"
         };
         res.status(400);
     }

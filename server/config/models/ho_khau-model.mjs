@@ -4,9 +4,13 @@ const { Schema, model } = mongoose;
 
 const ho_khauSchema = Schema({
     chuHo : {type : String, required : true, unique : true},
-    soNha : {type : Number,unique : true},
-    ngayDK : {type : Date}
-});
+    canHo : {type : Number,unique : true},
+    ngayDK : {type : Date},
+    deleted : {type : Boolean, default: false},
+    deleteAt : {type : Date, default: null}
+}, 
+{ timestamps: true }
+);
 
 /**@type {mongoose.Model} */
 const HoKhau = model("ho_khau", ho_khauSchema);

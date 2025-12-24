@@ -9,7 +9,7 @@ import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
  */
 export async function getHoKhauList(offset, limit) {
     try {
-        let query = HoKhau.find().select('_id');
+        let query = HoKhau.find({ deleted: false }).select('_id');
 
         if (limit !== -1) {
             query = query.skip(offset).limit(limit);
@@ -36,7 +36,7 @@ export async function getHoKhauList(offset, limit) {
  */
 export async function getHoKhau(_id) {
     try {
-        const hoKhau = await HoKhau.findOne({ _id }).exec();
+        const hoKhau = await HoKhau.findOne({ _id , deleted: false }).exec();
 
         if (!hoKhau) {
             return "HỘ KHẨU KHÔNG TỒN TẠI";
@@ -72,14 +72,14 @@ export async function insertHoKhau(hoKhau) {
             return "ERROR";
         }
  
-        const existingHoKhau = await HoKhau.findOne({ chuHo: hoKhau.chuHo });
+        const existingHoKhau = await HoKhau.findOne({ chuHo: hoKhau.chuHo , deleted: false });
         if(existingHoKhau) {
             return "HỘ ĐÃ TỒN TẠI";
         }
 
-        const existingSoNha = await HoKhau.findOne({ soNha: hoKhau.soNha , chuHo: { $ne: hoKhau.chuHo } });
-        if(existingSoNha) {
-            return "PHÒNG ĐÃ CÓ HỘ KHẨU";
+        const existingCanHo = await HoKhau.findOne({ canHo: hoKhau.canHo , chuHo: { $ne: hoKhau.chuHo }, deleted: false });
+        if(existingCanHo) {
+            return "CĂN HỘ ĐÃ CÓ HỘ KHẨU";
         }
 
         const newHoKhau = new HoKhau(hoKhau);
@@ -105,8 +105,9 @@ export async function insertHoKhau(hoKhau) {
  */
 export async function deleteHoKhau(_id) {
     try {
-        const result = await HoKhau.deleteOne({ _id: _id });    
-        if(result.deletedCount === 1) {
+        const result = await HoKhau.updateOne({ _id: _id, deleted: false }, { deleted: true, deletedAt: new Date() });    
+        if(result.modifiedCount === 1) {
+            await NhanKhauModel.updateMany({ hoKhau: _id, deleted: false }, { deleted: true, deletedAt: new Date() });
             return "OK";
         } else {
             return "HỘ KHÔNG TỒN TẠI";
@@ -136,13 +137,13 @@ export async function updateHoKhau(hoKhau) {
             updateData.chuHo = hoKhau.chuHo;
         }
 
-        if(hoKhau.soNha !== null && hoKhau.soNha !== undefined) {
-            updateData.soNha = hoKhau.soNha;
+        if(hoKhau.canHo !== null && hoKhau.canHo !== undefined) {
+            updateData.canHo = hoKhau.canHo;
             
-            // Chỉ check soNha trùng nếu soNha được thay đổi
-            const existingHoKhau = await HoKhau.findOne({ soNha: hoKhau.soNha , _id: { $ne: hoKhau._id } });
+            // Chỉ check canHo trùng nếu canHo được thay đổi
+            const existingHoKhau = await HoKhau.findOne({ canHo: hoKhau.canHo , _id: { $ne: hoKhau._id }, deleted: false });
             if(existingHoKhau) {
-                return "PHÒNG ĐÃ CÓ HỘ KHẨU";
+                return "CĂN HỘ ĐÃ CÓ HỘ KHẨU";
             }
         }
         
@@ -150,7 +151,7 @@ export async function updateHoKhau(hoKhau) {
             updateData.ngayDK = hoKhau.ngayDK;
         }
 
-        await HoKhau.updateOne({ _id: hoKhau._id }, updateData);
+        await HoKhau.updateOne({ _id: hoKhau._id, deleted: false }, updateData);
         return "OK";
     } catch(error) {
         console.error("Update error:", error);
@@ -166,14 +167,21 @@ export async function updateHoKhau(hoKhau) {
  */
 export async function addThanhVien(_id, cccd) {
     try {
-        const existingHoKhau = await HoKhau.findOne({ _id: _id });
+        const existingHoKhau = await HoKhau.findOne({ _id: _id , deleted: false });
         if(!existingHoKhau) {
-            return "CHỦ HỘ KHÔNG TỒN TẠI";
+            return "HỘ KHÔNG TỒN TẠI";
         }
 
-        const existingThanhVien = await NhanKhauModel.findOne({ cccd: cccd, hoKhau: _id });
-        if(existingThanhVien) {
-            return "THÀNH VIÊN ĐÃ TRONG HỘ RỒI";
+        const existingThanhVien = await NhanKhauModel.findOne({ cccd: cccd, deleted: false });
+        if(existingThanhVien && existingThanhVien.hoKhau) {
+            if(existingThanhVien.hoKhau === _id) {
+                return "THÀNH VIÊN ĐÃ TRONG HỘ RỒI";
+            } else {
+                return "THÀNH VIÊN ĐÃ THUỘC HỘ KHẨU KHÁC";
+            }
+        }
+        if(!existingThanhVien) {
+            return "THÀNH VIÊN KHÔNG TỒN TẠI";
         }
 
         await NhanKhauModel.updateOne({ cccd: cccd }, { hoKhau: _id });
@@ -192,11 +200,11 @@ export async function addThanhVien(_id, cccd) {
  */
 export async function deleteThanhVien(_id, cccd) {
     try {
-        const existingHoKhau = await HoKhau.findOne({ _id: _id });
+        const existingHoKhau = await HoKhau.findOne({ _id: _id , deleted: false });
         if(!existingHoKhau) {
-            return "CHỦ HỘ KHÔNG TỒN TẠI";
+            return "HỘ KHÔNG TỒN TẠI";
         }   
-        const existingThanhVien = await NhanKhauModel.findOne({ cccd: cccd, hoKhau: _id });
+        const existingThanhVien = await NhanKhauModel.findOne({ cccd: cccd, hoKhau: _id, deleted: false });
         if(!existingThanhVien) {
             return "THÀNH VIÊN KHÔNG TRONG HỘ";
         }

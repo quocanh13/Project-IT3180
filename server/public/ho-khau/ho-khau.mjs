@@ -43,7 +43,7 @@ function renderRow(hoKhau, tenChuHo) {
     row.innerHTML = `
         <td>${tenChuHo}</td>
         <td>${hoKhau.chuHo}</td>
-        <td>${hoKhau.soNha}</td>
+        <td>${hoKhau.canHo}</td>
         <td>${new Date(hoKhau.ngayDK).toLocaleDateString('vi-VN')}</td>
         <td>${hoKhau.numMembers || 0}</td>
         <td>
@@ -61,7 +61,7 @@ async function handleFormSubmit(e) {
     
     const hoKhauObj = {
         chuHo: document.getElementById('chuHo').value,
-        soNha: Number(document.getElementById('soNha').value),
+        canHo: Number(document.getElementById('canHo').value),
         ngayDK: new Date(document.getElementById('ngayDK').value),
     };
     
@@ -137,7 +137,7 @@ async function fetchDetailToForm(_id) {
     if (res.type === "OK") {
         document.getElementById('hoKhauId').value = res.data._id;
         document.getElementById('chuHo').value = res.data.chuHo;
-        document.getElementById('soNha').value = res.data.soNha;
+        document.getElementById('canHo').value = res.data.canHo;
         document.getElementById('ngayDK').value = new Date(res.data.ngayDK).toISOString().split('T')[0];
     }
 }

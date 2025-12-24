@@ -121,8 +121,13 @@ export async function deleteNhanKhau(req, res) {
             message: "Nhân khẩu không tồn tại"
         };
         res.status(404);
-    }
-    else {
+    } else if (result == "KHÔNG THỂ XÓA CHỦ HỘ") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Không thể xóa chủ hộ"
+        };
+        res.status(400);
+    } else {
         resData = {
             type: "OK",
             message: "Xóa nhân khẩu thành công"
