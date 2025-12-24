@@ -1,7 +1,7 @@
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
 import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
-import createHoKhauDetail from "./ho-khau-detail.mjs"
+import {createHoKhauDetail} from "./ho-khau-detail.mjs"
 
 let currentMode = 'add';
 
@@ -39,6 +39,7 @@ async function loadHoKhauList() {
 }
 
 function renderRow(hoKhau, tenChuHo) {
+    console.log(hoKhau)
     const tbody = document.getElementById('hoKhauData');
     const row = document.createElement('tr');
     row.className = "member-row"
