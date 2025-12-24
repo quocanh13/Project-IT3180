@@ -31766,6 +31766,18 @@ const hoKhau = {
 // createHoKhauDetail(hoKhau);
 })();
 
+/**
+ * Hàm tạo một component hiển thị thông tin hộ khẩu
+ * 
+ * Tham số đầu vào là một đối tượng có kiểu HoKhauInformation mở rộng của HoKhau
+ * 
+ * - Trường chuHo : NhanKhau - Thông tin của chủ hộ
+ *
+ * - Trường thanhVien : NhanKhau[] - Mảng chứa thông tin của từng thành viên
+ * 
+ * - Các trường khác giống hệt HoKhau
+ * @param {import("./HoKhauDetail").HoKhauInformation} hoKhau 
+ */
 const __webpack_exports__createHoKhauDetail = __webpack_exports__.createHoKhauDetail;
 export { __webpack_exports__createHoKhauDetail as createHoKhauDetail };
 
