@@ -33,21 +33,10 @@ async function loadHoKhauList() {
                 // Lấy tên chủ hộ
                 const chuHoRes = await getNhanKhau(hoKhauGoc.chuHo);
 
-                // Lấy thông tin chi tiết của tất cả Thành Viên (NhanKhau[])
-                // const danhSachThanhVien = [];
-                // if (hoKhauGoc.thanhVien && hoKhauGoc.thanhVien.length > 0) {
-                //     for (const memberCCCD of hoKhauGoc.thanhVien) {
-                //         const memberRes = await getNhanKhau(memberCCCD);
-                //         if (memberRes.type === "OK") {
-                //             danhSachThanhVien.push(memberRes.data);
-                //         }  
-                //     }
-                // }
-
-                // Tạo đối tượng mới kế thừa toàn bộ hoKhauGoc và thêm 2 trường mới
+                // Tạo đối tượng mới kế thừa toàn bộ hoKhauGoc và thêm tên chủ hộ
                 const hoKhauInformation = {
-                    ...hoKhauGoc,        
-                    tenChuHo: chuHoRes.data ? chuHoRes.data.hoTen : 'N/A' 
+                    ...hoKhauGoc,
+                    tenChuHo: chuHoRes.data ? chuHoRes.data.hoTen : 'N/A'
                 };
                 console.log('HoKhauFull:', hoKhauInformation);
                 renderRow(hoKhauInformation);
