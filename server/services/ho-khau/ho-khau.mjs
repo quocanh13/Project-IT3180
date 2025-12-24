@@ -174,7 +174,7 @@ export async function addThanhVien(_id, cccd) {
 
         const existingThanhVien = await NhanKhauModel.findOne({ cccd: cccd, deleted: false });
         if(existingThanhVien && existingThanhVien.hoKhau) {
-            if(existingThanhVien.hoKhau === _id) {
+            if(existingThanhVien.hoKhau.toString() === _id.toString()) {
                 return "THÀNH VIÊN ĐÃ TRONG HỘ RỒI";
             } else {
                 return "THÀNH VIÊN ĐÃ THUỘC HỘ KHẨU KHÁC";
