@@ -7,7 +7,7 @@ const ho_khauSchema = Schema({
     canHo : {type : Number,unique : true},
     ngayDK : {type : Date},
     deleted : {type : Boolean, default: false},
-    deleteAt : {type : Date, default: null}
+    deletedAt : {type : Date, default: null}
 }, 
 { timestamps: true }
 );
