@@ -17,11 +17,22 @@ async function renderRow(nhanKhau) {
     const row = document.createElement('tr');
 
     let tenChuHo = '-';
+    let canHo = '-';
     if (nhanKhau.hoKhau) {
-        const resChuHo = await getNhanKhau(nhanKhau.hoKhau);
-        if (resChuHo && resChuHo.type === "OK" && resChuHo.data) {
-            tenChuHo = resChuHo.data.hoTen;
+        // nhanKhau.hoKhau là ObjectId, hoặc là object đã populate
+        if (typeof nhanKhau.hoKhau === 'object') {
+            if(nhanKhau.hoKhau.chuHo) {
+                // Đã populate, lấy chuHo rồi lấy tên
+                const resChuHo = await getNhanKhau(nhanKhau.hoKhau.chuHo);
+                if (resChuHo && resChuHo.type === "OK" && resChuHo.data) {
+                    tenChuHo = resChuHo.data.hoTen;
+                }
+            }
+            if(nhanKhau.hoKhau.canHo) {
+                canHo = nhanKhau.hoKhau.canHo;
+            }
         }
+        // Nếu chưa populate thì hiển thị ID
     }
 
     row.innerHTML = `
@@ -31,6 +42,7 @@ async function renderRow(nhanKhau) {
         <td>${nhanKhau.gioiTinh? 'Nam' : 'Nữ'}</td>
         <td>${tenChuHo}</td>
         <td>${nhanKhau.quanHeVoiChuHo || '-'}</td>
+        <td>${canHo}</td>
         <td>
             <button class="btn btn-primary" onclick="editNhanKhau('${nhanKhau.cccd}')">
                 Sửa
@@ -46,7 +58,7 @@ async function renderRow(nhanKhau) {
 // 2. Lấy và hiển thị danh sách
 async function loadNhanKhauList() {
     const tbody = document.getElementById('nhanKhauData');
-    tbody.innerHTML = '<tr><td colspan="7">Đang tải dữ liệu...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8">Đang tải dữ liệu...</td></tr>';
 
     const response = await getNhanKhauList(0, -1);
 
@@ -145,6 +157,7 @@ window.removeNhanKhau = async function (cccd) {
         const res = await deleteNhanKhau(cccd);
         if (res.type === "OK") {
             loadNhanKhauList();
+            createToast(res.message, false);
         } else {
             createToast(res.message);
         }

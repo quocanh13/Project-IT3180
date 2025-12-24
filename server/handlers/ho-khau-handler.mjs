@@ -22,7 +22,7 @@ export async function getHoKhauList(req, res) {
 }
 export async function getHoKhau(req, res) {
     let resData;
-    const data = await DBGetHoKhau(req.params.chuHo);
+    const data = await DBGetHoKhau(req.params._id);
     if (data == "ERROR") {
         resData = {
             type: "ERROR",
@@ -51,9 +51,9 @@ export async function insertHoKhau(req, res) {
     if (req.body.chuHo) {
         req.body.chuHo = String(req.body.chuHo);
     }
-    // Đảm bảo soNha là Number
-    if (req.body.soNha) {
-        req.body.soNha = Number(req.body.soNha);
+    // Đảm bảo canHo là Number
+    if (req.body.canHo) {
+        req.body.canHo = Number(req.body.canHo);
     }
     
     const result = await DBInsertHoKhau(req.body);
@@ -72,6 +72,13 @@ export async function insertHoKhau(req, res) {
         };
         res.status(400);
     }
+    else if (result == "CĂN HỘ ĐÃ CÓ HỘ KHẨU") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Căn hộ đã có hộ khẩu"
+        };
+        res.status(400);
+    }
     else {
         resData = {
             type: "OK",
@@ -86,9 +93,9 @@ export async function updateHoKhau(req, res) {
     if (req.body.chuHo) {
         req.body.chuHo = String(req.body.chuHo);
     }
-    // Đảm bảo soNha là Number
-    if (req.body.soNha) {
-        req.body.soNha = Number(req.body.soNha);
+    // Đảm bảo canHo là Number
+    if (req.body.canHo) {
+        req.body.canHo = Number(req.body.canHo);
     }
     
     const result = await DBUpdateHoKhau(req.body);
@@ -107,6 +114,13 @@ export async function updateHoKhau(req, res) {
         };
         res.status(200);
     }
+    else if (result == "CĂN HỘ ĐÃ CÓ HỘ KHẨU") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Căn hộ đã có hộ khẩu"
+        };
+        res.status(400);
+    }
     else {
         resData = {
             type: "NOT FOUND",
@@ -118,16 +132,16 @@ export async function updateHoKhau(req, res) {
 }
 export async function deleteHoKhau(req, res) {
     let resData;
-    const chuHo = req.params.chuHo;
-    if (!chuHo || chuHo.trim() === '') {
+    const _id = req.params._id;
+    if (!_id) {
         resData = {
             type: "BAD REQUEST",
-            message: "Số CCCD của chủ hộ không hợp lệ"
+            message: "Hộ không tồn tại"
         };
         res.status(400);
     }
     else {
-        const result = await DBDeleteHoKhau(chuHo);
+        const result = await DBDeleteHoKhau(_id);
         if (result == "ERROR") {
             resData = {
                 type: "ERROR",
@@ -154,8 +168,8 @@ export async function deleteHoKhau(req, res) {
 }
 export async function addThanhVien(req, res) {
     let resData;
-    const chuHo = req.params.chuHo, thanhVien = req.params.thanhVien;
-    const result = await DBAddThanhVien(chuHo, thanhVien);
+    const _id = req.params._id, thanhVien = req.params.thanhVien;
+    const result = await DBAddThanhVien(_id, thanhVien);
     if (result == "OK") {
         resData = {
             type: "OK",
@@ -163,7 +177,7 @@ export async function addThanhVien(req, res) {
         };
         res.status(200);
     }
-    else if (result == "CHỦ HỘ KHÔNG TỒN TẠI") {
+    else if (result == "HỘ KHÔNG TỒN TẠI") {
         resData = {
             type: "NOT FOUND",
             message: "Không tìm thấy hộ"
@@ -184,6 +198,13 @@ export async function addThanhVien(req, res) {
         };
         res.status(400);
     }
+    else if (result == "THÀNH VIÊN ĐÃ THUỘC HỘ KHẨU KHÁC") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "Thành viên đã thuộc hộ khẩu khác"
+        };
+        res.status(400);
+    }
     else {
         resData = {
             type: "ERROR",
@@ -195,8 +216,8 @@ export async function addThanhVien(req, res) {
 }
 export async function deleteThanhVien(req, res) {
     let resData;
-    const chuHo = req.params.chuHo, thanhVien = req.params.thanhVien;
-    const result = await DBDeleteThanhVien(chuHo, thanhVien);
+    const _id = req.params._id, thanhVien = req.params.thanhVien;
+    const result = await DBDeleteThanhVien(_id, thanhVien);
     if (result == "OK") {
         resData = {
             type: "OK",

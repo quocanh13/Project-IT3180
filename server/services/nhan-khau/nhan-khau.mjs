@@ -13,10 +13,10 @@ import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
 export async function getNhanKhauList(offset = 0, limit = 10) {
     try {
         if(limit === -1) {
-            const nhanKhauList = await NhanKhauModel.find();
+            const nhanKhauList = await NhanKhauModel.find({ deleted: false }).populate('hoKhau');
             return nhanKhauList;
         }
-        const nhanKhauList = await NhanKhauModel.find().skip(offset).limit(limit);
+        const nhanKhauList = await NhanKhauModel.find({ deleted: false }).skip(offset).limit(limit).populate('hoKhau');
         return nhanKhauList;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách nhân khẩu:", error);
@@ -36,7 +36,7 @@ export async function getNhanKhauList(offset = 0, limit = 10) {
  */
 export async function getNhanKhau(cccd) {
     try {
-        const infoNhanKhau = await NhanKhauModel.findOne({ cccd : cccd }).exec();
+        const infoNhanKhau = await NhanKhauModel.findOne({ cccd : cccd , deleted: false }).exec();
         if (!infoNhanKhau) {
             return "NHÂN KHẨU KHÔNG TỒN TẠI";
         }
@@ -57,7 +57,7 @@ export async function getNhanKhau(cccd) {
  */
 export async function insertNhanKhau(nhanKhau) {
     try {
-        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: nhanKhau.cccd }).exec();
+        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: nhanKhau.cccd, deleted: false }).exec();
         if (existingNhanKhau) {
             return "NHÂN KHẨU ĐÃ TỒN TẠI";
         }else{
@@ -80,7 +80,7 @@ export async function insertNhanKhau(nhanKhau) {
  */
 export async function updateNhanKhau(nhanKhau) {
     try {
-        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: nhanKhau.cccd }).exec();
+        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: nhanKhau.cccd, deleted: false }).exec();
         if (!existingNhanKhau) {
             return "NHÂN KHẨU KHÔNG TỒN TẠI";
         }
@@ -110,11 +110,16 @@ export async function updateNhanKhau(nhanKhau) {
  */
 export async function deleteNhanKhau(cccd) {
     try {
-        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: cccd }).exec();
+        const existingNhanKhau = await NhanKhauModel.findOne({ cccd: cccd , deleted: false }).populate('hoKhau').exec();
         if (!existingNhanKhau) {
             return "NHÂN KHẨU KHÔNG TỒN TẠI";
         }
-        await NhanKhauModel.deleteOne({ cccd: cccd });
+        if(existingNhanKhau.hoKhau) {
+            if(existingNhanKhau.hoKhau.deleted === false && existingNhanKhau.hoKhau.chuHo === cccd) {
+                return "KHÔNG THỂ XÓA CHỦ HỘ";
+            }
+        }
+        await NhanKhauModel.updateOne({ cccd: cccd }, { deleted: true, deletedAt: new Date() });
         return "OK";
     } catch (error) {
         console.error("Lỗi khi xóa nhân khẩu:", error);

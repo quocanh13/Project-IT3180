@@ -1,7 +1,8 @@
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
 import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
-import createToast from "../utils/toast/toast.mjs";
+import createToast from "../utils/toast/toast.mjs"
 import {createHoKhauDetail} from "./ho-khau-detail.mjs"
+
 
 let currentMode = 'add';
 
@@ -21,14 +22,14 @@ async function loadHoKhauList() {
     const response = await getHoKhauList(0, -1);
     
     if (response.type === "OK") {
-        const listCCCD = response.data;
+        const list_id = response.data;
         tbody.innerHTML = ''; // Xóa dữ liệu cũ
 
-        for (const cccd of listCCCD) {
-            const detailRes = await getHoKhau(cccd);
+        for (const _id of list_id) {
+            const detailRes = await getHoKhau(_id);
             if (detailRes.type === "OK") {
                 // Lấy tên chủ hộ
-                const chuHoRes = await getNhanKhau(cccd);
+                const chuHoRes = await getNhanKhau(detailRes.data.chuHo);
                 const tenChuHo = chuHoRes.type === "OK" ? chuHoRes.data.hoTen : "Không xác định";
                 renderRow(detailRes.data, tenChuHo);
             }
@@ -42,23 +43,16 @@ function renderRow(hoKhau, tenChuHo) {
     console.log(hoKhau)
     const tbody = document.getElementById('hoKhauData');
     const row = document.createElement('tr');
-    row.className = "member-row"
-    row.addEventListener("click", async ()=>{
-        const _hoKhau = await getHoKhauInformation(hoKhau)
-        if(_hoKhau != null) {
-            createHoKhauDetail(_hoKhau)
-        }
-    });
     row.innerHTML = `
         <td>${tenChuHo}</td>
         <td>${hoKhau.chuHo}</td>
-        <td>${hoKhau.soNha}</td>
+        <td>${hoKhau.canHo}</td>
         <td>${new Date(hoKhau.ngayDK).toLocaleDateString('vi-VN')}</td>
-        <td>${hoKhau.thanhVien ? hoKhau.thanhVien.length : 0}</td>
+        <td>${hoKhau.numMembers || 0}</td>
         <td>
-            <button class="btn btn-primary" onclick="editHoKhau('${hoKhau.chuHo}'); event.stopPropagation();">Sửa</button>
-            <button class="btn btn-danger" onclick="removeHoKhau('${hoKhau.chuHo}'); event.stopPropagation();">Xóa</button>
-            <button class="btn btn-success" onclick="window.addThanhVien('${hoKhau.chuHo}'); event.stopPropagation();">Thêm thành viên</button>
+            <button class="btn btn-primary" onclick="editHoKhau('${hoKhau._id}')">Sửa</button>
+            <button class="btn btn-danger" onclick="removeHoKhau('${hoKhau._id}')">Xóa</button>
+            <button class="btn btn-success" onclick="window.addThanhVien('${hoKhau._id}')">Thêm thành viên</button>
         </td>
     `;
     tbody.appendChild(row);
@@ -70,30 +64,38 @@ async function handleFormSubmit(e) {
     
     const hoKhauObj = {
         chuHo: document.getElementById('chuHo').value,
-        soNha: document.getElementById('soNha').value,
+        canHo: Number(document.getElementById('canHo').value),
         ngayDK: new Date(document.getElementById('ngayDK').value),
-        thanhVien: [] // Mặc định khi thêm mới chưa có thành viên
     };
+    
+    // Nếu là edit, thêm _id
+    if (currentMode === 'edit') {
+        hoKhauObj._id = document.getElementById('hoKhauId').value;
+    }
+
     let res;
     if (currentMode === 'add') {
         res = await insertHoKhau(hoKhauObj);
+        if (res.type === "OK" && res.data && res.data._id) {
+            await addThanhVien(res.data._id, hoKhauObj.chuHo);
+        }
     } else {
         res = await updateHoKhau(hoKhauObj);
     }
 
-    if (res.type === "OK") {
-        createToast(res.message, false)
+    if (res && res.type === "OK") {
+        createToast(res.message || 'Thành công', false);
         closeModal();
         loadHoKhauList();
     } else {
-        createToast(res.message);
+        createToast(res?.message || 'Có lỗi xảy ra');
     }
 }
 
 // 3. Xóa
-window.removeHoKhau = async function(cccd) {
-    if (confirm(`Bạn có chắc muốn xóa hộ khẩu chủ hộ: ${cccd}?`)) { 
-        const hoKhauRes = await getHoKhau(cccd);
+window.removeHoKhau = async function(_id) {
+    if (confirm(`Bạn có chắc muốn xóa hộ khẩu này?`)) { 
+        const hoKhauRes = await getHoKhau(_id);
         if (hoKhauRes.type !== "OK") {
             createToast("Hộ khẩu không tồn tại");
         } else if (hoKhauRes.data.thanhVien) {
@@ -101,7 +103,7 @@ window.removeHoKhau = async function(cccd) {
                 await deleteNhanKhau(memberCCCD);
             });
         }
-        const res = await deleteHoKhau(cccd);
+        const res = await deleteHoKhau(_id);
         if (res.type === "OK") {
             loadHoKhauList();
         } else {
@@ -111,7 +113,7 @@ window.removeHoKhau = async function(cccd) {
 }
 
 // 4. Quản lý Modal
-window.openModal = async function(mode, cccd = null) {
+window.openModal = async function(mode, _id = null) {
     currentMode = mode;
     const modal = document.getElementById('hoKhauModal');
     const title = document.getElementById('modalTitle');
@@ -125,19 +127,20 @@ window.openModal = async function(mode, cccd = null) {
 
     if (mode === 'edit') {
         title.innerText = "Chỉnh sửa Hộ Khẩu";
-        chuHoInput.disabled = true; // Không cho sửa CCCD chủ hộ khi update
-        fetchDetailToForm(cccd);
+        chuHoInput.disabled = false; // Cho phép sửa chủ hộ
+        fetchDetailToForm(_id);
     } else {
         title.innerText = "Thêm Hộ Khẩu";
         chuHoInput.disabled = false;
     }
 }
 
-async function fetchDetailToForm(cccd) {
-    const res = await getHoKhau(cccd);
+async function fetchDetailToForm(_id) {
+    const res = await getHoKhau(_id);
     if (res.type === "OK") {
+        document.getElementById('hoKhauId').value = res.data._id;
         document.getElementById('chuHo').value = res.data.chuHo;
-        document.getElementById('soNha').value = res.data.soNha;
+        document.getElementById('canHo').value = res.data.canHo;
         document.getElementById('ngayDK').value = new Date(res.data.ngayDK).toISOString().split('T')[0];
     }
 }
@@ -146,8 +149,8 @@ window.closeModal = function() {
     document.getElementById('hoKhauModal').style.display = 'none';
 }
 
-window.editHoKhau = function(cccd) {
-    openModal('edit', cccd);
+window.editHoKhau = function(_id) {
+    openModal('edit', _id);
 }
 
 // Load danh sách nhân khẩu vào dropdown
@@ -189,10 +192,10 @@ async function loadNhanKhauToDropdown() {
     }
 }
 
-window.addThanhVien = async function(chuHo) {
+window.addThanhVien = async function(_id) {
     const cccd = prompt('Nhập số CCCD thành viên:');
     if (cccd) {
-        const res = await addThanhVien(chuHo, cccd);
+        const res = await addThanhVien(_id, cccd);
         if (res.type === "OK") {
             createToast('Thêm thành viên thành công', false);
             loadHoKhauList();
@@ -200,30 +203,4 @@ window.addThanhVien = async function(chuHo) {
             createToast(res.message);
         }
     }
-}
-
-/**
- * @param {HoKhau} _hoKhau 
- */
-async function getHoKhauInformation(_hoKhau) {
-    const hoKhau = Object.create(_hoKhau)
-    hoKhau.thanhVien = []
-    const chuHo = await getNhanKhau(hoKhau.chuHo)
-    if(chuHo.type == "OK") {
-        hoKhau.chuHo = chuHo.data
-    } else {
-        createToast(chuHo.message)
-        return null
-    }
-
-    for(let i = 0; i < _hoKhau.thanhVien.length; i++) {
-        const thanhVien = await getNhanKhau(_hoKhau.thanhVien[i])
-        if(thanhVien.type == "OK") {
-            hoKhau.thanhVien.push(thanhVien.data)
-        } else {
-            createToast(thanhVien.message)
-            return null
-        }
-    }
-    return hoKhau;   
 }
