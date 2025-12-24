@@ -28,10 +28,29 @@ async function loadHoKhauList() {
         for (const _id of list_id) {
             const detailRes = await getHoKhau(_id);
             if (detailRes.type === "OK") {
+                const hoKhauGoc = detailRes.data;
+
                 // Lấy tên chủ hộ
-                const chuHoRes = await getNhanKhau(detailRes.data.chuHo);
-                const tenChuHo = chuHoRes.type === "OK" ? chuHoRes.data.hoTen : "Không xác định";
-                renderRow(detailRes.data, tenChuHo);
+                const chuHoRes = await getNhanKhau(hoKhauGoc.chuHo);
+
+                // Lấy thông tin chi tiết của tất cả Thành Viên (NhanKhau[])
+                // const danhSachThanhVien = [];
+                // if (hoKhauGoc.thanhVien && hoKhauGoc.thanhVien.length > 0) {
+                //     for (const memberCCCD of hoKhauGoc.thanhVien) {
+                //         const memberRes = await getNhanKhau(memberCCCD);
+                //         if (memberRes.type === "OK") {
+                //             danhSachThanhVien.push(memberRes.data);
+                //         }  
+                //     }
+                // }
+
+                // Tạo đối tượng mới kế thừa toàn bộ hoKhauGoc và thêm 2 trường mới
+                const hoKhauInformation = {
+                    ...hoKhauGoc,        
+                    tenChuHo: chuHoRes.data ? chuHoRes.data.hoTen : 'N/A' 
+                };
+                console.log('HoKhauFull:', hoKhauInformation);
+                renderRow(hoKhauInformation);
             }
         }
     } else {
@@ -39,20 +58,26 @@ async function loadHoKhauList() {
     }
 }
 
-function renderRow(hoKhau, tenChuHo) {
-    console.log(hoKhau)
+function renderRow(hoKhauFull) {
     const tbody = document.getElementById('hoKhauData');
     const row = document.createElement('tr');
+    
+    row.onclick = (e) => {
+        if (e.target.tagName === 'BUTTON') return;
+        
+        createHoKhauDetail(hoKhauFull); 
+    };
+    
     row.innerHTML = `
-        <td>${tenChuHo}</td>
-        <td>${hoKhau.chuHo}</td>
-        <td>${hoKhau.canHo}</td>
-        <td>${new Date(hoKhau.ngayDK).toLocaleDateString('vi-VN')}</td>
-        <td>${hoKhau.numMembers || 0}</td>
+        <td>${hoKhauFull.tenChuHo}</td>
+        <td>${hoKhauFull.chuHo}</td>
+        <td>${hoKhauFull.canHo}</td>
+        <td>${new Date(hoKhauFull.ngayDK).toLocaleDateString('vi-VN')}</td>
+        <td>${hoKhauFull.thanhVien.length || 0}</td>
         <td>
-            <button class="btn btn-primary" onclick="editHoKhau('${hoKhau._id}')">Sửa</button>
-            <button class="btn btn-danger" onclick="removeHoKhau('${hoKhau._id}')">Xóa</button>
-            <button class="btn btn-success" onclick="window.addThanhVien('${hoKhau._id}')">Thêm thành viên</button>
+            <button class="btn btn-primary" onclick="editHoKhau('${hoKhauFull._id}')">Sửa</button>
+            <button class="btn btn-danger" onclick="removeHoKhau('${hoKhauFull._id}')">Xóa</button>
+            <button class="btn btn-success" onclick="window.addThanhVien('${hoKhauFull._id}')">Thêm thành viên</button>
         </td>
     `;
     tbody.appendChild(row);

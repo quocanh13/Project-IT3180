@@ -44,11 +44,12 @@ export async function getHoKhau(_id) {
         
         // Đếm số thành viên từ collection nhan_khau
         const thanhVienCount = await NhanKhauModel.countDocuments({ hoKhau: _id });
+        const thanhVien = await NhanKhauModel.find({ hoKhau: _id });
         
         // Chuyển sang plain object để thêm field
         const hoKhauObj = hoKhau.toObject();
         hoKhauObj.numMembers = thanhVienCount;
-
+        hoKhauObj.thanhVien = thanhVien;
         return hoKhauObj;
     } catch (error) {
         console.error("Get HoKhau error:", error);

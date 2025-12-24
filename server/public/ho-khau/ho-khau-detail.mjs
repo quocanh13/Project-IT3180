@@ -31698,7 +31698,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Hàm tạo một component hiển thị thông tin hộ khẩu
  * Tham số đầu vào là một đối tượng có kiểu HoKhauInformation mở rộng của HoKhau
- * - Trường chuHo : NhanKhau - Thông tin của chủ hộ
+ * - Trường tenChuHo : NhanKhau - Tên chủ hộ - String
  * - Trường thanhVien : NhanKhau[] - Mảng chứa thông tin của từng thành viên
  * @param {import("./HoKhauDetail").HoKhauInformation} hoKhau 
  */
