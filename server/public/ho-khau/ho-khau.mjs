@@ -1,8 +1,6 @@
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
 import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs"
-import {createHoKhauDetail} from "./ho-khau-detail.mjs"
-
 
 let currentMode = 'add';
 
@@ -54,7 +52,8 @@ function renderRow(hoKhauFull) {
     row.onclick = (e) => {
         if (e.target.tagName === 'BUTTON') return;
         
-        createHoKhauDetail(hoKhauFull); 
+        // Mở modal detail mới
+        openDetailModal(hoKhauFull._id);
     };
     
     row.innerHTML = `
@@ -66,7 +65,6 @@ function renderRow(hoKhauFull) {
         <td>
             <button class="btn btn-primary" onclick="editHoKhau('${hoKhauFull._id}')">Sửa</button>
             <button class="btn btn-danger" onclick="removeHoKhau('${hoKhauFull._id}')">Xóa</button>
-            <button class="btn btn-success" onclick="window.addThanhVien('${hoKhauFull._id}')">Thêm thành viên</button>
         </td>
     `;
     tbody.appendChild(row);
@@ -218,3 +216,198 @@ window.addThanhVien = async function(_id) {
         }
     }
 }
+
+// ===== DETAIL MODAL FUNCTIONS =====
+let currentHoKhauId = null;
+
+async function openDetailModal(hoKhauId) {
+    currentHoKhauId = hoKhauId;
+    const modal = document.getElementById('detailModal');
+    
+    // Load dữ liệu hộ khẩu
+    const res = await getHoKhau(hoKhauId);
+    if (res.type !== "OK") {
+        createToast('Không thể tải thông tin hộ khẩu');
+        return;
+    }
+    
+    const hoKhau = res.data;
+    
+    // Lấy thông tin chủ hộ
+    const chuHoRes = await getNhanKhau(hoKhau.chuHo);
+    const tenChuHo = chuHoRes.data ? chuHoRes.data.hoTen : 'N/A';
+    
+    // Hiển thị thông tin cơ bản
+    document.getElementById('detailTenChuHo').textContent = tenChuHo;
+    document.getElementById('detailCCCDChuHo').textContent = hoKhau.chuHo;
+    document.getElementById('detailCanHo').textContent = hoKhau.canHo || 'N/A';
+    document.getElementById('detailNgayDK').textContent = new Date(hoKhau.ngayDK).toLocaleDateString('vi-VN');
+    document.getElementById('detailSoThanhVien').textContent = hoKhau.thanhVien?.length || 0;
+    
+    // Load danh sách thành viên
+    await loadMembersList(hoKhau.thanhVien);
+    
+    modal.style.display = 'flex';
+}
+
+window.closeDetailModal = function() {
+    document.getElementById('detailModal').style.display = 'none';
+    currentHoKhauId = null;
+}
+
+async function loadMembersList(thanhVienArray) {
+    const tbody = document.getElementById('membersTableBody');
+    tbody.innerHTML = '<tr><td colspan="5">Đang tải...</td></tr>';
+    
+    if (!thanhVienArray || thanhVienArray.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">Chưa có thành viên nào</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = '';
+    
+    for (const member of thanhVienArray) {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td>${member.hoTen || 'N/A'}</td>
+            <td>${member.cccd || 'N/A'}</td>
+            <td>${member.quanHeVoiChuHo || 'N/A'}</td>
+            <td>${member.ngaySinh ? new Date(member.ngaySinh).toLocaleDateString('vi-VN') : 'N/A'}</td>
+            <td>
+                <button class="btn-edit-member" onclick="openUpdateRelationModal('${member.cccd}', '${member.hoTen}', '${member.quanHeVoiChuHo || ''}')">Sửa</button>
+                <button class="btn-delete-member" onclick="removeMemberFromHo('${member.cccd}')">Xóa</button>
+            </td>
+        `;
+        
+        tbody.appendChild(row);
+    }
+}
+
+window.openAddMemberModal = async function() {
+    const modal = document.getElementById('addMemberModal');
+    const select = document.getElementById('memberSelect');
+    
+    // Load danh sách nhân khẩu
+    select.innerHTML = '<option value="" disabled selected>Đang tải...</option>';
+    
+    const res = await getNhanKhauList(0, -1);
+    if (res.type === "OK") {
+        select.innerHTML = '<option value="" disabled selected>-- Chọn nhân khẩu --</option>';
+        
+        for (const nhanKhau of res.data) {
+            const option = document.createElement('option');
+            option.value = nhanKhau.cccd;
+            option.textContent = `${nhanKhau.hoTen} - ${nhanKhau.cccd}`;
+            select.appendChild(option);
+        }
+    } else {
+        select.innerHTML = '<option value="" disabled>Lỗi tải dữ liệu</option>';
+    }
+    
+    modal.style.display = 'flex';
+}
+
+window.closeAddMemberModal = function() {
+    document.getElementById('addMemberModal').style.display = 'none';
+    document.getElementById('addMemberForm').reset();
+}
+
+// Xử lý form thêm thành viên
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('addMemberForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const cccd = document.getElementById('memberSelect').value;
+        const quanHe = document.getElementById('quanHeVoiChuHo').value;
+        
+        if (!currentHoKhauId || !cccd) {
+            createToast('Thông tin không hợp lệ');
+            return;
+        }
+        
+        // Thêm thành viên vào hộ
+        const res = await addThanhVien(currentHoKhauId, cccd);
+        
+        if (res.type === "OK") {
+            // Cập nhật quan hệ với chủ hộ
+            const updateRes = await updateNhanKhau({
+                cccd: cccd,
+                quanHeVoiChuHo: quanHe
+            });
+            
+            createToast('Thêm thành viên thành công', false);
+            closeAddMemberModal();
+            // Refresh detail modal
+            openDetailModal(currentHoKhauId);
+            loadHoKhauList();
+        } else {
+            createToast(res.message || 'Không thể thêm thành viên');
+        }
+    });
+    
+    // Xử lý form cập nhật quan hệ
+    document.getElementById('updateRelationForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const cccd = document.getElementById('updateMemberCCCD').value;
+        const quanHe = document.getElementById('updateQuanHe').value;
+        
+        if (!cccd || !quanHe) {
+            createToast('Thông tin không hợp lệ');
+            return;
+        }
+        
+        const res = await updateNhanKhau({
+            cccd: cccd,
+            quanHeVoiChuHo: quanHe
+        });
+        
+        if (res.type === "OK") {
+            createToast('Cập nhật quan hệ thành công', false);
+            closeUpdateRelationModal();
+            // Refresh detail modal
+            if (currentHoKhauId) {
+                openDetailModal(currentHoKhauId);
+            }
+            loadHoKhauList();
+        } else {
+            createToast(res.message || 'Không thể cập nhật quan hệ');
+        }
+    });
+});
+
+window.removeMemberFromHo = async function(cccd) {
+    if (!confirm('Bạn có chắc muốn xóa thành viên này khỏi hộ?')) {
+        return;
+    }
+    
+    // Xóa nhân khẩu (hoặc chỉ xóa khỏi hộ nếu có API riêng)
+    const res = await deleteNhanKhau(cccd);
+    
+    if (res.type === "OK") {
+        createToast('Đã xóa thành viên', false);
+        // Refresh detail modal
+        if (currentHoKhauId) {
+            openDetailModal(currentHoKhauId);
+        }
+        loadHoKhauList();
+    } else {
+        createToast(res.message || 'Không thể xóa thành viên');
+    }
+}
+
+// Mở modal cập nhật quan hệ
+window.openUpdateRelationModal = function(cccd, hoTen, quanHe) {
+    document.getElementById('updateMemberCCCD').value = cccd;
+    document.getElementById('updateMemberName').value = hoTen;
+    document.getElementById('updateQuanHe').value = quanHe || '';
+    document.getElementById('updateRelationModal').style.display = 'flex';
+}
+
+window.closeUpdateRelationModal = function() {
+    document.getElementById('updateRelationModal').style.display = 'none';
+    document.getElementById('updateRelationForm').reset();
+}
+
+window.openDetailModal = openDetailModal;

@@ -167,7 +167,153 @@ th {
     width: 400px;
 }
 
+.modal-detail {
+    width: 800px;
+    max-width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-small {
+    width: 450px;
+}
+
+.btn-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.btn-close:hover {
+    color: #000;
+}
+
+.detail-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.info-row {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #666;
+    min-width: 180px;
+}
+
+.info-value {
+    color: #333;
+    flex: 1;
+}
+
+.badge {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.9em;
+}
+
+.members-section {
+    margin-top: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.section-header h3 {
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.9em;
+}
+
+.members-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.members-table th {
+    background: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.members-table td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.members-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.members-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.btn-delete-member {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    margin-left: 5px;
+}
+
+.btn-delete-member:hover {
+    background: #c82333;
+}
+
+.btn-edit-member {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.btn-edit-member:hover {
+    background: #0056b3;
+}
+
 .form-group { margin-bottom: 1rem; }
 .form-group label { display: block; margin-bottom: 5px; }
-.form-group input { width: 100%; padding: 8px; box-sizing: border-box; }
+.form-group input, .form-group select { width: 100%; padding: 8px; box-sizing: border-box; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1rem; }

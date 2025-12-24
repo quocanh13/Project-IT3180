@@ -91,6 +91,105 @@
         </div>
     </div>
 
+    <!-- Modal Detail Hộ Khẩu -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content modal-detail">
+            <button class="btn-close" onclick="closeDetailModal()">×</button>
+            <h2>Chi Tiết Hộ Khẩu</h2>
+            
+            <div class="detail-info">
+                <div class="info-row">
+                    <span class="info-label">Tên Chủ Hộ:</span>
+                    <span class="info-value" id="detailTenChuHo"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">CCCD Chủ Hộ:</span>
+                    <span class="info-value" id="detailCCCDChuHo"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Căn Hộ:</span>
+                    <span class="info-value" id="detailCanHo"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ngày Đăng Ký:</span>
+                    <span class="info-value" id="detailNgayDK"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Số Thành Viên:</span>
+                    <span class="info-value" id="detailSoThanhVien"></span>
+                </div>
+            </div>
+
+            <div class="members-section">
+                <div class="section-header">
+                    <h3>Danh Sách Thành Viên</h3>
+                    <button class="btn btn-success btn-sm" onclick="openAddMemberModal()">+ Thêm Thành Viên</button>
+                </div>
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Họ Tên</th>
+                            <th>CCCD</th>
+                            <th>Quan Hệ Với Chủ Hộ</th>
+                            <th>Ngày Sinh</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-actions" style="margin-top: 20px;">
+                <button type="button" class="btn btn-secondary" onclick="closeDetailModal()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thêm Thành Viên -->
+    <div id="addMemberModal" class="modal">
+        <div class="modal-content modal-small">
+            <h2>Thêm Thành Viên</h2>
+            <form id="addMemberForm">
+                <div class="form-group">
+                    <label>Chọn Nhân Khẩu:</label>
+                    <select id="memberSelect" required>
+                        <option value="" disabled selected>-- Chọn nhân khẩu --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quan Hệ Với Chủ Hộ:</label>
+                    <input type="text" id="quanHeVoiChuHo" required placeholder="Vd: Con, Vợ, Bố, Mẹ...">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddMemberModal()">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Cập Nhật Quan Hệ -->
+    <div id="updateRelationModal" class="modal">
+        <div class="modal-content modal-small">
+            <h2>Cập Nhật Quan Hệ Với Chủ Hộ</h2>
+            <form id="updateRelationForm">
+                <input type="hidden" id="updateMemberCCCD">
+                <div class="form-group">
+                    <label>Họ Tên:</label>
+                    <input type="text" id="updateMemberName" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Quan Hệ Với Chủ Hộ:</label>
+                    <input type="text" id="updateQuanHe" required placeholder="Vd: Con, Vợ, Bố, Mẹ...">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeUpdateRelationModal()">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập Nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script type="module" src="./ho-khau.mjs"></script>
 </body>
 </html>
