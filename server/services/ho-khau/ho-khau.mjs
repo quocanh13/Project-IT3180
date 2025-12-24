@@ -209,7 +209,7 @@ export async function deleteThanhVien(_id, cccd) {
         if(!existingThanhVien) {
             return "THÀNH VIÊN KHÔNG TRONG HỘ";
         }
-        await NhanKhauModel.updateOne({ cccd: cccd }, { $unset: { hoKhau: "" } });
+        await NhanKhauModel.updateOne({ cccd: cccd }, { $unset: { hoKhau: "" ,quanHeVoiChuHo: ""} });
         return "OK";
     } catch (error) {
         console.error("Delete ThanhVien error:", error);

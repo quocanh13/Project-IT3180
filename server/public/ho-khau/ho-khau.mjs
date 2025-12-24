@@ -1,11 +1,15 @@
-import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien } from "../request/ho-khau.mjs";
+import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien, deleteThanhVien} from "../request/ho-khau.mjs";
 import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs"
+import { renderLayout } from "../utils/layout.mjs"
 
 let currentMode = 'add';
 
 // Khởi tạo khi load trang
 document.addEventListener('DOMContentLoaded', () => {
+    // Render layout (topbar + sidebar)
+    renderLayout('ho-khau');
+    
     loadHoKhauList();
     
     // Gán sự kiện submit form
@@ -382,8 +386,7 @@ window.removeMemberFromHo = async function(cccd) {
         return;
     }
     
-    // Xóa nhân khẩu (hoặc chỉ xóa khỏi hộ nếu có API riêng)
-    const res = await deleteNhanKhau(cccd);
+    const res = await deleteThanhVien(currentHoKhauId, cccd);
     
     if (res.type === "OK") {
         createToast('Đã xóa thành viên', false);

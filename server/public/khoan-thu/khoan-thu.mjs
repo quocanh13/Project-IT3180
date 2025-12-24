@@ -1,3 +1,10 @@
+import { renderLayout } from "../utils/layout.mjs";
+
+// Render layout khi load trang
+document.addEventListener('DOMContentLoaded', () => {
+    renderLayout('khoan-thu');
+});
+
 let currentMode = 'add';
 let currentId = null;
 
