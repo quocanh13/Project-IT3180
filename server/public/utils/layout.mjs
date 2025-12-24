@@ -28,7 +28,7 @@ export function renderLayout(activePage) {
                     <div class="sidebar-text ${activePage === 'nhan-khau' ? 'chosen-link' : ''}">nhân khẩu</div>
                 </div>
             </a>
-            <a href="../khoan-thu/khoan-thu.html">
+            <a href="../thu-chi/thu-chi.html">
                 <div class="sidebar-link ${activePage === 'khoan-thu' ? 'chosen-link' : ''}">
                     <img src="../images/khoan-thu.png">
                     <div class="sidebar-text ${activePage === 'khoan-thu' ? 'chosen-link' : ''}">Quản lý</div>

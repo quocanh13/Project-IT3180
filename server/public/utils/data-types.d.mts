@@ -57,12 +57,10 @@ export declare class HoKhau {
     ngayDK?: Date;
 }
 export declare class KhoanThu {
-    id: mongoose.Types.ObjectId;
-    ten: string;
-    soTien: number;
-    moTa?: string;
-    hanNop?: Date;
-    ngayNop?: Date;
+    maKhoanThu? : number
+    tenKhoanThu? : string
+    loaiKhoanThu? : "bắt buộc" | "tự nguyện"
+    soTien? : number
 }
 export declare class DsKhoanThu {
     /**Số CCCD của chủ hộ */

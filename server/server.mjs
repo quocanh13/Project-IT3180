@@ -4,6 +4,7 @@ import staticRouter from "./routers/static-router.mjs"
 import loginRouter from "./routers/login-router.mjs"
 import hoKhauRouter from "./routers/ho-khau-router.mjs"
 import nhanKhauRouter from "./routers/nhan-khau-router.mjs"
+import khoanThuRouter from "./routers/khoan-thu-router.mjs"
 
 const server = express();
 
@@ -15,7 +16,7 @@ server.use((req, res, next)=>{
     next();
 })
 
-server.use([staticRouter, loginRouter, hoKhauRouter, nhanKhauRouter]);
+server.use([staticRouter, loginRouter, hoKhauRouter, nhanKhauRouter, khoanThuRouter]);
 
 server.listen(80, "::", ()=>{
     console.log("Server is listening");

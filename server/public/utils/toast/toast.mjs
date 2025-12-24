@@ -25,7 +25,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.toast-container{
     position: fixed;
     top: 20px;
     left: 0px;
-    z-index: 300;
+    z-index: 100000;
 }
 
 .toast-container > div{

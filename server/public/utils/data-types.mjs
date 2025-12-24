@@ -55,13 +55,11 @@ export class HoKhau {
     soNha;
     ngayDK;
 }
-export class KhoanThu {
-    id;
-    ten;
-    soTien;
-    moTa;
-    hanNop;
-    ngayNop;
+export  class KhoanThu {
+    maKhoanThu 
+    tenKhoanThu 
+    loaiKhoanThu 
+    soTien 
 }
 export class DsKhoanThu {
     /**Số CCCD của chủ hộ */

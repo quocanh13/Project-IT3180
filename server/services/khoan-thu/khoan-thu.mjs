@@ -1,4 +1,4 @@
-import { KhoanThu } from "../../config/models/khoan_thu-model.mjs";
+import KhoanThu from "../../config/models/khoan_thu-model.mjs";
 
 /**
  * Hàm lấy danh sách khoản thu 
