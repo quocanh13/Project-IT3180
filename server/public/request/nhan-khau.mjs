@@ -7,7 +7,9 @@ export async function getNhanKhau(cccd) {
     const res = await fetch("/nhan-khau/" + cccd, {
         method: "GET"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Hàm lấy thông tin nhân khẩu dựa trên số CCCD
@@ -19,7 +21,9 @@ export async function getNhanKhauList(offset = 0, limit = 10) {
     const res = await fetch(`/nhan-khau?offset=${offset}&limit=${limit}`, {
         method: "GET"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Hàm thêm một nhân khẩu vào danh sách nhân khẩu
@@ -34,7 +38,9 @@ export async function insertNhanKhau(nhanKhau) {
             "content-type": "application/json"
         }
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Hàm cập nhật thông tin một nhân khẩu trong danh sách nhân khẩu
@@ -49,7 +55,9 @@ export async function updateNhanKhau(nhanKhau) {
         },
         body: JSON.stringify(nhanKhau),
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Hàm xóa một nhân khẩu có số CCCD tương ứng khỏi danh sách nhân khẩu
@@ -60,5 +68,7 @@ export async function deleteNhanKhau(cccd) {
     const res = await fetch(`/nhan-khau/${cccd}`, {
         method: "DELETE",
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }

@@ -1,14 +1,17 @@
 import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien, deleteThanhVien} from "../request/ho-khau.mjs";
 import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs"
-import { renderLayout } from "../utils/layout.mjs"
+// import { renderLayout } from "../utils/layout.mjs"
+import createHeader from "../header/header.mjs"
+
+createHeader(0);
 
 let currentMode = 'add';
 
 // Khởi tạo khi load trang
 document.addEventListener('DOMContentLoaded', () => {
     // Render layout (topbar + sidebar)
-    renderLayout('ho-khau');
+    // renderLayout('ho-khau');
     
     loadHoKhauList();
     
