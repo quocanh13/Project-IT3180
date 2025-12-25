@@ -1,7 +1,7 @@
-import { NopTien } from "../../config/models/nop_tien-model.mjs";
-import { KhoanThu } from "../../config/models/khoan_thu-model.mjs";
+import NopTien from "../../config/models/nop_tien-model.mjs";
+import KhoanThu from "../../config/models/khoan_thu-model.mjs";
 import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
-import { HoKhau } from "../../config/models/ho_khau-model.mjs";
+import HoKhau from "../../config/models/ho_khau-model.mjs";
 /**
  * Hàm lấy danh sách người nộp tiền 
  * @param {number} offset - Vị trí bắt đầu. Mặc định là 0
@@ -20,10 +20,10 @@ export async function getNopTienList(offset = 0, limit = 10,maKhoanThu = null) {
             find.maKhoanThu = maKhoanThu;
         }
         if(limit === -1) {
-            const nopTienList = await KhoanThu.find(find);
+            const nopTienList = await NopTien.find(find);
             return nopTienList;
         }
-        const nopTienList = await KhoanThu.find(find).skip(offset).limit(limit);
+        const nopTienList = await NopTien.find(find).skip(offset).limit(limit);
         return nopTienList;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách nộp tiền:", error);
@@ -45,6 +45,12 @@ export async function getNopTien(_id) {
         if (!infoNopTien) {
             return "HOÁ ĐƠN KHÔNG TỒN TẠI";
         }
+        const khoanThu =  await KhoanThu.findOne({ maKhoanThu : infoNopTien.maKhoanThu , deleted: false }).exec();
+        const nguoiNop =  await NhanKhauModel.findOne({ cccd : infoNopTien.nguoiNop , deleted: false }).exec();
+        const hoKhau =  await HoKhau.findOne({ _id : nguoiNop.maHoKhau , deleted: false }).exec();
+        infoNopTien.tenKhoanThu = khoanThu ? khoanThu.tenKhoanThu : "_";
+        infoNopTien.nguoiNop = nguoiNop ? nguoiNop.hoTen : "_";
+        infoNopTien.canHo = hoKhau ? hoKhau.canHo : "_";
         return infoNopTien;
     } catch (error) {
         console.error("Lỗi khi lấy thông tin nộp tiền:", error);
