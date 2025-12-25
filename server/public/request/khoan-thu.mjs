@@ -41,7 +41,7 @@ export async function insertKhoanThu(khoanThu) {
  * @returns 
  */
 export async function updateKhoanThu(khoanThu) {
-    const res = await fetch(`/khoan-thu/${khoanThu._id}`, {
+    const res = await fetch(`/khoan-thu/${khoanThu.maKhoanThu}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

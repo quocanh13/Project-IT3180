@@ -1,7 +1,7 @@
-import { NopTien } from "../../config/models/nop_tien-model.mjs";
-import { KhoanThu } from "../../config/models/khoan_thu-model.mjs";
+import  NopTien  from "../../config/models/nop_tien-model.mjs";
+import  KhoanThu  from "../../config/models/khoan_thu-model.mjs";
 import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
-import { HoKhau } from "../../config/models/ho_khau-model.mjs";
+import  HoKhau  from "../../config/models/ho_khau-model.mjs";
 /**
  * Hàm lấy danh sách người nộp tiền 
  * @param {number} offset - Vị trí bắt đầu. Mặc định là 0
