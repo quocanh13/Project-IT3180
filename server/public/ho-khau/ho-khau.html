@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Hộ Khẩu</title>
     <link rel="stylesheet" href="./ho-khau.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
 </head>
 <body>
     <div id="root"></div>
@@ -13,13 +14,19 @@
     <main class="container">
         <header class="content-header">
             <h1>Danh Sách Hộ Khẩu</h1>
-            <button class="btn btn-primary" onclick="openModal('add')">Thêm Hộ Khẩu Mới</button>
+            <button class="btn btn-success" onclick="openModal('add')">Thêm Hộ Khẩu Mới</button>
         </header>
 
-        <!-- <form action="" id="searchForm" class="search-form">
-            <input type="text" id="keyword" placeholder="Tìm kiếm theo CCCD, Căn Hộ..." />
-            <button type="submit" class="btn btn-secondary">Tìm Kiếm</button>
-        </form> -->
+            <div class="row">
+                <div class="col-9"></div>
+                <div class="col-3 mb-3">
+                    <form action="" id="searchForm" class="search-form">
+                        <input type="text" id="keyword" placeholder="Tìm kiếm theo CCCD, Căn Hộ..." />
+                        <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
+                    </form>
+                </div>
+            </div>
+
 
         <section class="table-container">
             <table id="hoKhauTable">
@@ -70,7 +77,7 @@
     <!-- Modal Detail Hộ Khẩu -->
     <div id="detailModal" class="modal">
         <div class="modal-content modal-detail">
-            <button class="btn-close" onclick="closeDetailModal()">×</button>
+            <!-- <button class="btn-close" onclick="closeDetailModal()">×</button> -->
             <h2>Chi Tiết Hộ Khẩu</h2>
             
             <div class="detail-info">
@@ -166,6 +173,8 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>
     <script type="module" src="./ho-khau.mjs"></script>
 </body>
 </html>

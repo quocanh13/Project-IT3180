@@ -4,7 +4,7 @@ export async function postLogin(req, res) {
     const result = await login(req.body.username, req.body.password);
     let resData;
     if (result == "OK") {
-        const token = sign({ username: req.body.username }, "30s");
+        const token = sign({ username: req.body.username }, "600s");
         res.cookie("token", token);
         resData = {
             type: "REDIRECT",

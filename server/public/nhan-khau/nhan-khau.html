@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Nhân Khẩu</title>
     <link rel="stylesheet" href="./nhan-khau.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
 </head>
 <body>
     <div id="root"></div>
@@ -13,8 +14,18 @@
     <main class="container">
         <header class="content-header">
             <h1>Danh Sách Nhân Khẩu</h1>
-            <button class="btn btn-primary" onclick="openModal('add')">Thêm Nhân Khẩu Mới</button>
+            <button class="btn btn-success" onclick="openModal('add')">Thêm Nhân Khẩu Mới</button>
         </header>
+
+            <div class="row">
+                <div class="col-9"></div>
+                <div class="col-3 mb-3">
+                    <form action="" id="searchForm" class="search-form">
+                        <input type="text" id="keyword" placeholder="Tìm kiếm theo CCCD, Căn Hộ..." />
+                        <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
+                    </form>
+                </div>
+            </div>
 
         <section class="table-container">
             <table id="nhanKhauTable">
@@ -83,7 +94,8 @@
             </form>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>
     <script type="module" src="./nhan-khau.mjs"></script>
 </body>
 </html>

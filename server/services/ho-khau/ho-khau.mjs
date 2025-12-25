@@ -218,16 +218,30 @@ export async function deleteThanhVien(_id, cccd) {
 }
 export async function getHoKhauSearch(keyword) {
     try {
-        let find = {
-            deleted: false
-        };
+        let find = { deleted: false };
 
         if (keyword) {
             const regex = new RegExp(keyword, 'i');
-            find.$or = [ { chuHo: regex }, { canHo: Number(keyword) } ];
-        }
-        const hoKhauSearchId = await HoKhau.findOne(find).exec();
-        return hoKhauSearchId._id;
+            const nhanKhauList = await NhanKhauModel.find({ 
+                hoTen: regex, 
+                quanHeVoiChuHo: "Chủ Hộ",
+                deleted: false 
+            }).exec();
+            const hoKhauIdsFromNhanKhau = nhanKhauList
+                .map(nk => nk.hoKhau)
+                .filter(id => id != null);
+            let orConditions = [
+                { chuHo: regex }, 
+                { _id: { $in: hoKhauIdsFromNhanKhau } } 
+            ];
+            if (!isNaN(keyword) && keyword.trim() !== "") {
+                orConditions.push({ canHo: Number(keyword) });
+            }
+            find.$or = orConditions;
+        }       
+        const hoKhauSearch = await HoKhau.find(find).select('_id').exec();
+        return hoKhauSearch.map(hk => hk._id.toString()); 
+        
     } catch (error) {
         console.error("Search HoKhau error:", error);
         return "ERROR";

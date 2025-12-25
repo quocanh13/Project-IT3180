@@ -70,7 +70,7 @@ function renderRow(hoKhauFull) {
         <td>${new Date(hoKhauFull.ngayDK).toLocaleDateString('vi-VN')}</td>
         <td>${hoKhauFull.thanhVien.length || 0}</td>
         <td>
-            <button class="btn btn-primary" onclick="editHoKhau('${hoKhauFull._id}')">Sửa</button>
+            <button class="btn btn-warning" onclick="editHoKhau('${hoKhauFull._id}')">Sửa</button>
             <button class="btn btn-danger" onclick="removeHoKhau('${hoKhauFull._id}')">Xóa</button>
         </td>
     `;
@@ -436,19 +436,20 @@ if (searchForm) {
         const response = await searchHoKhau(keyword);
 
         if (response.type === "OK") {
-            const id = response.data;
+            const listId = response.data;
             tbody.innerHTML = ''; 
-
-            const detailRes = await getHoKhau(id); 
-            if (detailRes.type === "OK") {
-                const hoKhauGoc = detailRes.data;
-                const chuHoRes = await getNhanKhau(hoKhauGoc.chuHo); 
-                const hoKhauInformation = {
-                    ...hoKhauGoc,
-                    tenChuHo: chuHoRes.data ? chuHoRes.data.hoTen : 'N/A'   
-                };
-                console.log('HoKhauFull:', hoKhauInformation);
-                renderRow(hoKhauInformation);
+            for (const id of listId) {
+                const detailRes = await getHoKhau(id); 
+                if (detailRes.type === "OK") {
+                    const hoKhauGoc = detailRes.data;
+                    const chuHoRes = await getNhanKhau(hoKhauGoc.chuHo); 
+                    const hoKhauInformation = {
+                        ...hoKhauGoc,
+                        tenChuHo: chuHoRes.data ? chuHoRes.data.hoTen : 'N/A'   
+                    };
+                    console.log('HoKhauFull:', hoKhauInformation);
+                    renderRow(hoKhauInformation);
+                }
             }
         } else {
             createToast(response.message);

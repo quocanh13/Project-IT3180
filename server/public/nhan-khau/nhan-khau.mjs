@@ -48,7 +48,7 @@ async function renderRow(nhanKhau) {
         <td>${nhanKhau.quanHeVoiChuHo || '-'}</td>
         <td>${canHo}</td>
         <td>
-            <button class="btn btn-primary" onclick="editNhanKhau('${nhanKhau.cccd}')">
+            <button class="btn btn-warning" onclick="editNhanKhau('${nhanKhau.cccd}')">
                 Sửa
             </button>
             <button class="btn btn-danger" onclick="removeNhanKhau('${nhanKhau.cccd}')">
