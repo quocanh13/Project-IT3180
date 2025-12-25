@@ -41,17 +41,28 @@ export async function getNopTienList(offset = 0, limit = 10,maKhoanThu = null) {
  */
 export async function getNopTien(_id) {
     try {
-        const infoNopTien = await NopTien.findOne({ _id : _id , deleted: false }).exec();
-        if (!infoNopTien) {
+        const infoNopTienDoc = await NopTien.findOne({ _id : _id , deleted: false }).exec();
+        if (!infoNopTienDoc) {
             return "HOÁ ĐƠN KHÔNG TỒN TẠI";
         }
-        const khoanThu =  await KhoanThu.findOne({ maKhoanThu : infoNopTien.maKhoanThu , deleted: false }).exec();
-        const nguoiNop =  await NhanKhauModel.findOne({ cccd : infoNopTien.nguoiNop , deleted: false }).exec();
-        const hoKhau =  await HoKhau.findOne({ _id : nguoiNop.maHoKhau , deleted: false }).exec();
-        infoNopTien.tenKhoanThu = khoanThu ? khoanThu.tenKhoanThu : "_";
-        infoNopTien.tenNguoiNop = nguoiNop ? nguoiNop.hoTen : "_";
-        infoNopTien.canHo = nguoiNop && nguoiNop.hoKhau ? nguoiNop.hoKhau.canHo : "_";
-        return infoNopTien;
+
+        const result = infoNopTienDoc.toObject();
+        const khoanThu = await KhoanThu.findOne({ maKhoanThu : infoNopTienDoc.maKhoanThu, deleted: false }).exec();
+        const nguoiNop = await NhanKhauModel.findOne({ cccd : infoNopTienDoc.nguoiNop, deleted: false })
+                                            .populate('hoKhau')
+                                            .exec();
+        result.tenKhoanThu = khoanThu ? khoanThu.tenKhoanThu : "_";
+        
+        if (nguoiNop) {
+            result.tenNguoiNop = nguoiNop.hoTen;
+            result.canHo = (nguoiNop.hoKhau && nguoiNop.hoKhau.canHo) ? nguoiNop.hoKhau.canHo : "Chưa có hộ khẩu";
+        } else {
+            result.tenNguoiNop = "Không tìm thấy người nộp (CCCD: " + result.nguoiNop + ")";
+            result.canHo = "_";
+        }
+
+        return result;
+
     } catch (error) {
         console.error("Lỗi khi lấy thông tin nộp tiền:", error);
         return "ERROR";
