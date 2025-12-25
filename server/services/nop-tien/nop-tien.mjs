@@ -46,7 +46,8 @@ export async function getNopTien(_id) {
             return "HOÁ ĐƠN KHÔNG TỒN TẠI";
         }
         const khoanThu =  await KhoanThu.findOne({ maKhoanThu : infoNopTien.maKhoanThu , deleted: false }).exec();
-        const nguoiNop =  await NhanKhauModel.findOne({ cccd : infoNopTien.nguoiNop , deleted: false }).populate('hoKhau').exec();
+        const nguoiNop =  await NhanKhauModel.findOne({ cccd : infoNopTien.nguoiNop , deleted: false }).exec();
+        const hoKhau =  await HoKhau.findOne({ _id : nguoiNop.maHoKhau , deleted: false }).exec();
         infoNopTien.tenKhoanThu = khoanThu ? khoanThu.tenKhoanThu : "_";
         infoNopTien.tenNguoiNop = nguoiNop ? nguoiNop.hoTen : "_";
         infoNopTien.canHo = nguoiNop && nguoiNop.hoKhau ? nguoiNop.hoKhau.canHo : "_";
@@ -56,6 +57,7 @@ export async function getNopTien(_id) {
         return "ERROR";
     }
 }
+
 
 /**
  * Hàm thêm một hoá đơn vào database
@@ -111,7 +113,7 @@ export async function updateNopTien(nopTien) {
 /**
  * Hàm xóa một khoản thu theo mã khoản thu
  * @param {ObjectId} id - Mã khoản thu
- * @returns {Promise<"OK" | "ERROR" | "HOÁ ĐƠN KHÔNG TỒN TẠI">}
+ * @returns {Promise<"OK" | "ERROR" | "HOÁ ĐƠN KHÔNG TỒN TẠI">} 
  * - Trả về "OK" nếu thành công
  * 
  * - Trả về "HOÁ ĐƠN KHÔNG TỒN TẠI" nếu hoá đơn không tồn tại

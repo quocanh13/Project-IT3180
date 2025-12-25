@@ -61,8 +61,9 @@ export  class KhoanThu {
     loaiKhoanThu 
     soTien 
 }
-export class DsKhoanThu {
-    /**Số CCCD của chủ hộ */
-    chuHo;
-    khoanThu;
+export class NopTien {
+    maKhoanThu 
+    nguoiNop 
+    soTien 
+    ngayNop 
 }

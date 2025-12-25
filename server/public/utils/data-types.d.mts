@@ -62,8 +62,9 @@ export declare class KhoanThu {
     loaiKhoanThu? : "bắt buộc" | "tự nguyện"
     soTien? : number
 }
-export declare class DsKhoanThu {
-    /**Số CCCD của chủ hộ */
-    chuHo: number;
-    khoanThu: mongoose.Types.ObjectId[];
+export declare class NopTien {
+    maKhoanThu : number
+    nguoiNop : string
+    soTien : number
+    ngayNop : Date
 }
