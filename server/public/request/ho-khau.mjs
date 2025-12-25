@@ -83,3 +83,14 @@ export async function deleteThanhVien(_id, thanhVien) {
     });
     return await res.json();
 }
+/**
+ * 
+ * @param {String} keyword - Từ khóa tìm kiếm 
+ * @returns 
+ */
+export async function searchHoKhau(keyword) {  
+    const res = await fetch(`/ho-khau/search?keyword=${encodeURIComponent(keyword)}`, {
+        method: "GET"
+    });
+    return await res.json();
+}

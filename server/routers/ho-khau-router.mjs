@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { getHoKhauList, getHoKhau, addThanhVien, deleteThanhVien, insertHoKhau, deleteHoKhau, updateHoKhau } from "../handlers/ho-khau-handler.mjs";
+import { getHoKhauList, getHoKhau, addThanhVien, deleteThanhVien, insertHoKhau, deleteHoKhau, updateHoKhau, getHoKhauSearch } from "../handlers/ho-khau-handler.mjs";
+import { get } from "http";
 const router = Router();
 router.get("/ho-khau", getHoKhauList);
+router.get("/ho-khau/search", getHoKhauSearch);
 router.post("/ho-khau", insertHoKhau);
 router.delete("/ho-khau/:_id", deleteHoKhau);
 router.put("/ho-khau/:_id", updateHoKhau);

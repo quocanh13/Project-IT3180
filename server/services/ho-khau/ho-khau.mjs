@@ -216,4 +216,21 @@ export async function deleteThanhVien(_id, cccd) {
         return "ERROR";
     }
 }
+export async function getHoKhauSearch(keyword) {
+    try {
+        let find = {
+            deleted: false
+        };
+
+        if (keyword) {
+            const regex = new RegExp(keyword, 'i');
+            find.$or = [ { chuHo: regex }, { canHo: Number(keyword) } ];
+        }
+        const hoKhauSearchId = await HoKhau.findOne(find).exec();
+        return hoKhauSearchId._id;
+    } catch (error) {
+        console.error("Search HoKhau error:", error);
+        return "ERROR";
+    } 
+}
         

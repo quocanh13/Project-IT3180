@@ -1,4 +1,4 @@
-import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien, deleteThanhVien} from "../request/ho-khau.mjs";
+import { getHoKhauList, getHoKhau, insertHoKhau, updateHoKhau, deleteHoKhau, addThanhVien, deleteThanhVien, searchHoKhau} from "../request/ho-khau.mjs";
 import { getNhanKhauList, getNhanKhau, deleteNhanKhau, updateNhanKhau, insertNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs"
 import { renderLayout } from "../utils/layout.mjs"
@@ -414,3 +414,41 @@ window.closeUpdateRelationModal = function() {
 }
 
 window.openDetailModal = openDetailModal;
+
+// Tìm kiếm hộ khẩu 
+const searchForm = document.getElementById('searchForm');
+if (searchForm) {
+    searchForm.addEventListener('submit', async (e) => {   
+        e.preventDefault();
+
+        const keyword = document.getElementById('keyword').value.trim();
+        const tbody = document.getElementById('hoKhauData');
+
+        if (!keyword) {
+            loadHoKhauList();
+            return;
+        }
+
+        tbody.innerHTML = '<tr><td colspan="5">Đang tải dữ liệu...</td></tr>';
+        const response = await searchHoKhau(keyword);
+
+        if (response.type === "OK") {
+            const id = response.data;
+            tbody.innerHTML = ''; 
+
+            const detailRes = await getHoKhau(id); 
+            if (detailRes.type === "OK") {
+                const hoKhauGoc = detailRes.data;
+                const chuHoRes = await getNhanKhau(hoKhauGoc.chuHo); 
+                const hoKhauInformation = {
+                    ...hoKhauGoc,
+                    tenChuHo: chuHoRes.data ? chuHoRes.data.hoTen : 'N/A'   
+                };
+                console.log('HoKhauFull:', hoKhauInformation);
+                renderRow(hoKhauInformation);
+            }
+        } else {
+            createToast(response.message);
+        }   
+    });
+}

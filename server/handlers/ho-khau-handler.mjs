@@ -1,4 +1,4 @@
-import { getHoKhauList as DBGetHoKhauList, getHoKhau as DBGetHoKhau, insertHoKhau as DBInsertHoKhau, updateHoKhau as DBUpdateHoKhau, deleteHoKhau as DBDeleteHoKhau, addThanhVien as DBAddThanhVien, deleteThanhVien as DBDeleteThanhVien } from "../services/ho-khau/ho-khau.mjs";
+import { getHoKhauList as DBGetHoKhauList, getHoKhau as DBGetHoKhau, insertHoKhau as DBInsertHoKhau, updateHoKhau as DBUpdateHoKhau, deleteHoKhau as DBDeleteHoKhau, addThanhVien as DBAddThanhVien, deleteThanhVien as DBDeleteThanhVien, getHoKhauSearch as DBGetHoKhauSearch } from "../services/ho-khau/ho-khau.mjs";
 export async function getHoKhauList(req, res) {
     let resData;
     const offset = Number(req.query.offset) || 0;
@@ -252,6 +252,26 @@ export async function deleteThanhVien(req, res) {
             message: "Server có lỗi vui lòng thử lại sau"
         };
         res.status(500);
+    }
+    res.json(resData);
+}
+export async function getHoKhauSearch(req, res) {
+    let resData;
+    const keyword = req.query.keyword || "";
+    const data = await DBGetHoKhauSearch(keyword);
+    if (data == "ERROR") {
+        resData = {
+            type: "ERROR",
+            message: "Server đang có lỗi vui lòng thử lại sau"
+        };
+        res.status(500);
+    }
+    else {
+        resData = {
+            type: "OK",
+            data: data
+        };
+        res.status(200);
     }
     res.json(resData);
 }
