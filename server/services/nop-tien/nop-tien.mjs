@@ -46,11 +46,10 @@ export async function getNopTien(_id) {
             return "HOÁ ĐƠN KHÔNG TỒN TẠI";
         }
         const khoanThu =  await KhoanThu.findOne({ maKhoanThu : infoNopTien.maKhoanThu , deleted: false }).exec();
-        const nguoiNop =  await NhanKhauModel.findOne({ cccd : infoNopTien.nguoiNop , deleted: false }).exec();
-        const hoKhau =  await HoKhau.findOne({ _id : nguoiNop.maHoKhau , deleted: false }).exec();
+        const nguoiNop =  await NhanKhauModel.findOne({ cccd : infoNopTien.nguoiNop , deleted: false }).populate('hoKhau').exec();
         infoNopTien.tenKhoanThu = khoanThu ? khoanThu.tenKhoanThu : "_";
-        infoNopTien.nguoiNop = nguoiNop ? nguoiNop.hoTen : "_";
-        infoNopTien.canHo = hoKhau ? hoKhau.canHo : "_";
+        infoNopTien.tenNguoiNop = nguoiNop ? nguoiNop.hoTen : "_";
+        infoNopTien.canHo = nguoiNop && nguoiNop.hoKhau ? nguoiNop.hoKhau.canHo : "_";
         return infoNopTien;
     } catch (error) {
         console.error("Lỗi khi lấy thông tin nộp tiền:", error);
