@@ -64287,7 +64287,7 @@ function UpdateKhoanThuForm({
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("input", {
             type: "text",
             name: "name",
-            value: curKhoanThu.tenKhoanThu,
+            defaultValue: curKhoanThu.tenKhoanThu,
             placeholder: "V\xED d\u1EE5: Ti\u1EC1n r\xE1c...",
             required: true
           })]
@@ -64300,7 +64300,7 @@ function UpdateKhoanThuForm({
             name: "cost",
             min: 0,
             placeholder: "0",
-            value: curKhoanThu.soTien,
+            defaultValue: curKhoanThu.soTien,
             required: true
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
