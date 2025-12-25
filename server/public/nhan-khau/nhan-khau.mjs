@@ -1,13 +1,14 @@
 import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau,  deleteNhanKhau } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
-import { renderLayout } from "../utils/layout.mjs";
+import createHeader from "../header/header.mjs"
 
 let currentMode = 'add';
+
+createHeader(1)
 
 // 1. Khởi tạo khi load trang
 document.addEventListener('DOMContentLoaded', () => {
     // Render layout (topbar + sidebar)
-    renderLayout('nhan-khau');
     
     loadNhanKhauList();
     document.getElementById('nhanKhauForm')

@@ -1,4 +1,5 @@
 import express from "express"
+import cookieParser from "cookie-parser";
 
 import staticRouter from "./routers/static-router.mjs"
 import loginRouter from "./routers/login-router.mjs"
@@ -11,6 +12,7 @@ const server = express();
 
 server.use(express.static("./server/public"));
 server.use(express.json());
+server.use(cookieParser())
 
 server.use((req, res, next)=>{
     console.log(req.url + " " + req.method);

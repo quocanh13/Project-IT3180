@@ -8,7 +8,9 @@ export async function getKhoanThuList(offset = 0, limit = 20) {
     const res = await fetch(`/khoan-thu?offset=${offset}&limit=${limit}`, {
         method: "GET"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để lấy thông tin về khoản thu
@@ -19,7 +21,9 @@ export async function getKhoanThu(_id) {
     const res = await fetch(`/khoan-thu/${_id}`, {
         method: "GET",
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để thêm hộ khẩu
@@ -33,7 +37,9 @@ export async function insertKhoanThu(khoanThu) {
             "content-type": "application/json"
         }
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để cập nhật hộ khẩu
@@ -48,7 +54,9 @@ export async function updateKhoanThu(khoanThu) {
         },
         body: JSON.stringify(khoanThu)
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để xóa khoản thu
@@ -59,5 +67,7 @@ export async function deleteKhoanThu(_id) {
     const res = await fetch(`/khoan-thu/${_id}`, {
         method: "DELETE"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }

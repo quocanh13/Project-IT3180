@@ -1,7 +1,10 @@
 import { Router } from "express";
-import { getHoKhauList, getHoKhau, addThanhVien, deleteThanhVien, insertHoKhau, deleteHoKhau, updateHoKhau, getHoKhauSearch } from "../handlers/ho-khau-handler.mjs";
-import { get } from "http";
+import { getHoKhauList, getHoKhau, addThanhVien, deleteThanhVien, insertHoKhau, deleteHoKhau, updateHoKhau,getHoKhauSearch } from "../handlers/ho-khau-handler.mjs";
+import { verifyUser } from "../handlers/login-handler.mjs";
 const router = Router();
+
+router.use("/ho-khau", verifyUser)
+
 router.get("/ho-khau", getHoKhauList);
 router.get("/ho-khau/search", getHoKhauSearch);
 router.post("/ho-khau", insertHoKhau);

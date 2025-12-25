@@ -8,7 +8,9 @@ export async function getHoKhauList(offset = 0, limit = 20) {
     const res = await fetch(`/ho-khau?offset=${offset}&limit=${limit}`, {
         method: "GET"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để lấy thông tin về hộ gia đình tương ứng với chuHo
@@ -19,7 +21,9 @@ export async function getHoKhau(_id) {
     const res = await fetch(`/ho-khau/${_id}`, {
         method: "GET",
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để thêm hộ khẩu
@@ -33,7 +37,9 @@ export async function insertHoKhau(hoKhau) {
             "content-type": "application/json"
         }
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để cập nhật hộ khẩu
@@ -48,7 +54,9 @@ export async function updateHoKhau(hoKhau) {
         },
         body: JSON.stringify(hoKhau)
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để xóa hộ khẩu
@@ -59,7 +67,9 @@ export async function deleteHoKhau(_id) {
     const res = await fetch(`/ho-khau/${_id}`, {
         method: "DELETE"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Hàm thêm thành viên vào hộ
@@ -70,7 +80,9 @@ export async function addThanhVien(_id, thanhVien) {
     const res = await fetch(`/ho-khau/${_id}/thanh-vien/${thanhVien}`, {
         method: "POST"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Hàm xóa thành viên khỏi hộ
@@ -81,7 +93,9 @@ export async function deleteThanhVien(_id, thanhVien) {
     const res = await fetch(`/ho-khau/${_id}/thanh-vien/${thanhVien}`, {
         method: "DELETE"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * 

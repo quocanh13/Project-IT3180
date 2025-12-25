@@ -8,7 +8,9 @@ export async function getNopTienList(offset = 0, limit = 20,maKhoanThu) {
     const res = await fetch(`/nop-tien?offset=${offset}&limit=${limit}&maKhoanThu=${maKhoanThu}`, {
         method: "GET"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để lấy thông tin về hoá đơn theo ID
@@ -19,7 +21,9 @@ export async function getNopTien(_id) {
     const res = await fetch(`/nop-tien/${_id}`, {
         method: "GET",
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để thêm hoá đơn
@@ -33,7 +37,9 @@ export async function insertNopTien(nopTien) {
             "content-type": "application/json"
         }
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để cập nhật hoá đơn
@@ -48,7 +54,9 @@ export async function updateNopTien(nopTien) {
         },
         body: JSON.stringify(nopTien)
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }
 /**
  * Request để xóa hoá đơn theo ID
@@ -59,5 +67,7 @@ export async function deleteNopTien(_id) {
     const res = await fetch(`/nop-tien/${_id}`, {
         method: "DELETE"
     });
-    return await res.json();
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
 }

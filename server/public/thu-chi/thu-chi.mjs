@@ -64309,7 +64309,7 @@ function UpdateKhoanThuForm({
             children: "Lo\u1EA1i Kho\u1EA3n Thu"
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("select", {
             name: "type",
-            defaultValue: curKhoanThu.loaiKhoanThu,
+            value: curKhoanThu.loaiKhoanThu,
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("option", {
               value: "b\u1EAFt bu\u1ED9c",
               children: "B\u1EAFt Bu\u1ED9c"
