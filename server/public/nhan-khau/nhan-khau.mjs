@@ -61,14 +61,27 @@ async function renderRow(nhanKhau) {
 
 // 2. Lấy và hiển thị danh sách
 async function loadNhanKhauList() {
+    const totalNhanKhau = document.querySelector("#totalNhanKhau.stat-value")
+    const totalNam = document.querySelector("#totalMale.stat-value")
+    const totalNu = document.querySelector("#totalFemale.stat-value")
+
     const tbody = document.getElementById('nhanKhauData');
     tbody.innerHTML = '<tr><td colspan="8">Đang tải dữ liệu...</td></tr>';
 
     const response = await getNhanKhauList(0, -1);
 
     if (response.type === "OK") {
+        let nam = 0, nu = 0
         const nhanKhauList = response.data;
         console.log(nhanKhauList);
+        totalNhanKhau.textContent = nhanKhauList.length
+        for(const i of nhanKhauList) {
+            if(i.gioiTinh) nam++;
+            else nu++;
+        }
+
+        totalNam.textContent = nam
+        totalNu.textContent = nu
 
         tbody.innerHTML = '';
         for (const nhanKhau of nhanKhauList) {

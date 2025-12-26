@@ -22,19 +22,27 @@ document.addEventListener('DOMContentLoaded', () => {
 // 1. Lấy và hiển thị danh sách
 async function loadHoKhauList() {
     const tbody = document.getElementById('hoKhauData');
+    const totalHoKhau = document.querySelector("#totalHoKhau.stat-value")
+    const totalMembers = document.querySelector("#totalMembers.stat-value")
+    const totalApartments = document.querySelector("#totalApartments.stat-value")
+    const tableCount = document.querySelector("#tableCount.table-count")
     tbody.innerHTML = '<tr><td colspan="5">Đang tải dữ liệu...</td></tr>';
 
     const response = await getHoKhauList(0, -1);
     
     if (response.type === "OK") {
+        let countTotalMember = 0
         const list_id = response.data;
+        totalHoKhau.textContent = list_id.length
+        totalApartments.textContent = list_id.length
+        tableCount.textContent = list_id.length + " Hộ Khẩu"
         tbody.innerHTML = ''; // Xóa dữ liệu cũ
 
         for (const _id of list_id) {
             const detailRes = await getHoKhau(_id);
             if (detailRes.type === "OK") {
                 const hoKhauGoc = detailRes.data;
-
+                countTotalMember += hoKhauGoc.thanhVien.length
                 // Lấy tên chủ hộ
                 const chuHoRes = await getNhanKhau(hoKhauGoc.chuHo);
 
@@ -47,6 +55,8 @@ async function loadHoKhauList() {
                 renderRow(hoKhauInformation);
             }
         }
+
+        totalMembers.textContent = countTotalMember
     } else {
         createToast(response.message);
     }
