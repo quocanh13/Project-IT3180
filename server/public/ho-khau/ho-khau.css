@@ -8,6 +8,10 @@
 .toast-container{
     pointer-events: fill;
 }
+
+#detailSoThanhVien{
+    flex-grow: unset;
+}
 :root {
     /* Primary Colors - Navy Blue Theme */
     --primary-color: #1e3c72;

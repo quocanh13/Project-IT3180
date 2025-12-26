@@ -64,6 +64,7 @@ async function loadNhanKhauList() {
     const totalNhanKhau = document.querySelector("#totalNhanKhau.stat-value")
     const totalNam = document.querySelector("#totalMale.stat-value")
     const totalNu = document.querySelector("#totalFemale.stat-value")
+    const tableCount = document.querySelector("#tableCount")
 
     const tbody = document.getElementById('nhanKhauData');
     tbody.innerHTML = '<tr><td colspan="8">Đang tải dữ liệu...</td></tr>';
@@ -75,6 +76,7 @@ async function loadNhanKhauList() {
         const nhanKhauList = response.data;
         console.log(nhanKhauList);
         totalNhanKhau.textContent = nhanKhauList.length
+        tableCount.textContent = nhanKhauList.length + " Nhân Khẩu"
         for(const i of nhanKhauList) {
             if(i.gioiTinh) nam++;
             else nu++;
