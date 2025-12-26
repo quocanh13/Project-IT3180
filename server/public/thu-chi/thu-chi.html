@@ -1,6 +1,34 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script type="module">
+            // Tạo header trước khi load thu-chi
+            import createHeader from '../header/header.mjs';
+            // Index 2 cho thu chi (0: hộ khẩu, 1: nhân khẩu, 2: thu chi)
+            window.addEventListener('DOMContentLoaded', () => {
+                // Tạo div cho header
+                const headerRoot = document.createElement('div');
+                headerRoot.id = 'header-root';
+                document.body.insertBefore(headerRoot, document.body.firstChild);
+                
+                // Đổi tên root cũ thành root cho header
+                const thuChiRoot = document.querySelector('#root');
+                thuChiRoot.id = 'thu-chi-content';
+                
+                // Tạo root mới cho header
+                const newRoot = document.createElement('div');
+                newRoot.id = 'root';
+                document.body.insertBefore(newRoot, thuChiRoot);
+                
+                createHeader(2);
+                
+                // Đổi lại tên cho thu-chi
+                setTimeout(() => {
+                    newRoot.id = 'header-root-done';
+                    thuChiRoot.id = 'root';
+                }, 0);
+            });
+        </script>
         <script src="./thu-chi.mjs" defer type="module"></script>
     </head>
     <body>
