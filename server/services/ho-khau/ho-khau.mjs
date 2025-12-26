@@ -9,7 +9,7 @@ import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
  */
 export async function getHoKhauList(offset, limit) {
     try {
-        let query = HoKhau.find({ deleted: false }).select('_id');
+        let query = HoKhau.find({ deleted: false }).sort("canHo").select('_id');
 
         if (limit !== -1) {
             query = query.skip(offset).limit(limit);

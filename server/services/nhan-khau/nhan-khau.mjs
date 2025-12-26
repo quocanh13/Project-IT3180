@@ -1,5 +1,17 @@
 import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
 import  HoKhau  from "../../config/models/ho_khau-model.mjs";
+
+/**
+ * Hàm helper để lấy tên (phần cuối) từ họ tên
+ * @param {string} hoTen - Họ tên đầy đủ
+ * @returns {string} - Tên (phần cuối của họ tên)
+ */
+function getTen(hoTen) {
+    if (!hoTen) return '';
+    const parts = hoTen.trim().split(/\s+/);
+    return parts[parts.length - 1];
+}
+
 /**
  * Hàm lấy danh sách nhân khẩu 
  * @param {number} offset - Vị trí bắt đầu. Mặc định là 0
@@ -14,10 +26,23 @@ export async function getNhanKhauList(offset = 0, limit = 10) {
     try {
         if(limit === -1) {
             const nhanKhauList = await NhanKhauModel.find({ deleted: false }).populate('hoKhau');
+            
+            nhanKhauList.sort((a, b) => {
+                const tenA = getTen(a.hoTen);
+                const tenB = getTen(b.hoTen);
+                return tenA.localeCompare(tenB, 'vi');
+            });
             return nhanKhauList;
         }
-        const nhanKhauList = await NhanKhauModel.find({ deleted: false }).skip(offset).limit(limit).populate('hoKhau');
-        return nhanKhauList;
+        const nhanKhauList = await NhanKhauModel.find({ deleted: false }).populate('hoKhau');
+        
+        nhanKhauList.sort((a, b) => {
+            const tenA = getTen(a.hoTen);
+            const tenB = getTen(b.hoTen);
+            return tenA.localeCompare(tenB, 'vi');
+        });
+        
+        return nhanKhauList.slice(offset, offset + limit);
     } catch (error) {
         console.error("Lỗi khi lấy danh sách nhân khẩu:", error);
         return "ERROR";
