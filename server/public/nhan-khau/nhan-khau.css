@@ -5,6 +5,10 @@
     --bg-color: #f4f7f6;
 }
 
+.toast-container{
+    pointer-events: fill;
+}
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
