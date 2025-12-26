@@ -80,7 +80,7 @@ function Header({
     className: "tc-header",
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h3", {
       className: "tc-header-title",
-      children: "Qu\u1EA3n L\xFD Thu Chi"
+      children: "Qu\u1EA3n L\xFD Chung Cư BlueMoon"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("nav", {
       className: "tc-header-nav",
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
