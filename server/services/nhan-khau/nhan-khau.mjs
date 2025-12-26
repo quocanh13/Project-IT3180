@@ -1,5 +1,5 @@
 import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
-
+import  HoKhau  from "../../config/models/ho_khau-model.mjs";
 /**
  * Hàm lấy danh sách nhân khẩu 
  * @param {number} offset - Vị trí bắt đầu. Mặc định là 0
@@ -123,6 +123,70 @@ export async function deleteNhanKhau(cccd) {
         return "OK";
     } catch (error) {
         console.error("Lỗi khi xóa nhân khẩu:", error);
+        return "ERROR";
+    }
+}
+export async function searchNhanKhau(keyword) {
+    try {
+        const cleanKeyword = keyword.trim();
+        if (!cleanKeyword) return [];
+        const regex = new RegExp(cleanKeyword, 'i');
+        let results = [];
+        const directResults = await NhanKhauModel.find({
+            deleted: false,
+            $or: [
+                { hoTen: regex },
+                { cccd: cleanKeyword }
+            ]
+        }).populate('hoKhau').exec();
+        results = [...directResults];
+        const listNguoiTrungTen = await NhanKhauModel.find({
+            deleted: false,
+            hoTen: regex
+        }).select('cccd').exec();
+        const listCCCD = listNguoiTrungTen.map(nk => nk.cccd);
+        const dsHoKhau = await HoKhau.find({
+            deleted: false,
+            chuHo: { $in: listCCCD }
+        }).select('_id').exec();
+        const hoKhauIds = dsHoKhau.map(h => h._id);
+        if (hoKhauIds.length > 0) {
+            const thanhVienTrongHo = await NhanKhauModel.find({
+                deleted: false,
+                hoKhau: { $in: hoKhauIds }
+            }).populate('hoKhau').exec();
+ 
+            results = [...results, ...thanhVienTrongHo];
+        }
+        if (!isNaN(cleanKeyword)) {
+            const canHoNumber = Number(cleanKeyword);
+            const hoKhauByCanHo = await HoKhau.find({ 
+                canHo: canHoNumber,
+                deleted: false 
+            }).select('_id');
+            const idsCanHo = hoKhauByCanHo.map(h => h._id);
+            if (idsCanHo.length > 0) {
+                const nhanKhauCanHo = await NhanKhauModel.find({
+                    deleted: false,
+                    hoKhau: { $in: idsCanHo }
+                }).populate('hoKhau').exec();
+                results = [...results, ...nhanKhauCanHo];
+            }
+        }
+        const uniqueResults = [];
+        const seenIds = new Set();
+        for (const item of results) {
+            if (item && item._id) {
+                const idStr = item._id.toString();
+                if (!seenIds.has(idStr)) {
+                    seenIds.add(idStr);
+                    uniqueResults.push(item);
+                }
+            }
+        }
+        return uniqueResults;
+    } catch (error) {
+        console.error("Lỗi searchNhanKhau:", error);
         return "ERROR";
     }
 }

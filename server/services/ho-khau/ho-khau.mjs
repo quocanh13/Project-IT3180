@@ -231,7 +231,7 @@ export async function getHoKhauSearch(keyword) {
                 .map(nk => nk.hoKhau)
                 .filter(id => id != null);
             let orConditions = [
-                { chuHo: regex }, 
+                { chuHo: keyword }, 
                 { _id: { $in: hoKhauIdsFromNhanKhau } } 
             ];
             if (!isNaN(keyword) && keyword.trim() !== "") {

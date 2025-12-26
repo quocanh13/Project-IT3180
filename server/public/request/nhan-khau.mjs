@@ -72,3 +72,12 @@ export async function deleteNhanKhau(cccd) {
     if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
     return resData
 }
+export async function searchNhanKhau(keyword) {
+    const res = await fetch(`/nhan-khau/search?keyword=${encodeURIComponent(keyword)}`, {
+        method: "GET"
+    }); 
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
+}
+
