@@ -136,7 +136,7 @@ export async function searchNhanKhau(keyword) {
             deleted: false,
             $or: [
                 { hoTen: regex },
-                { cccd: regex }
+                { cccd: cleanKeyword }
             ]
         }).populate('hoKhau').exec();
         results = [...directResults];
