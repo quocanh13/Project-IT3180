@@ -292,8 +292,10 @@ async function loadMembersList(thanhVienArray) {
             <td>${member.quanHeVoiChuHo || 'N/A'}</td>
             <td>${member.ngaySinh ? new Date(member.ngaySinh).toLocaleDateString('vi-VN') : 'N/A'}</td>
             <td>
-                <button class="btn-edit-member" onclick="openUpdateRelationModal('${member.cccd}', '${member.hoTen}', '${member.quanHeVoiChuHo || ''}')">Sửa</button>
-                <button class="btn-delete-member" onclick="removeMemberFromHo('${member.cccd}')">Xóa</button>
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                    <button class="btn-edit-member" onclick="openUpdateRelationModal('${member.cccd}', '${member.hoTen}', '${member.quanHeVoiChuHo || ''}')">Sửa</button>
+                    <button class="btn-delete-member" onclick="removeMemberFromHo('${member.cccd}')">Xóa</button>
+                </div>
             </td>
         `;
         
