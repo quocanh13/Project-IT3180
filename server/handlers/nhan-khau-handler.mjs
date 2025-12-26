@@ -1,4 +1,4 @@
-import { getNhanKhauList as DBGetNhanKhauList, getNhanKhau as DBGetNhanKhau, insertNhanKhau as DBInsertNhanKhau, updateNhanKhau as DBUpdateNhanKhau, deleteNhanKhau as DBDeleteNhanKhau } from "../services/nhan-khau/nhan-khau.mjs";
+import { getNhanKhauList as DBGetNhanKhauList, getNhanKhau as DBGetNhanKhau, insertNhanKhau as DBInsertNhanKhau, updateNhanKhau as DBUpdateNhanKhau, deleteNhanKhau as DBDeleteNhanKhau, searchNhanKhau as DBSearchNhanKhau } from "../services/nhan-khau/nhan-khau.mjs";
 
 export async function getNhanKhauList(req, res) {
     let resData;
@@ -131,6 +131,26 @@ export async function deleteNhanKhau(req, res) {
         resData = {
             type: "OK",
             message: "Xóa nhân khẩu thành công"
+        };
+        res.status(200);
+    }
+    res.json(resData);
+}
+export async function searchNhanKhau(req, res) {
+    let resData;
+    const keyword = req.query.keyword || "";
+    const data = await DBSearchNhanKhau(keyword);  
+    if (data == "ERROR") {
+        resData = {
+            type: "ERROR",
+            message: "Server đang có lỗi vui lòng thử lại sau"  
+        };
+        res.status(500);
+    }
+    else {
+        resData = {
+            type: "OK",
+            data: data
         };
         res.status(200);
     }

@@ -1,4 +1,4 @@
-import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau,  deleteNhanKhau } from "../request/nhan-khau.mjs";
+import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau,  deleteNhanKhau, searchNhanKhau  } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
 import createHeader from "../header/header.mjs"
 
@@ -172,3 +172,26 @@ window.removeNhanKhau = async function (cccd) {
 window.editNhanKhau = function (cccd) {
     openModal('edit', cccd);
 };
+
+const searchForm = document.getElementById('searchForm');
+if (searchForm) {
+    searchForm.addEventListener('submit', async (e) => {   
+        e.preventDefault();
+        const keyword = document.getElementById('keyword').value;
+        const res = await searchNhanKhau(keyword);
+        const tbody = document.getElementById('nhanKhauData');
+        tbody.innerHTML = '';
+        if (!keyword) {
+            loadNhanKhauList();
+            return;
+        }
+        if (res.type === "OK") {
+            const nhanKhauList = res.data;
+            for (const nhanKhau of nhanKhauList) {
+                await renderRow(nhanKhau);
+            }
+        } else {
+            createToast(res.message);
+        }
+    });
+}
