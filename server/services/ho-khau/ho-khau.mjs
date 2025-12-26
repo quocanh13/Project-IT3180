@@ -1,5 +1,6 @@
 import HoKhau from "../../config/models/ho_khau-model.mjs";
 import { NhanKhauModel } from "../../config/models/nhan_khau-model.mjs";
+import LichSu from "../../config/models/lich_su-model.mjs";
 
 /**
  * Hàm lấy danh sách hộ khẩu
@@ -89,6 +90,17 @@ export async function insertHoKhau(hoKhau) {
         // Cập nhật nhân khẩu với _id của hộ khẩu (không phải chuHo CCCD)
         await NhanKhauModel.updateOne({ cccd: hoKhau.chuHo }, { hoKhau: newHoKhau._id, quanHeVoiChuHo: "Chủ Hộ" });
 
+        // Lấy _id của nhân khẩu từ CCCD để tạo lịch sử
+        const chuHoNhanKhau = await NhanKhauModel.findOne({ cccd: hoKhau.chuHo });
+        if (chuHoNhanKhau) {
+            const newLichSu = new LichSu({
+                canHo: newHoKhau.canHo,
+                nhanKhau: chuHoNhanKhau._id,
+                ngayDK: newHoKhau.ngayDK
+            });
+            await newLichSu.save();
+        }
+
         return "OK";
     } catch(error) {
         console.error("Insert error:", error);
@@ -109,6 +121,9 @@ export async function deleteHoKhau(_id) {
         const result = await HoKhau.updateOne({ _id: _id, deleted: false }, { deleted: true, deletedAt: new Date() });    
         if(result.modifiedCount === 1) {
             await NhanKhauModel.updateMany({ hoKhau: _id, deleted: false }, { deleted: true, deletedAt: new Date() });
+            const thanhVienList = await NhanKhauModel.find({ hoKhau: _id }).select('_id');
+            const thanhVienIds = thanhVienList.map(tv => tv._id);
+            await LichSu.updateMany({ nhanKhau: { $in: thanhVienIds }, deleted: false }, { ngayChuyenDi: new Date() });
             return "OK";
         } else {
             return "HỘ KHÔNG TỒN TẠI";
@@ -146,6 +161,21 @@ export async function updateHoKhau(hoKhau) {
             if(existingHoKhau) {
                 return "CĂN HỘ ĐÃ CÓ HỘ KHẨU";
             }
+
+            const hoKhauInDb = await HoKhau.findOne({ _id: hoKhau._id , deleted: false });
+            if(hoKhauInDb) {
+                const thanhVienList = await NhanKhauModel.find({ hoKhau: hoKhau._id }).select('_id');
+                const thanhVienIds = thanhVienList.map(tv => tv._id);
+                await LichSu.updateMany({canHo: hoKhauInDb.canHo, nhanKhau: { $in: thanhVienIds }, deleted: false }, { ngayChuyenDi: new Date() });
+                for(const tvId of thanhVienIds) {
+                    const newLichSu = new LichSu({
+                        canHo: hoKhau.canHo,
+                        nhanKhau: tvId,
+                        ngayDK: new Date()
+                    });
+                    await newLichSu.save();
+                }
+            }
         }
         
         if(hoKhau.ngayDK !== null && hoKhau.ngayDK !== undefined) {
@@ -153,6 +183,7 @@ export async function updateHoKhau(hoKhau) {
         }
 
         await HoKhau.updateOne({ _id: hoKhau._id, deleted: false }, updateData);
+
         return "OK";
     } catch(error) {
         console.error("Update error:", error);
@@ -186,6 +217,12 @@ export async function addThanhVien(_id, cccd) {
         }
 
         await NhanKhauModel.updateOne({ cccd: cccd }, { hoKhau: _id });
+        const newLichSu = new LichSu({
+            canHo: existingHoKhau.canHo,
+            nhanKhau: existingThanhVien._id,
+            ngayDK: new Date()
+        });
+        await newLichSu.save();
         return "OK";
     } catch (error) {
         console.error("Add ThanhVien error:", error);
@@ -210,6 +247,7 @@ export async function deleteThanhVien(_id, cccd) {
             return "THÀNH VIÊN KHÔNG TRONG HỘ";
         }
         await NhanKhauModel.updateOne({ cccd: cccd }, { $unset: { hoKhau: "" ,quanHeVoiChuHo: ""} });
+        await LichSu.updateOne({ canHo: existingHoKhau.canHo, nhanKhau: existingThanhVien._id, deleted: false }, { ngayChuyenDi: new Date() });
         return "OK";
     } catch (error) {
         console.error("Delete ThanhVien error:", error);

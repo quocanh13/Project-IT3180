@@ -158,6 +158,7 @@ export async function deleteNhanKhau(cccd) {
             if(existingNhanKhau.hoKhau.deleted === false && existingNhanKhau.hoKhau.chuHo === cccd) {
                 return "KHÔNG THỂ XÓA CHỦ HỘ";
             }
+            await LichSu.updateOne({ canHo: existingNhanKhau.hoKhau.canHo, nhanKhau: existingNhanKhau._id, deleted: false }, { ngayChuyenDi: new Date() });
         }
         await NhanKhauModel.updateOne({ cccd: cccd }, { deleted: true, deletedAt: new Date() });
         return "OK";
