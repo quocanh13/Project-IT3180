@@ -7,6 +7,7 @@ import hoKhauRouter from "./routers/ho-khau-router.mjs"
 import nhanKhauRouter from "./routers/nhan-khau-router.mjs"
 import khoanThuRouter from "./routers/khoan-thu-router.mjs"
 import nopTienRouter from "./routers/nop-tien-router.mjs"
+import lichSuRouter from "./routers/lich-su-router.mjs"
 
 const server = express();
 
@@ -19,7 +20,7 @@ server.use((req, res, next)=>{
     next();
 })
 
-server.use([staticRouter, loginRouter, hoKhauRouter, nhanKhauRouter, khoanThuRouter, nopTienRouter]);
+server.use([staticRouter, loginRouter, hoKhauRouter, nhanKhauRouter, khoanThuRouter, nopTienRouter, lichSuRouter]);
 
 server.listen(80, "::", ()=>{
     console.log("Server is listening");

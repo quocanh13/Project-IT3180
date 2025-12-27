@@ -1,0 +1,67 @@
+/* Tùy chỉnh tổng thể */
+body { 
+    background-color: #f4f7f6; 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    padding: 40px 0;
+}
+
+.container { 
+    max-width: 1000px; 
+}
+
+/* Thẻ chứa bảng */
+.table-card { 
+    background: #ffffff; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+    overflow: hidden;
+    padding: 25px;
+}
+
+/* Tiêu đề trang */
+.header-title {
+    color: #2c3e50;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Kiểu dáng cho các ô số phòng (Rowspan cell) */
+.cell-room {
+    font-size: 1.25rem;
+    color: #0d6efd;
+    background-color: #f8f9fa !important;
+    font-weight: bold;
+    border-right: 1px solid #dee2e6;
+    text-align: center;
+}
+
+/* Hiệu ứng dòng */
+.room-row-start { 
+    border-top: 2px solid #dee2e6 !important; 
+}
+
+/* Trạng thái đang ở */
+.bg-active { 
+    background-color: #f0f9ff !important; 
+}
+
+/* Tùy chỉnh Badge */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+}
+
+.badge-success {
+    background-color: #198754;
+}
+
+.badge-secondary {
+    background-color: #6c757d;
+}
+
+/* Hiệu ứng khi di chuột qua dòng */
+.table-hover tbody tr:hover {
+    background-color: #f1f4f9;
+}
