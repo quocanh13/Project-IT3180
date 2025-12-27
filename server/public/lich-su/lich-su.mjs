@@ -57,6 +57,7 @@ function renderRow(item) {
 
         tr.innerHTML = `
             ${roomCell}
+            <td>${person.cccd}</td>
             <td>${person.hoTen}</td>
             <td>${ngayVao}</td>
             <td>${ngayRa}</td>

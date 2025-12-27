@@ -21,6 +21,7 @@ export async function getLichSuList(canHoFilter = null) {
             }
             acc[key].lichSuNguoiO.push({
                 idLichSu: item._id,
+                cccd: item.nhanKhau?.cccd || "Không rõ",
                 hoTen: item.nhanKhau?.hoTen || "Không rõ",
                 ngayVao: item.ngayDK,
                 ngayRa: item.ngayChuyenDi,
