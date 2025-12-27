@@ -28,6 +28,14 @@ export async function getNhanKhauList(offset = 0, limit = 10) {
             const nhanKhauList = await NhanKhauModel.find({ deleted: false }).populate('hoKhau');
             
             nhanKhauList.sort((a, b) => {
+
+                const canHoA = (a.hoKhau && a.hoKhau.canHo) ? a.hoKhau.canHo : 0;
+                const canHoB = (b.hoKhau && b.hoKhau.canHo) ? b.hoKhau.canHo : 0;
+
+                if (canHoA !== canHoB) {
+                    return canHoA - canHoB;
+                }
+
                 const tenA = getTen(a.hoTen);
                 const tenB = getTen(b.hoTen);
                 return tenA.localeCompare(tenB, 'vi');
@@ -37,6 +45,13 @@ export async function getNhanKhauList(offset = 0, limit = 10) {
         const nhanKhauList = await NhanKhauModel.find({ deleted: false }).populate('hoKhau');
         
         nhanKhauList.sort((a, b) => {
+            const canHoA = (a.hoKhau && a.hoKhau.canHo) ? a.hoKhau.canHo : 0;
+            const canHoB = (b.hoKhau && b.hoKhau.canHo) ? b.hoKhau.canHo : 0;
+
+            if (canHoA !== canHoB) {
+                return canHoA - canHoB;
+            }
+
             const tenA = getTen(a.hoTen);
             const tenB = getTen(b.hoTen);
             return tenA.localeCompare(tenB, 'vi');
@@ -143,6 +158,7 @@ export async function deleteNhanKhau(cccd) {
             if(existingNhanKhau.hoKhau.deleted === false && existingNhanKhau.hoKhau.chuHo === cccd) {
                 return "KHÔNG THỂ XÓA CHỦ HỘ";
             }
+            await LichSu.updateOne({ canHo: existingNhanKhau.hoKhau.canHo, nhanKhau: existingNhanKhau._id, deleted: false }, { ngayChuyenDi: new Date() });
         }
         await NhanKhauModel.updateOne({ cccd: cccd }, { deleted: true, deletedAt: new Date() });
         return "OK";

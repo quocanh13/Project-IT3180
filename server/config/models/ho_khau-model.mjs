@@ -5,7 +5,7 @@ const { Schema, model } = mongoose;
 const ho_khauSchema = Schema({
     chuHo : {type : String, required : true, unique : true},
     canHo : {type : Number,unique : true},
-    ngayDK : {type : Date},
+    ngayDK : {type : Date, required : true},
     deleted : {type : Boolean, default: false},
     deletedAt : {type : Date, default: null}
 }, 
