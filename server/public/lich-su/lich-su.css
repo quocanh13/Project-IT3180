@@ -52,6 +52,9 @@ body {
     color: var(--text-primary);
     position: relative;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* ngang */
 }
 
 /* Background Pattern */
@@ -71,7 +74,6 @@ body {
 
 /* ========== MAIN CONTAINER ========== */
 .container {
-    margin-left: 85px;
     padding: 2rem;
     max-width: 1400px;
     position: relative;
