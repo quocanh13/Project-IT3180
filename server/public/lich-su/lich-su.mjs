@@ -1,4 +1,7 @@
 import { getLichSuList } from "../request/lich-su.mjs";
+import createHeader from "../header/header.mjs"
+
+createHeader(3)
 
 const searchForm = document.getElementById('searchForm');
 const tbody = document.getElementById('lichSuData');
