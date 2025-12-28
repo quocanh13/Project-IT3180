@@ -81,3 +81,11 @@ export async function searchNhanKhau(keyword) {
     return resData
 }
 
+export async function filterNhanKhau(gioiTinh) {
+    const res = await fetch(`/nhan-khau/filter?gioiTinh=${encodeURIComponent(gioiTinh)}`, {
+        method: "GET"
+    });
+    const resData = await res.json()
+    if(resData.type == "REDIRECT") window.location.href = resData.redirectURL
+    return resData
+}

@@ -1,4 +1,4 @@
-import { getLichSuList } from "../request/lich-su.mjs";
+import { getLichSuList, filterLichSu } from "../request/lich-su.mjs";
 import createHeader from "../header/header.mjs"
 
 createHeader(3)
@@ -6,10 +6,9 @@ createHeader(3)
 const searchForm = document.getElementById('searchForm');
 const tbody = document.getElementById('lichSuData');
 
-// --- 1. HÀM THỰC THI CHÍNH (Tải và hiển thị) ---
-async function loadAndRender(canHo = null) {
+async function loadAndRender(searchValue = null) {
     tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Đang tải dữ liệu...</td></tr>';
-    const res = await getLichSuList(canHo);
+    const res = await getLichSuList(searchValue);
     tbody.innerHTML = '';
     if (res.type === "SUCCESS") {
         if (res.data.length === 0) {
@@ -31,17 +30,14 @@ async function loadAndRender(canHo = null) {
 if (searchForm) {
     searchForm.addEventListener('submit', async (e) => {   
         e.preventDefault();
-        const keyword = document.getElementById('keyword').value;
-        const canHo = keyword.trim() !== "" ? parseInt(keyword, 10) : null;
-        
-        console.log("Tìm kiếm căn hộ:", canHo);
-        await loadAndRender(canHo);
+        const keyword = document.getElementById('keyword').value.trim();
+        const searchValue = keyword !== "" ? keyword : null;
+        await loadAndRender(searchValue);
     });
 }
 
 function renderRow(item) {
     const rowsCount = item.lichSuNguoiO.length;
-    
     item.lichSuNguoiO.forEach((person, index) => {
         const tr = document.createElement('tr');
         if (!person.ngayRa) tr.style.backgroundColor = "#f0f9ff";
@@ -54,7 +50,6 @@ function renderRow(item) {
         }
         const ngayVao = person.ngayVao ? new Date(person.ngayVao).toLocaleDateString('vi-VN') : '---';
         const ngayRa = person.ngayRa ? new Date(person.ngayRa).toLocaleDateString('vi-VN') : '<span class="text-success fw-bold">Đang ở</span>';
-
         tr.innerHTML = `
             ${roomCell}
             <td>${person.cccd}</td>
@@ -67,3 +62,28 @@ function renderRow(item) {
     });
 }
 loadAndRender();
+
+
+const filer = document.getElementById('filterStatus');
+if (filer) {
+    filer.addEventListener('change', async (e) => {
+        const status = e.target.value;
+        const res = await filterLichSu(status);
+        tbody.innerHTML = '';
+        if (res.type === "SUCCESS") {
+            if (res.data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Không tìm thấy lịch sử nào.</td></tr>';
+                return;
+            }
+            for (const item of res.data) {
+                renderRow(item);
+            }
+        } else {
+            if (typeof createToast === "function") {
+                createToast(res.message);
+            } else {
+                alert(res.message);
+            }   
+        }
+    });
+}

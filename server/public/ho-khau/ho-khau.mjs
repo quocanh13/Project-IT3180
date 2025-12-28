@@ -468,3 +468,39 @@ if (searchForm) {
         }   
     });
 }
+
+
+// Lọc hộ khẩu
+const filterSelect = document.getElementById('filterSelect');
+if (filterSelect) {
+    filterSelect.addEventListener('change', async (e) => {
+        const filterValue = e.target.value;
+        const tbody = document.getElementById('hoKhauData');
+        tbody.innerHTML = '<tr><td colspan="5">Đang tải dữ liệu...</td></tr>';  
+        let response;
+        if (filterValue === 'asc' || filterValue === 'desc') {
+            response = await getHoKhauList(0, -1, filterValue);
+        } else {
+            response = await getHoKhauList(0, -1,null);
+        } 
+        if (response.type === "OK") {
+            const list_id = response.data;
+            tbody.innerHTML = '';
+            for (const _id of list_id) {
+                const detailRes = await getHoKhau(_id);
+                if (detailRes.type === "OK") {
+                    const hoKhauGoc = detailRes.data;
+                    const chuHoRes = await getNhanKhau(hoKhauGoc.chuHo);
+                    const hoKhauInformation = {
+                        ...hoKhauGoc,
+                        tenChuHo: chuHoRes.data ? chuHoRes.data.hoTen : 'N/A'
+                    };
+                    console.log('HoKhauFull:', hoKhauInformation);
+                    renderRow(hoKhauInformation);
+                }
+            }
+        } else {
+            createToast(response.message);
+        }
+    });
+}

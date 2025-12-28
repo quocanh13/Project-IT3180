@@ -4,8 +4,8 @@
  * @param limit - Số lượng hộ khẩu được lấy, nếu là -1 thì lấy toàn bộ - Mặc định là 20
  * @returns - Nếu thành công thì data là mảng lưu số cccd của chủ hộ
  */
-export async function getHoKhauList(offset = 0, limit = 20) {
-    const res = await fetch(`/ho-khau?offset=${offset}&limit=${limit}`, {
+export async function getHoKhauList(offset = 0, limit = 20, filter = null) {
+    const res = await fetch(`/ho-khau?offset=${offset}&limit=${limit}&filter=${encodeURIComponent(filter || '')}`, {
         method: "GET"
     });
     const resData = await res.json()

@@ -231,3 +231,22 @@ export async function searchNhanKhau(keyword) {
         return "ERROR";
     }
 }
+export async function filterNhanKhau(gioiTinh) {
+    try {
+        let filterData;
+        if(gioiTinh !== ""){
+            filterData = await NhanKhauModel.find({
+                deleted: false,
+                gioiTinh: gioiTinh
+            }).populate('hoKhau').exec();
+        } else {
+            filterData = await NhanKhauModel.find({
+                deleted: false
+            }).populate('hoKhau').exec();
+        }
+        return filterData;
+    } catch (error) {
+        console.error("Lỗi filterNhanKhau:", error);
+        return "ERROR";
+    }
+}

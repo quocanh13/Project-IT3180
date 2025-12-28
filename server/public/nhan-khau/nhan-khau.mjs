@@ -1,4 +1,4 @@
-import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau,  deleteNhanKhau, searchNhanKhau  } from "../request/nhan-khau.mjs";
+import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau,  deleteNhanKhau, searchNhanKhau, filterNhanKhau  } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
 import createHeader from "../header/header.mjs"
 
@@ -210,3 +210,22 @@ if (searchForm) {
         }
     });
 }
+
+const filter = document.getElementById('filterSelect');
+if (filter) {
+    filter.addEventListener('change', async (e) => {   
+        const gioiTinh = e.target.value;
+        const res = await filterNhanKhau(gioiTinh);
+        const tbody = document.getElementById('nhanKhauData');
+        tbody.innerHTML = '';
+        if (res.type === "OK") {
+            const nhanKhauList = res.data;
+            for (const nhanKhau of nhanKhauList) {
+                await renderRow(nhanKhau);
+            }   
+        } else {
+            createToast(res.message);
+        }
+    });
+}
+
