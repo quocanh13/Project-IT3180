@@ -920,3 +920,15 @@ th{
     justify-content: space-between;
     align-items: center;
 }
+
+.tc-container{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.tc-content{
+    max-width: 1200px;
+}
+.tc-content, .tc-header{
+    flex-grow: 1;
+}
