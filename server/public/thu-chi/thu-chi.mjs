@@ -32373,6 +32373,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Container chi tiết */
     color: #4a5568;
 }
 
+.tc-detail-info p:last-child {
+    text-align: right;
+}
+
 .tc-detail-info strong {
     color: #2d3748;
     margin-right: 5px;
@@ -64457,28 +64461,12 @@ function KhoanThuDetail({
           className: "tc-detail-info",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("p", {
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("strong", {
-              children: "T\xEAn:"
-            }), " ", khoanThu.tenKhoanThu]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("p", {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("strong", {
-              children: "M\xE3:"
-            }), " ", khoanThu.maKhoanThu]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("p", {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("strong", {
-              children: "Gi\xE1:"
-            }), " ", khoanThu.soTien.toLocaleString(), " \u0111"]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("p", {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("strong", {
-              children: "Lo\u1EA1i:"
-            }), " ", khoanThu.loaiKhoanThu]
+              children: "T\u1ED5ng s\u1ED1 ph\xF2ng \u0111\xE3 n\u1ED9p:"
+            }), " ", nopTienList.length, " / ", totalHoKhau, " ph\xF2ng"]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("p", {
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("strong", {
               children: "T\u1ED5ng s\u1ED1 ti\u1EC1n \u0111\xE3 thu:"
             }), " ", totalMoney.toLocaleString(), " \u0111"]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("p", {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("strong", {
-              children: "T\u1ED5ng s\u1ED1 ph\xF2ng \u0111\xE3 n\u1ED9p:"
-            }), " ", nopTienList.length, " / ", totalHoKhau, " ph\xF2ng"]
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
           className: "tc-detail-header",

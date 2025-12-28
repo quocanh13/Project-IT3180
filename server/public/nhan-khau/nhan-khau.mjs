@@ -1,4 +1,4 @@
-import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau,  deleteNhanKhau, searchNhanKhau  } from "../request/nhan-khau.mjs";
+import { getNhanKhauList, getNhanKhau, insertNhanKhau, updateNhanKhau,  deleteNhanKhau, searchNhanKhau, filterNhanKhau  } from "../request/nhan-khau.mjs";
 import createToast from "../utils/toast/toast.mjs";
 import createHeader from "../header/header.mjs"
 
@@ -38,6 +38,11 @@ async function renderRow(nhanKhau) {
         }
         // Nếu chưa populate thì hiển thị ID
     }
+
+    row.onclick = (e) => {
+        if (e.target.tagName === 'BUTTON') return;
+        viewNhanKhau(nhanKhau.cccd);
+    };
 
     row.innerHTML = `
         <td>${nhanKhau.cccd}</td>
@@ -102,6 +107,8 @@ window.openModal = function (mode, cccd = null) {
     const title = document.getElementById('modalTitle');
     const cccdInput = document.getElementById('cccd');
     const form = document.getElementById('nhanKhauForm');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    const modalActions = form.querySelector('.modal-actions');
 
     modal.style.display = 'flex';
     form.reset();
@@ -109,10 +116,21 @@ window.openModal = function (mode, cccd = null) {
     if (mode === 'edit') {
         title.innerText = "Chỉnh sửa Nhân Khẩu";
         cccdInput.disabled = true;
+        inputs.forEach(input => {
+            if (input !== cccdInput) input.disabled = false;
+        });
+        if (modalActions) modalActions.style.display = 'flex';
         fetchDetailToForm(cccd);
-    } else {
+    } else if (mode === 'add') {
         title.innerText = "Thêm Nhân Khẩu";
         cccdInput.disabled = false;
+        inputs.forEach(input => input.disabled = false);
+        if (modalActions) modalActions.style.display = 'flex';
+    } else {
+        title.innerText = "Thông Tin Chi Tiết";
+        inputs.forEach(input => input.disabled = true);
+        if (modalActions) modalActions.style.display = 'none';
+        fetchDetailToForm(cccd);
     }
 };
 
@@ -188,6 +206,10 @@ window.editNhanKhau = function (cccd) {
     openModal('edit', cccd);
 };
 
+window.viewNhanKhau = function (cccd) {
+    openModal('view', cccd);
+};
+
 const searchForm = document.getElementById('searchForm');
 if (searchForm) {
     searchForm.addEventListener('submit', async (e) => {   
@@ -210,3 +232,22 @@ if (searchForm) {
         }
     });
 }
+
+const filter = document.getElementById('filterSelect');
+if (filter) {
+    filter.addEventListener('change', async (e) => {   
+        const gioiTinh = e.target.value;
+        const res = await filterNhanKhau(gioiTinh);
+        const tbody = document.getElementById('nhanKhauData');
+        tbody.innerHTML = '';
+        if (res.type === "OK") {
+            const nhanKhauList = res.data;
+            for (const nhanKhau of nhanKhauList) {
+                await renderRow(nhanKhau);
+            }   
+        } else {
+            createToast(res.message);
+        }
+    });
+}
+

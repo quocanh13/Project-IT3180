@@ -710,6 +710,14 @@ td {
     border-top: 1px solid var(--border-color);
 }
 
+/* Ẩn mũi tên của select khi disabled */
+select:disabled {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none;
+}
+
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 10px;

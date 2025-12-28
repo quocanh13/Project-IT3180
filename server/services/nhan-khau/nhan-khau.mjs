@@ -97,6 +97,12 @@ export async function getNhanKhau(cccd) {
  */
 export async function insertNhanKhau(nhanKhau) {
     try {
+        if (!nhanKhau || !nhanKhau.cccd) {
+            return "ERROR";
+        }
+        if (nhanKhau.cccd.length !== 12 || isNaN(Number(nhanKhau.cccd))) {
+            return "CCCD KHÔNG HỢP LỆ";
+        }
         const existingNhanKhau = await NhanKhauModel.findOne({ cccd: nhanKhau.cccd, deleted: false }).exec();
         if (existingNhanKhau) {
             return "NHÂN KHẨU ĐÃ TỒN TẠI";
@@ -228,6 +234,25 @@ export async function searchNhanKhau(keyword) {
         return uniqueResults;
     } catch (error) {
         console.error("Lỗi searchNhanKhau:", error);
+        return "ERROR";
+    }
+}
+export async function filterNhanKhau(gioiTinh) {
+    try {
+        let filterData;
+        if(gioiTinh !== ""){
+            filterData = await NhanKhauModel.find({
+                deleted: false,
+                gioiTinh: gioiTinh
+            }).populate('hoKhau').exec();
+        } else {
+            filterData = await NhanKhauModel.find({
+                deleted: false
+            }).populate('hoKhau').exec();
+        }
+        return filterData;
+    } catch (error) {
+        console.error("Lỗi filterNhanKhau:", error);
         return "ERROR";
     }
 }

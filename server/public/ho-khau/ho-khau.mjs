@@ -94,12 +94,12 @@ async function handleFormSubmit(e) {
     const hoKhauObj = {
         chuHo: document.getElementById('chuHo').value,
         canHo: Number(document.getElementById('canHo').value),
-        ngayDK: new Date(document.getElementById('ngayDK').value),
     };
     
-    // Nếu là edit, thêm _id
     if (currentMode === 'edit') {
         hoKhauObj._id = document.getElementById('hoKhauId').value;
+    } else {
+        hoKhauObj.ngayDK = new Date(document.getElementById('ngayDK').value);
     }
 
     let res;
@@ -147,6 +147,7 @@ window.openModal = async function(mode, _id = null) {
     const modal = document.getElementById('hoKhauModal');
     const title = document.getElementById('modalTitle');
     const chuHoInput = document.getElementById('chuHo');
+    const ngayDKInput = document.getElementById('ngayDK');
     
     modal.style.display = 'flex';
     document.getElementById('hoKhauForm').reset();
@@ -157,10 +158,12 @@ window.openModal = async function(mode, _id = null) {
     if (mode === 'edit') {
         title.innerText = "Chỉnh sửa Hộ Khẩu";
         chuHoInput.disabled = false; // Cho phép sửa chủ hộ
+        ngayDKInput.disabled = true; // Khóa ngày đăng ký khi edit
         fetchDetailToForm(_id);
     } else {
         title.innerText = "Thêm Hộ Khẩu";
         chuHoInput.disabled = false;
+        ngayDKInput.disabled = false; // Cho phép nhập ngày đăng ký khi thêm mới
     }
 }
 
@@ -466,5 +469,41 @@ if (searchForm) {
         } else {
             createToast(response.message);
         }   
+    });
+}
+
+
+// Lọc hộ khẩu
+const filterSelect = document.getElementById('filterSelect');
+if (filterSelect) {
+    filterSelect.addEventListener('change', async (e) => {
+        const filterValue = e.target.value;
+        const tbody = document.getElementById('hoKhauData');
+        tbody.innerHTML = '<tr><td colspan="5">Đang tải dữ liệu...</td></tr>';  
+        let response;
+        if (filterValue === 'asc' || filterValue === 'desc') {
+            response = await getHoKhauList(0, -1, filterValue);
+        } else {
+            response = await getHoKhauList(0, -1,null);
+        } 
+        if (response.type === "OK") {
+            const list_id = response.data;
+            tbody.innerHTML = '';
+            for (const _id of list_id) {
+                const detailRes = await getHoKhau(_id);
+                if (detailRes.type === "OK") {
+                    const hoKhauGoc = detailRes.data;
+                    const chuHoRes = await getNhanKhau(hoKhauGoc.chuHo);
+                    const hoKhauInformation = {
+                        ...hoKhauGoc,
+                        tenChuHo: chuHoRes.data ? chuHoRes.data.hoTen : 'N/A'
+                    };
+                    console.log('HoKhauFull:', hoKhauInformation);
+                    renderRow(hoKhauInformation);
+                }
+            }
+        } else {
+            createToast(response.message);
+        }
     });
 }

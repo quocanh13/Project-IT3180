@@ -3,7 +3,8 @@ export async function getHoKhauList(req, res) {
     let resData;
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
-    const data = await DBGetHoKhauList(offset, limit);
+    const filter = req.query.filter || null;
+    const data = await DBGetHoKhauList(offset, limit, filter);
     if (data == "ERROR") {
         resData = {
             type: "ERROR",

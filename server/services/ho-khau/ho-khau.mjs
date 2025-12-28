@@ -8,9 +8,20 @@ import LichSu from "../../config/models/lich_su-model.mjs";
  * @param {number} limit - Số lượng, nếu là -1 thì lấy toàn bộ nhân khẩu
  * @returns {Promise<number[] | "ERROR">} - Trả về mảng lưu số CCCD của chủ hộ | Trả về "ERROR" nếu có lỗi
  */
-export async function getHoKhauList(offset, limit) {
+export async function getHoKhauList(offset, limit, filter) {
     try {
-        let query = HoKhau.find({ deleted: false }).sort("canHo").select('_id');
+        const findConditions = { deleted: false };
+        let sortOption = {};
+        if (filter === 'asc') {
+            sortOption = { ngayDK: 1 };
+        } else if (filter === 'desc') {
+            sortOption = { ngayDK: -1 };
+        } else {
+            sortOption = { canHo: 1 };
+        }
+        let query = HoKhau.find(findConditions)
+                          .sort(sortOption)
+                          .select('_id');
 
         if (limit !== -1) {
             query = query.skip(offset).limit(limit);
@@ -18,6 +29,7 @@ export async function getHoKhauList(offset, limit) {
 
         const hoKhauList = await query.exec();
         return hoKhauList.map(hk => hk._id);
+
     } catch (error) {
         console.error("Get HoKhau error:", error);
         return "ERROR";
@@ -151,6 +163,8 @@ export async function updateHoKhau(hoKhau) {
 
         if(hoKhau.chuHo !== null && hoKhau.chuHo !== undefined) {
             updateData.chuHo = hoKhau.chuHo;
+            await NhanKhauModel.updateOne({ hoKhau: hoKhau._id, quanHeVoiChuHo: "Chủ Hộ" , deleted: false }, { $unset:  { quanHeVoiChuHo: "" } });
+            await NhanKhauModel.updateOne({ cccd: hoKhau.chuHo , deleted: false }, { hoKhau: hoKhau._id,  quanHeVoiChuHo: "Chủ Hộ" });
         }
 
         if(hoKhau.canHo !== null && hoKhau.canHo !== undefined) {
