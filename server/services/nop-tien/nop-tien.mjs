@@ -19,12 +19,32 @@ export async function getNopTienList(offset = 0, limit = 10,maKhoanThu = null) {
         if(maKhoanThu !== null) {
             find.maKhoanThu = maKhoanThu;
         }
+        
+        let nopTienList;
         if(limit === -1) {
-            const nopTienList = await NopTien.find(find);
-            return nopTienList;
+            nopTienList = await NopTien.find(find);
+        } else {
+            nopTienList = await NopTien.find(find).skip(offset).limit(limit);
         }
-        const nopTienList = await NopTien.find(find).skip(offset).limit(limit);
-        return nopTienList;
+        
+        // Populate thông tin người nộp từ NhanKhau
+        const populatedList = await Promise.all(nopTienList.map(async (nop) => {
+            const nopObj = nop.toObject();
+            const nhanKhau = await NhanKhauModel.findOne({ cccd: nop.nguoiNop, deleted: false });
+            if (nhanKhau) {
+                nopObj.tenNguoiNop = nhanKhau.hoTen;
+                // Tìm căn hộ - field là hoKhau (ObjectId), và ho_khau có field canHo
+                if (nhanKhau.hoKhau) {
+                    const hoKhau = await HoKhau.findOne({ _id: nhanKhau.hoKhau, deleted: false });
+                    if (hoKhau) {
+                        nopObj.canHo = hoKhau.canHo;
+                    }
+                }
+            }
+            return nopObj;
+        }));
+        
+        return populatedList;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách nộp tiền:", error);
         return "ERROR";

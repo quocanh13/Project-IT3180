@@ -1,10 +1,248 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <script src="./thu-chi.mjs" defer type="module"></script>
-        <link rel="stylesheet" href="./thu-chi.css">
-    </head>
-    <body>
-        <div id="root"></div>
-    </body>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Thu Phí - Bluemoon Residence</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./thu-chi.css">
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <div id="root"></div>
+    <main class="container">
+        <header class="content-header">
+            <div class="header-left">
+                <div class="page-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1>Danh Sách Khoản Thu</h1>
+                    <p class="page-subtitle">Theo dõi các khoản thu và tiến độ nộp tiền của cư dân</p>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="btnAddKhoanThu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Tạo Khoản Thu
+            </button>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Tổng Danh Mục Thu</div>
+                    <div class="stat-value" id="totalKhoanThu">0</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Tổng Thực Thu</div>
+                    <div class="stat-value text-success" id="totalCollected">0 đ</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Lượt Đã Nộp</div>
+                    <div class="stat-value" id="totalTransactions">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <div class="search-input-wrapper">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <form id="searchForm">
+                    <input type="text" id="keyword" placeholder="Tìm tên khoản thu" />
+                </form>
+            </div>
+            <select id="filterType" class="filter-select">
+                <option value="">Tất cả loại phí</option>
+                <option value="bắt buộc">Bắt buộc</option>
+                <option value="tự nguyện">Tự nguyện</option>
+            </select>
+        </div>
+
+        <section class="table-container" style="background: transparent; box-shadow: none; border: none;">
+            <div class="table-header-bar" style="border-radius: 12px; margin-bottom: 20px;">
+                <h3>Danh sách khoản thu</h3>
+                <span class="table-count" id="tableCount">0 khoản</span>
+            </div>
+            
+            <div id="thuChiData" class="room-grid-container">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <span>Đang tải dữ liệu...</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Thêm/Sửa Khoản Thu -->
+    <div id="khoanThuModal" class="modal">
+        <div class="modal-content">
+            <button class="btn-close" id="btnCloseModal">×</button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <h2 id="modalTitle">Thêm Khoản Thu</h2>
+            </div>
+            <form id="khoanThuForm">
+                <input type="hidden" id="khoanThuId" />
+                <div class="form-group">
+                    <label>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        </svg>
+                        Tên Khoản Thu:
+                    </label>
+                    <input type="text" id="tenKhoanThu" required placeholder="VD: Phí quản lý, Phí gửi xe...">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        Số Tiền (VNĐ):
+                    </label>
+                    <input type="number" id="soTien" required placeholder="VD: 200000" min="0">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 7h16M4 12h16M4 17h10"></path>
+                        </svg>
+                        Loại Khoản Thu:
+                    </label>
+                    <select id="loaiKhoanThu" required>
+                        <option value="" disabled selected>-- Chọn loại --</option>
+                        <option value="bắt buộc">Bắt buộc</option>
+                        <option value="tự nguyện">Tự nguyện</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelModal">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Nhập Nộp Tiền -->
+    <div id="nopTienModal" class="modal">
+        <div class="modal-content">
+            <button class="btn-close" id="btnCloseNopTienModal">×</button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </div>
+                <h2 id="nopTienModalTitle">Nhập Thông Tin Nộp Tiền</h2>
+            </div>
+            <form id="nopTienForm">
+                <input type="hidden" id="maKhoanThuNop" />
+                <div class="form-group">
+                    <label>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Người Nộp Tiền:
+                    </label>
+                    <select id="maNhanKhauNop" required>
+                        <option value="" disabled selected>Đang tải...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        Số Tiền (VNĐ):
+                    </label>
+                    <input type="number" id="soTienNop" required placeholder="VD: 200000" min="0">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        Ngày Nộp:
+                    </label>
+                    <input type="date" id="ngayNop" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelNopTienModal">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Xác Nhận
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>
+    <script type="module" src="./thu-chi.mjs"></script>
+</body>
 </html>

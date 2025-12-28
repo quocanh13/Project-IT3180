@@ -13,10 +13,10 @@ import KhoanThu from "../../config/models/khoan_thu-model.mjs";
 export async function getKhoanThuList(offset = 0, limit = 10) {
     try {
         if(limit === -1) {
-            const khoanThuList = await KhoanThu.find({ deleted: false });
+            const khoanThuList = await KhoanThu.find({ deleted: false }).sort({ createdAt: -1 });
             return khoanThuList;
         }
-        const khoanThuList = await KhoanThu.find({ deleted: false }).skip(offset).limit(limit);
+        const khoanThuList = await KhoanThu.find({ deleted: false }).sort({ createdAt: -1 }).skip(offset).limit(limit);
         return khoanThuList;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách khoản thu:", error);

@@ -12,6 +12,7 @@ export async function getLichSuList(searchValue = null) {
         if (searchValue) {
             const searchStr = searchValue.toString().trim();
             if (searchStr.length === 12) {
+                // Tìm theo CCCD
                 const nhanKhau = await NhanKhauModel.findOne({ cccd: searchStr });
                 if (nhanKhau) {
                     condition.nhanKhau = nhanKhau._id;
@@ -21,14 +22,23 @@ export async function getLichSuList(searchValue = null) {
             } else {
                 const canHoNumber = parseInt(searchStr, 10);               
                 if (!isNaN(canHoNumber)) {
+                    // Tìm theo số căn hộ
                     condition.canHo = canHoNumber;
                 } else {
-                    return [];
+                    // Tìm theo tên (hoTen)
+                    const nhanKhauList = await NhanKhauModel.find({ 
+                        hoTen: { $regex: searchStr, $options: 'i' } 
+                    });
+                    if (nhanKhauList.length > 0) {
+                        condition.nhanKhau = { $in: nhanKhauList.map(nk => nk._id) };
+                    } else {
+                        return [];
+                    }
                 }
             }
         }
         const list = await LichSu.find(condition)
-            .sort({ canHo: 1, ngayDK: -1 })
+            .sort({ canHo: 1,ngayChuyenDi: 1, ngayDK: -1 })
             .populate("nhanKhau");
         const grouped = list.reduce((acc, item) => {
             const key = item.canHo;

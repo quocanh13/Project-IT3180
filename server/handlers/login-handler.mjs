@@ -4,8 +4,12 @@ export async function postLogin(req, res) {
     const result = await login(req.body.username, req.body.password);
     let resData;
     if (result == "OK") {
-        const token = sign({ username: req.body.username }, "600s");
-        res.cookie("token", token);
+        const token = sign({ username: req.body.username }, "7d");
+        res.cookie("token", token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày tính bằng milliseconds
+            httpOnly: true,
+            sameSite: 'lax'
+        });
         resData = {
             type: "REDIRECT",
             redirectURL: "/ho-khau/ho-khau.html"

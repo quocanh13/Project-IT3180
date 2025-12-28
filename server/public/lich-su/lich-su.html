@@ -8,14 +8,10 @@
     <link rel="stylesheet" href="./lich-su.css">
 </head>
 <body>
-    <!-- Background Pattern -->
     <div class="bg-pattern"></div>
 
     <div id="root"></div>
-    <!-- Topbar và Sidebar sẽ được render bởi layout.mjs -->
-
     <main class="container">
-        <!-- Page Header với Icon -->
         <header class="content-header">
             <div class="header-left">
                 <div class="page-icon">
@@ -31,7 +27,6 @@
             </div>
         </header>
 
-        <!-- Stats Cards -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
@@ -40,10 +35,11 @@
                     </svg>
                 </div>
                 <div class="stat-info">
-                    <div class="stat-label">Tổng Căn Hộ</div>
+                    <div class="stat-label">Căn Hộ Đã Hoạt Động</div>
                     <div class="stat-value" id="totalRooms">0</div>
                 </div>
             </div>
+
             <div class="stat-card">
                 <div class="stat-icon" style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%);">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
@@ -52,27 +48,26 @@
                     </svg>
                 </div>
                 <div class="stat-info">
-                    <div class="stat-label">Đang Cư Trú</div>
-                    <div class="stat-value" id="totalActive">0</div>
+                    <div class="stat-label">Phòng Có Người</div>
+                    <div class="stat-value" id="occupiedRooms">0</div>
                 </div>
             </div>
+
             <div class="stat-card">
                 <div class="stat-icon" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        <circle cx="12" cy="8" r="2" fill="white"></circle>
                     </svg>
                 </div>
                 <div class="stat-info">
-                    <div class="stat-label">Lịch Sử Ghi Nhận</div>
-                    <div class="stat-value" id="totalHistory">0</div>
+                    <div class="stat-label">Tổng Lượt Cư Trú</div>
+                    <div class="stat-value" id="totalHistoryRecords">0</div>
                 </div>
             </div>
         </div>
 
-        <!-- Search and Filter Bar -->
         <div class="search-bar">
             <div class="search-input-wrapper">
                 <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -90,91 +85,20 @@
             </select>
         </div>
 
-        <!-- Table Container -->
-        <section class="table-container">
-            <div class="table-header-bar">
+        <section class="table-container" style="background: transparent; box-shadow: none; border: none;">
+            
+            <div class="table-header-bar" style="border-radius: 12px; margin-bottom: 20px;">
                 <h3>Lịch sử cư trú theo căn hộ</h3>
                 <span class="table-count" id="tableCount">0 bản ghi</span>
             </div>
-            <div class="table-wrapper">
-                <table id="lichSuTable">
-                    <thead>
-                        <tr>
-                            <th class="col-room">
-                                <div class="th-content">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                    </svg>
-                                    Số Căn Hộ
-                                </div>
-                            </th>
-                            <th>
-                                <div class="th-content">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    </svg>
-                                    CCCD
-                                </div>
-                            </th>
-                            <th>
-                                <div class="th-content">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="12" cy="7" r="4"></circle>
-                                    </svg>
-                                    Họ Tên
-                                </div>
-                            </th>
-                            <th>
-                                <div class="th-content">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="8.5" cy="7" r="4"></circle>
-                                        <line x1="20" y1="8" x2="20" y2="14"></line>
-                                        <line x1="23" y1="11" x2="17" y2="11"></line>
-                                    </svg>
-                                    Ngày Chuyển Vào
-                                </div>
-                            </th>
-                            <th>
-                                <div class="th-content">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="8.5" cy="7" r="4"></circle>
-                                        <line x1="23" y1="11" x2="17" y2="11"></line>
-                                    </svg>
-                                    Ngày Chuyển Đi
-                                </div>
-                            </th>
-                            <th class="text-center">
-                                <div class="th-content justify-center">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <path d="M12 6v6l4 2"></path>
-                                    </svg>
-                                    Trạng Thái
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="lichSuData">
-                        <tr>
-                            <td colspan="6" class="loading-state">
-                                <div class="spinner"></div>
-                                <span>Đang tải dữ liệu...</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            
+            <div id="lichSuData" class="room-grid-container">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <span>Đang tải dữ liệu...</span>
+                </div>
             </div>
-            <div class="empty-state" id="emptyState" style="display: none;">
-                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-                <h3>Không tìm thấy dữ liệu</h3>
-                <p>Thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm</p>
-            </div>
+
         </section>
     </main>
 
