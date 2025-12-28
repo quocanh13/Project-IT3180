@@ -5,6 +5,7 @@ createHeader(3)
 
 const searchForm = document.getElementById('searchForm');
 const tbody = document.getElementById('lichSuData');
+const tableCount = document.getElementById('tableCount');
 
 async function loadAndRender(searchValue = null) {
     tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Đang tải dữ liệu...</td></tr>';
@@ -13,11 +14,16 @@ async function loadAndRender(searchValue = null) {
     if (res.type === "SUCCESS") {
         if (res.data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Không tìm thấy lịch sử nào.</td></tr>';
+            if (tableCount) tableCount.textContent = '0 bản ghi';
             return;
         }
+        // Đếm tổng số bản ghi (tổng số người trong tất cả các phòng)
+        let totalRecords = 0;
         for (const item of res.data) {
+            totalRecords += item.lichSuNguoiO.length;
             renderRow(item);
         }
+        if (tableCount) tableCount.textContent = `${totalRecords} bản ghi`;
     } else {
         if (typeof createToast === "function") {
             createToast(res.message);
@@ -73,11 +79,16 @@ if (filer) {
         if (res.type === "SUCCESS") {
             if (res.data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Không tìm thấy lịch sử nào.</td></tr>';
+                if (tableCount) tableCount.textContent = '0 bản ghi';
                 return;
             }
+            // Đếm tổng số bản ghi
+            let totalRecords = 0;
             for (const item of res.data) {
+                totalRecords += item.lichSuNguoiO.length;
                 renderRow(item);
             }
+            if (tableCount) tableCount.textContent = `${totalRecords} bản ghi`;
         } else {
             if (typeof createToast === "function") {
                 createToast(res.message);

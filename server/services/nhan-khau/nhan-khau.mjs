@@ -97,6 +97,12 @@ export async function getNhanKhau(cccd) {
  */
 export async function insertNhanKhau(nhanKhau) {
     try {
+        if (!nhanKhau || !nhanKhau.cccd) {
+            return "ERROR";
+        }
+        if (nhanKhau.cccd.length !== 12 || isNaN(Number(nhanKhau.cccd))) {
+            return "CCCD KHÔNG HỢP LỆ";
+        }
         const existingNhanKhau = await NhanKhauModel.findOne({ cccd: nhanKhau.cccd, deleted: false }).exec();
         if (existingNhanKhau) {
             return "NHÂN KHẨU ĐÃ TỒN TẠI";

@@ -163,6 +163,8 @@ export async function updateHoKhau(hoKhau) {
 
         if(hoKhau.chuHo !== null && hoKhau.chuHo !== undefined) {
             updateData.chuHo = hoKhau.chuHo;
+            await NhanKhauModel.updateOne({ hoKhau: hoKhau._id, quanHeVoiChuHo: "Chủ Hộ" , deleted: false }, { $unset:  { quanHeVoiChuHo: "" } });
+            await NhanKhauModel.updateOne({ cccd: hoKhau.chuHo , deleted: false }, { hoKhau: hoKhau._id,  quanHeVoiChuHo: "Chủ Hộ" });
         }
 
         if(hoKhau.canHo !== null && hoKhau.canHo !== undefined) {

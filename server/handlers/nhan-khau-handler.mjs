@@ -60,6 +60,13 @@ export async function insertNhanKhau(req, res) {
         };
         res.status(500);
     }
+    else if (result == "CCCD KHÔNG HỢP LỆ") {
+        resData = {
+            type: "BAD REQUEST",
+            message: "CCCD không hợp lệ"
+        };
+        res.status(400);
+    }
     else if (result == "NHÂN KHẨU ĐÃ TỒN TẠI") {
         resData = {
             type: "BAD REQUEST",

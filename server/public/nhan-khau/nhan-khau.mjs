@@ -39,6 +39,11 @@ async function renderRow(nhanKhau) {
         // Nếu chưa populate thì hiển thị ID
     }
 
+    row.onclick = (e) => {
+        if (e.target.tagName === 'BUTTON') return;
+        viewNhanKhau(nhanKhau.cccd);
+    };
+
     row.innerHTML = `
         <td>${nhanKhau.cccd}</td>
         <td>${nhanKhau.hoTen}</td>
@@ -102,6 +107,8 @@ window.openModal = function (mode, cccd = null) {
     const title = document.getElementById('modalTitle');
     const cccdInput = document.getElementById('cccd');
     const form = document.getElementById('nhanKhauForm');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    const modalActions = form.querySelector('.modal-actions');
 
     modal.style.display = 'flex';
     form.reset();
@@ -109,10 +116,21 @@ window.openModal = function (mode, cccd = null) {
     if (mode === 'edit') {
         title.innerText = "Chỉnh sửa Nhân Khẩu";
         cccdInput.disabled = true;
+        inputs.forEach(input => {
+            if (input !== cccdInput) input.disabled = false;
+        });
+        if (modalActions) modalActions.style.display = 'flex';
         fetchDetailToForm(cccd);
-    } else {
+    } else if (mode === 'add') {
         title.innerText = "Thêm Nhân Khẩu";
         cccdInput.disabled = false;
+        inputs.forEach(input => input.disabled = false);
+        if (modalActions) modalActions.style.display = 'flex';
+    } else {
+        title.innerText = "Thông Tin Chi Tiết";
+        inputs.forEach(input => input.disabled = true);
+        if (modalActions) modalActions.style.display = 'none';
+        fetchDetailToForm(cccd);
     }
 };
 
@@ -186,6 +204,10 @@ window.removeNhanKhau = async function (cccd) {
 // 8. Edit
 window.editNhanKhau = function (cccd) {
     openModal('edit', cccd);
+};
+
+window.viewNhanKhau = function (cccd) {
+    openModal('view', cccd);
 };
 
 const searchForm = document.getElementById('searchForm');
