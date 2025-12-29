@@ -1,4 +1,5 @@
 import KhoanThu from "../../config/models/khoan_thu-model.mjs";
+import NopTien from "../..//config/models/nop_tien-model.mjs";
 
 /**
  * Hàm lấy danh sách khoản thu 
@@ -113,6 +114,7 @@ export async function deleteKhoanThu(maKhoanThu) {
             return "KHOẢN THU KHÔNG TỒN TẠI";
         }
         await KhoanThu.updateOne({ maKhoanThu: maKhoanThu }, { deleted: true, deletedAt: new Date() });
+        await NopTien.updateMany({ maKhoanThu: maKhoanThu }, { deleted: true, deletedAt: new Date() });
         return "OK";
     } catch (error) {
         console.error("Lỗi khi xóa khoản thu:", error);

@@ -1,5 +1,5 @@
-import { getKhoanThuList } from "../request/khoan-thu.mjs";
-import { getNopTienList, insertNopTien } from "../request/nop-tien.mjs";
+import { getKhoanThuList, deleteKhoanThu } from "../request/khoan-thu.mjs";
+import { getNopTienList, insertNopTien, deleteNopTien, updateNopTien } from "../request/nop-tien.mjs";
 import { getNhanKhauList, getNhanKhau } from "../request/nhan-khau.mjs";
 import createHeader from "../header/header.mjs"
 import createToast from "../utils/toast/toast.mjs"
@@ -30,6 +30,12 @@ const nopTienModal = document.getElementById('nopTienModal');
 const btnCloseNopTienModal = document.getElementById('btnCloseNopTienModal');
 const btnCancelNopTienModal = document.getElementById('btnCancelNopTienModal');
 const nopTienForm = document.getElementById('nopTienForm');
+
+// Modal Elements - Sửa Nộp Tiền
+const editNopTienModal = document.getElementById('editNopTienModal');
+const btnCloseEditNopTienModal = document.getElementById('btnCloseEditNopTienModal');
+const btnCancelEditNopTienModal = document.getElementById('btnCancelEditNopTienModal');
+const editNopTienForm = document.getElementById('editNopTienForm');
 
 // Helper format tiền
 const formatMoney = (amount) => {
@@ -116,6 +122,63 @@ function closeNopTienModal() {
     nopTienForm.reset();
 }
 
+async function loadNhanKhauListForEdit() {
+    const select = document.getElementById('editMaNhanKhauNop');
+    select.innerHTML = '<option value="" disabled selected>Đang tải...</option>';
+    
+    try {
+        const response = await getNhanKhauList(0, -1);
+        
+        if (response.type === "OK") {
+            const listNhanKhau = response.data;
+            
+            if (!listNhanKhau || listNhanKhau.length === 0) {
+                select.innerHTML = '<option value="" disabled>Chưa có nhân khẩu nào</option>';
+                return;
+            }
+            
+            select.innerHTML = '<option value="" disabled selected>-- Chọn người nộp tiền --</option>';
+            
+            for (const nhanKhau of listNhanKhau) {
+                const option = document.createElement('option');
+                option.value = nhanKhau.cccd;
+                option.textContent = `${nhanKhau.hoTen} - ${nhanKhau.cccd}`;
+                select.appendChild(option);
+            }
+        } else {
+            select.innerHTML = '<option value="" disabled>Lỗi tải dữ liệu</option>';
+        }
+    } catch (error) {
+        console.error('Error loading nhan khau:', error);
+        select.innerHTML = '<option value="" disabled>Lỗi tải dữ liệu</option>';
+    }
+}
+
+async function openEditNopTienModal(nopTienData) {
+    editNopTienModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Load danh sách nhân khẩu
+    await loadNhanKhauListForEdit();
+    
+    // Set giá trị cho form
+    document.getElementById('editNopTienId').value = nopTienData._id;
+    document.getElementById('editMaKhoanThuNop').value = nopTienData.maKhoanThu;
+    document.getElementById('editMaNhanKhauNop').value = nopTienData.nguoiNop;
+    document.getElementById('editSoTienNop').value = nopTienData.soTien;
+    
+    // Format ngày nộp
+    const ngayNop = new Date(nopTienData.ngayNop);
+    const formattedDate = ngayNop.toISOString().split('T')[0];
+    document.getElementById('editNgayNop').value = formattedDate;
+}
+
+function closeEditNopTienModal() {
+    editNopTienModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    editNopTienForm.reset();
+}
+
 // Event Listeners for Modal
 if (btnAddKhoanThu) {
     btnAddKhoanThu.addEventListener('click', () => openModal('add'));
@@ -137,6 +200,14 @@ if (btnCancelNopTienModal) {
     btnCancelNopTienModal.addEventListener('click', closeNopTienModal);
 }
 
+if (btnCloseEditNopTienModal) {
+    btnCloseEditNopTienModal.addEventListener('click', closeEditNopTienModal);
+}
+
+if (btnCancelEditNopTienModal) {
+    btnCancelEditNopTienModal.addEventListener('click', closeEditNopTienModal);
+}
+
 // Close modal when clicking outside
 window.addEventListener('click', (e) => {
     if (e.target === modal) {
@@ -144,6 +215,9 @@ window.addEventListener('click', (e) => {
     }
     if (e.target === nopTienModal) {
         closeNopTienModal();
+    }
+    if (e.target === editNopTienModal) {
+        closeEditNopTienModal();
     }
 });
 
@@ -224,6 +298,44 @@ if (nopTienForm) {
         } catch (error) {
             console.error('Error:', error);
             createToast('Có lỗi xảy ra khi thêm nộp tiền', true);
+        }
+    });
+}
+
+// Form Submit Handler - Sửa Nộp Tiền
+if (editNopTienForm) {
+    editNopTienForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const _id = document.getElementById('editNopTienId').value;
+        const maKhoanThu = document.getElementById('editMaKhoanThuNop').value;
+        const nguoiNop = document.getElementById('editMaNhanKhauNop').value;
+        const soTien = parseFloat(document.getElementById('editSoTienNop').value);
+        const ngayNop = new Date(document.getElementById('editNgayNop').value);
+        
+        const nopTienData = {
+            _id,
+            maKhoanThu,
+            nguoiNop,
+            soTien,
+            ngayNop
+        };
+        
+        try {
+            const response = await updateNopTien(nopTienData);
+            
+            if (response.type === 'OK' || response.type === 'SUCCESS') {
+                createToast(response.message || 'Cập nhật nộp tiền thành công', false);
+                setTimeout(() => {
+                    closeEditNopTienModal();
+                    loadAndRender(); // Reload data
+                }, 100);
+            } else {
+                createToast(response.message || 'Có lỗi xảy ra', true);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            createToast('Có lỗi xảy ra khi cập nhật nộp tiền', true);
         }
     });
 }
@@ -362,6 +474,7 @@ function renderCard(item) {
             const cccd = nop.nguoiNop || '---';
             const canHo = nop.canHo || '---';
             const soTien = formatMoney(nop.soTien);
+            const nopDataStr = JSON.stringify(nop).replace(/"/g, '&quot;');
             
             tableRowsHTML += `
                 <tr>
@@ -371,13 +484,27 @@ function renderCard(item) {
                     <td>${cccd}</td>
                     <td class="text-success font-weight-bold">${soTien}</td>
                     <td>${ngayNop}</td>
+                    <td style="text-align: center;">
+                        <button class="btn-action btn-action-edit" data-nop='${nopDataStr}' title="Sửa">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                        <button class="btn-action btn-action-delete" data-id="${nop._id}" title="Xóa">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </td>
                 </tr>
             `;
         });
     } else {
         tableRowsHTML = `
             <tr>
-                <td colspan="6" style="text-align:center; padding:30px; color:#999; font-style:italic;">
+                <td colspan="7" style="text-align:center; padding:30px; color:#999; font-style:italic;">
                     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom:10px; opacity:0.5">
                        <circle cx="12" cy="12" r="10"></circle>
                        <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -433,6 +560,7 @@ function renderCard(item) {
                                 <th>CCCD</th>
                                 <th style="width: 200px;">Số tiền</th>
                                 <th style="width: 180px;">Ngày nộp</th>
+                                <th style="width: 120px; text-align: center;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -444,13 +572,6 @@ function renderCard(item) {
         </div>
         
         <div class="card-footer-actions">
-            <button class="btn btn-outline btn-edit" data-ma="${item.maKhoanThu}">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-                Sửa
-            </button>
             <button class="btn btn-primary btn-add-payment" data-ma="${item.maKhoanThu}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -458,6 +579,22 @@ function renderCard(item) {
                 </svg>
                 Nhập nộp tiền
             </button>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-outline btn-edit" data-ma="${item.maKhoanThu}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Sửa
+                </button>
+                <button class="btn btn-danger btn-delete-khoan" data-ma="${item.maKhoanThu}" data-ten="${item.tenKhoanThu}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Xóa
+                </button>
+            </div>
         </div>
     `;
 
@@ -526,6 +663,69 @@ function renderCard(item) {
             openNopTienModal(maKhoanThu);
         });
     }
+    
+    // Add delete khoản thu button functionality
+    const btnDeleteKhoan = card.querySelector('.btn-delete-khoan');
+    if (btnDeleteKhoan) {
+        btnDeleteKhoan.addEventListener('click', async () => {
+            const maKhoanThu = btnDeleteKhoan.getAttribute('data-ma');
+            const tenKhoanThu = btnDeleteKhoan.getAttribute('data-ten');
+            
+            if (confirm(`Bạn có chắc chắn muốn xóa khoản thu "${tenKhoanThu}"?\nLưu ý: Tất cả dữ liệu nộp tiền liên quan sẽ bị xóa!`)) {
+                try {
+                    const response = await deleteKhoanThu(maKhoanThu);
+                    
+                    if (response.type === 'OK' || response.type === 'SUCCESS') {
+                        createToast(response.message || 'Xóa khoản thu thành công', false);
+                        setTimeout(() => {
+                            loadAndRender();
+                        }, 100);
+                    } else {
+                        createToast(response.message || 'Có lỗi xảy ra khi xóa khoản thu', true);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    createToast('Có lỗi xảy ra khi xóa khoản thu', true);
+                }
+            }
+        });
+    }
+    
+    // Add edit nộp tiền button functionality
+    const btnEditNopTiens = card.querySelectorAll('.btn-action-edit');
+    btnEditNopTiens.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const nopDataStr = btn.getAttribute('data-nop');
+            const nopData = JSON.parse(nopDataStr);
+            openEditNopTienModal(nopData);
+        });
+    });
+    
+    // Add delete nộp tiền button functionality
+    const btnDeleteNopTiens = card.querySelectorAll('.btn-action-delete');
+    btnDeleteNopTiens.forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const nopTienId = btn.getAttribute('data-id');
+            
+            if (confirm('Bạn có chắc chắn muốn xóa giao dịch nộp tiền này?')) {
+                try {
+                    const response = await deleteNopTien(nopTienId);
+                    
+                    if (response.type === 'OK' || response.type === 'SUCCESS') {
+                        createToast(response.message || 'Xóa nộp tiền thành công', false);
+                        setTimeout(() => {
+                            loadAndRender();
+                        }, 100);
+                    } else {
+                        createToast(response.message || 'Có lỗi xảy ra khi xóa nộp tiền', true);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    createToast('Có lỗi xảy ra khi xóa nộp tiền', true);
+                }
+            }
+        });
+    });
 }
 
 // Event Listeners - Search and Filter
