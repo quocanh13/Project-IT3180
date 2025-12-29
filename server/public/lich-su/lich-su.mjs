@@ -79,8 +79,7 @@ function processAndRenderData(data) {
 
     data.forEach((item) => {
         // Kiểm tra xem phòng có người đang ở không (ngayRa == null)
-        const hasActiveResident = item.lichSuNguoiO.some(p => !p.ngayRa);
-        if (hasActiveResident) {
+        if (item.trangThai === "Có Người") {
             occupiedCount++;
         }
 
