@@ -37,13 +37,14 @@ export async function getLichSuList(searchValue = null) {
                 }
             }
         }
+  
         const list = await LichSu.find(condition)
             .sort({ canHo: 1,ngayChuyenDi: 1, ngayDK: -1 })
             .populate("nhanKhau");
         const grouped = list.reduce((acc, item) => {
             const key = item.canHo;
             if (!acc[key]) {
-                acc[key] = { soPhong: key, lichSuNguoiO: [] };
+                acc[key] = { soPhong: key, lichSuNguoiO: [], trangThai: "Trống"};
             }
             acc[key].lichSuNguoiO.push({
                 idLichSu: item._id,
@@ -53,6 +54,11 @@ export async function getLichSuList(searchValue = null) {
                 ngayRa: item.ngayChuyenDi,
                 trangThai: item.ngayChuyenDi ? "Đã dời đi" : "Đang cư trú"
             });
+
+            if(!item.ngayChuyenDi && acc[key].trangThai === "Trống") {
+                acc[key].trangThai = "Có Người";
+            }
+            
             return acc;
         }, {});
 
@@ -73,21 +79,31 @@ export async function filterLichSu(status) {
         const list = await LichSu.find(condition)
             .sort({ canHo: 1, ngayDK: -1 })
             .populate("nhanKhau");
-        const grouped = list.reduce((acc, item) => {
+        
+        const grouped = {};
+        
+        for (const item of list) {
             const key = item.canHo;
-            if (!acc[key]) {
-                acc[key] = { soPhong: key, lichSuNguoiO: [] };
+            if (!grouped[key]) {
+                grouped[key] = { soPhong: key, lichSuNguoiO: [], trangThai: "Trống"};
             }
-            acc[key].lichSuNguoiO.push({
+            grouped[key].lichSuNguoiO.push({
                 idLichSu: item._id,
                 cccd: item.nhanKhau?.cccd || "Không rõ",
                 hoTen: item.nhanKhau?.hoTen || "Không rõ",
                 ngayVao: item.ngayDK,
                 ngayRa: item.ngayChuyenDi,
                 trangThai: item.ngayChuyenDi ? "Đã dời đi" : "Đang cư trú"
-            });
-            return acc;
-        }, {});
+            }); 
+        }
+        
+        // Check trạng thái cho từng căn hộ
+        for (const key in grouped) {
+            const check = await LichSu.findOne({canHo: parseInt(key), ngayChuyenDi: null, deleted: false});
+            if(check) {
+                grouped[key].trangThai = "Có Người";
+            }
+        }
 
         return Object.values(grouped);
     } catch (error) {

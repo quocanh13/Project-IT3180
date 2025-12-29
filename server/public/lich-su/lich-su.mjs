@@ -150,8 +150,7 @@ function handleError(message) {
  * Render HTML cho từng Card Phòng
  */
 function renderCard(item) {
-    const hasCurrentResident = item.lichSuNguoiO.some(person => !person.ngayRa);
-    const roomStatus = hasCurrentResident ? 'Đang ở' : 'Trống';
+    const roomStatus = item.trangThai;
     
     // Sắp xếp: Người đang ở lên đầu, sau đó đến người mới ra gần nhất
     const sortedHistory = item.lichSuNguoiO.sort((a, b) => {
